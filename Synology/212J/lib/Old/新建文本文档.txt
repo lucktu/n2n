@@ -1,0 +1,1 @@
+cp -rf /tmp/libcrypto.so.1.0.0 /lib/libcrypto.so.1.0.0
