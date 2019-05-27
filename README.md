@@ -20,6 +20,6 @@ v2s n2n.lucktu.com:10088
 
 One: https://github.com/lucktu/Program_4_n2n
 
-Two: https://pan.baidu.com/s/1nwuKlvj   key: 9nfi
+Two: http://n2n.lucktu.com/n2n/     (temporary,Unreliable)
 
 qq group: 256572040
