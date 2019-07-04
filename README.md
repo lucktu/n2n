@@ -18,7 +18,7 @@ v2s n2n.lucktu.com:10088
 
 ---------------------------download-----------------------
 
-One: https://github.com/lucktu/Program_4_n2n
+One: https://github.com/lucktu/n2n
 
 Two: http://n2n.lucktu.com/n2n/     (temporary,Unreliable)
 
