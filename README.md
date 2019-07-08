@@ -8,7 +8,9 @@ NOTE:
 
 2019-6-10: Since today, v2 has increased the probability of p2p, but it must be used in new supernode.
 
-2019-1-28: Add a-A parameter to increase speed.
+2019-1-28: Add a -A parameter to increase speed.
+
+2018-6-6: The official restart the N2N project.
 
 ----------------------------From--------------------------
 
