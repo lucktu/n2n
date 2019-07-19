@@ -4,7 +4,7 @@ Provide my collection of n2n main program
 
 NOTE:
 
-2019-7-16 Add -S, -T parameters in edge
+2019-7-16: Add -S & -T parameters in edge
 
 2019-7-6: Version upgraded to v2.5.1，now everyone can easily distinguish.
 
@@ -12,11 +12,11 @@ NOTE:
 
 2019-6-10: Since today, v2 has increased the probability of p2p, but <strong>it must be used with new supernode.</strong>
 
-2019-1-28: Add a -A parameter to increase speed
+2019-1-28: Add a -i & -A parameter to increase speed
 
 2018-10-7: Added configure and autogen.sh
 
-2018-9-29: Add -c parameters in edge
+2018-9-29: Add -c parameters in supernode
 
 2018-8-16: Edge and supernode can reads a configuration file now
 
