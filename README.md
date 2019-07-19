@@ -6,13 +6,13 @@ NOTE:
 
 2019-7-16: Add -S & -T parameters in edge
 
-2019-7-6: Version upgraded to v2.5.1，now everyone can easily distinguish.
+2019-7-6: Upgraded to v2.5.1，now everyone can easily distinguish.
 
-2019-7-1: Modified the method of AES, so <strong>it is different from the previous one.</strong>
+2019-7-1: Modified the method of AES, so <strong>it is different from the previous one with "-A".</strong>
 
 2019-6-10: Since today, v2 has increased the probability of p2p, but <strong>it must be used with new supernode.</strong>
 
-2019-1-28: Add a -i & -A parameter to increase speed
+2019-1-28: Add a -i & -A parameter in edge to increase speed
 
 2018-10-7: Added configure and autogen.sh
 
