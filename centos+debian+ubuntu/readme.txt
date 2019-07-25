@@ -1,4 +1,4 @@
-Compilation method (Run under SSH):
+Compilation method for n2n_v2_dev (Run under SSH):
 
 cd /opt
 git clone https://github.com/ntop/n2n.git
