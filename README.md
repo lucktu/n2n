@@ -1,4 +1,4 @@
-Unfortunately, compiling is also a technical job, and many people don't, so I 've collated the compiled results for my friends who can't compile.
+Unfortunately, compiling is also a technical job, and many people can't, so I've collated the compiled results for them.
 
 ###################################################################################
 
