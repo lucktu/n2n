@@ -1,4 +1,4 @@
-Provide my collection of n2n main program
+Unfortunately, compiling is also a technical job, and many people don't, so I 've collated the compiled results for my friends who can't compile.
 
 ###################################################################################
 
