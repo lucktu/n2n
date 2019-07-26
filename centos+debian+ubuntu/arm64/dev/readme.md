@@ -1,8 +1,8 @@
 ##在斐讯N1上编译，系统为Armbian即debian linux内核5.0.0，架构ARM64即aarch64
+
+<pre>
 Starting n2n edge 2.5.0 Jun 15 2019 13:50:04
-
 Welcome to n2n v.2.5.0 for Debian 9.9
-
 Built on Jun 15 2019 13:49:56
 Copyright 2007-18 - ntop.org and contributors
 
@@ -36,4 +36,4 @@ edge -d <tun device> -a [static:|dhcp:]<tun IP address> -c <community> [-k <encr
 
 Environment variables:
   N2N_KEY                | Encryption key (ASCII). Not with -k.
-
+</pre>
