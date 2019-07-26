@@ -12,7 +12,7 @@ edge -d <tun device> -a [static:|dhcp:]<tun IP address> -c <community> [-k <encr
     [-s <netmask>] [-u <uid> -g <gid>][-f][-m <MAC address>] -l <supernode host:port>
     [-p <local port>] [-M <mtu>] [-r] [-E] [-v] [-i <reg_interval>] [-t <mgmt port>] [-b] [-A] [-h]
 
--d '<tun device'>          | tun device name
+-d /<tun device\>          | tun device name
 -a <mode:address>        | Set interface address. For DHCP use '-r -a dhcp:0.0.0.0'
 -c <community>           | n2n community name the edge belongs to.
 -k <encrypt key>         | Encryption key (ASCII) - also N2N_KEY=<encrypt key>.
