@@ -11,5 +11,5 @@ Now the main program (edge & supernode) has been generated, in the /opt/n2n dire
 
 You may need to install some plug-ins as follows before you compile
 apt-get update
-apt-get install git make autoconf automake libtool subversion build-essential
-#apt-get install python-dev python-pip libxml2-dev libxslt1-dev zlib1g-dev libffi-dev libssl-dev
+apt-get install git make autoconf automake libtool subversion build-essential libssl-dev
+#apt-get install python-dev python-pip libxml2-dev libxslt1-dev zlib1g-dev libffi-dev
