@@ -12,7 +12,11 @@ NOTE:
 
 2019-6-10: <strong>Since today, v2 has increased the probability of p2p, but it must be used with new supernode.</strong>
 
-2019-1-28: Add -i & -A parameter in edge to increase speed
+2019-5-6: Add -i parameter in edge to increase speed
+
+2019-3-2: Modify the version of N2N from V2.3.0 to v2.5.0
+
+2019-1-28: Add -A parameter in edge to increase speed
 
 2018-10-7: Added configure and autogen.sh
 
