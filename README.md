@@ -12,7 +12,7 @@ NOTE:
 
 2019-6-10: <strong>Since today, v2 has increased the probability of p2p, but it must be used with new supernode.</strong>
 
-2019-5-6: Add -i parameter in edge to increase speed
+2019-5-6: Add -i parameter in edge
 
 2019-3-2: Upgraded to v2.5.0 (from v2.3.0)
 
