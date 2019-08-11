@@ -10,9 +10,9 @@ NOTE:
 
 2019-7-1: Modified the method of AES, so <strong>it is different from the previous one with "-A".</strong>
 
-2019-6-10: Since today, v2 has increased the probability of p2p, but <strong>it must be used with new supernode.</strong>
+2019-6-10: <strong>Since today, v2 has increased the probability of p2p, but it must be used with new supernode.</strong>
 
-2019-1-28: Add a -i & -A parameter in edge to increase speed
+2019-1-28: Add -i & -A parameter in edge to increase speed
 
 2018-10-7: Added configure and autogen.sh
 
