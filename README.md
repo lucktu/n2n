@@ -8,7 +8,7 @@ NOTE:
 
 2019-7-6: Upgraded to v2.5.1，now everyone can easily distinguish.
 
-2019-7-1: Modified the method of AES, so <strong>it is different from the previous one with "-A".</strong>
+2019-7-1: Modified the method of AES, so <strong>it is different from the previous one (2019-1-28) with "-A".</strong>
 
 2019-6-10: <strong>Since today, v2 has increased the probability of p2p, but it must be used with new supernode.</strong>
 
