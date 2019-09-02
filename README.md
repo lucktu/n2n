@@ -4,7 +4,9 @@ Unfortunately, compiling is also a technical job, and many people can't, so I've
 
 NOTE:
 
-2019-7-16: Add -S & -T parameters in edge
+2019-8-19: Remove -b option (ver: 2.5.1_r227)
+
+2019-7-16: Add -S(disable p2p) & -T(TOS setting in edge) parameters in edge
 
 2019-7-6: Upgraded to v2.5.1，now everyone can easily distinguish.
 
