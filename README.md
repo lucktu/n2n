@@ -6,9 +6,9 @@ NOTE:
 
 2019-8-19: Remove -b option (ver: 2.5.1_r227)
 
-2019-7-16: Add -S(disable p2p) & -T(TOS setting in edge) parameters in edge
+2019-7-16: Add -S(disable p2p) & -T(TOS setting in edge) parameters in edge  (ver: 2.5.1_r216)
 
-2019-7-6: Upgraded to v2.5.1，now everyone can easily distinguish.
+2019-7-6: Upgraded to v2.5.1，now everyone can easily distinguish  (ver: 2.5.1_r198)
 
 2019-7-1: Modified the method of AES, so <strong>it is different from the previous one (2019-1-28) with "-A".</strong>
 
