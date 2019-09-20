@@ -6,6 +6,8 @@ NOTE:
 
 2019-8-19 v.2.5.1.r227: Remove -b option
 
+2019-8-16 v.2.5.1.r225: Add -D(Enable PMTU discovery)
+
 2019-7-16 v.2.5.1.r216: Add -S(disable p2p) & -T(TOS setting in edge) parameters in edge
 
 2019-7-6  v.2.5.1.r198: Upgraded to v2.5.1，now everyone can easily distinguish
