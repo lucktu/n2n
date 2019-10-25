@@ -14,13 +14,13 @@ NOTE:
 
 2019-07-06: v.2.5.1_r198, Upgraded to v2.5.1，now everyone can easily distinguish
 
-2019-07-01: Modified the method of AES, so <strong>it is different from the previous one (2019-1-28) with "-A".</strong>
+2019-07-01: v.2.5.0_r191, Modified the method of AES, so <strong>it is different from the previous one (2019-1-28) with "-A".</strong>
 
-2019-06-10: <strong>Since today, v2 has increased the probability of p2p, but it must be used with new supernode.</strong>
+2019-06-10: v.2.5.0_r162, <strong>Since today, v2 has increased the probability of p2p, but it must be used with new supernode.</strong>
 
-2019-05-06: Add -i parameter in edge
+2019-05-06: v.2.5.0_r134, Add -i parameter in edge
 
-2019-03-02: Upgraded to v2.5.0 (from v2.3.0)
+2019-03-02: v.2.5.0_r104, Upgraded to v2.5.0 (from v2.3.0)
 
 2019-01-28: Add -A parameter in edge to increase speed
 
