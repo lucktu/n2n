@@ -1,3 +1,8 @@
+When you don't have the files you want, you can go here and look for them, test them.
+\N2N\centos+debian+ubuntu\*
+
+====================================================================
+
 libcrypto.so.0.9.8
 linux32 --> lib
 linux64 --> lib64
