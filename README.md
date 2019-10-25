@@ -16,7 +16,7 @@ NOTE:
 
 2019-07-01: v.2.5.0_r191, Modified the method of AES, so <strong>it is different from the previous one (2019-1-28) with "-A".</strong>
 
-2019-06-10: v.2.5.0_r162, <strong>Since today, v2 has increased the probability of p2p, but it must be used with new supernode.</strong>
+2019-06-10: v.2.5.0_r162, <strong>Since today, v2 has increased the probability of p2p with the new supernode.</strong>
 
 2019-05-06: v.2.5.0_r134, Add -i parameter in edge
 
