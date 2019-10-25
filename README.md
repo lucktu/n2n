@@ -4,31 +4,31 @@ Unfortunately, compiling is also a technical job, and many people can't, so I've
 
 NOTE:
 
-2019-8-19 v.2.5.1.r227: Remove -b option
+2019-08-19: v.2.5.1.r227: Remove -b option
 
-2019-8-16 v.2.5.1.r225: Add -D(Enable PMTU discovery)
+2019-08-16: v.2.5.1.r225: Add -D(Enable PMTU discovery)
 
-2019-7-16 v.2.5.1.r216: Add -S(disable p2p) & -T(TOS setting in edge) parameters in edge
+2019-07-16: v.2.5.1.r216: Add -S(disable p2p) & -T(TOS setting in edge) parameters in edge
 
-2019-7-6  v.2.5.1.r198: Upgraded to v2.5.1，now everyone can easily distinguish
+2019-07-06: v.2.5.1.r198: Upgraded to v2.5.1，now everyone can easily distinguish
 
-2019-7-1: Modified the method of AES, so <strong>it is different from the previous one (2019-1-28) with "-A".</strong>
+2019-07-01: Modified the method of AES, so <strong>it is different from the previous one (2019-1-28) with "-A".</strong>
 
-2019-6-10: <strong>Since today, v2 has increased the probability of p2p, but it must be used with new supernode.</strong>
+2019-06-10: <strong>Since today, v2 has increased the probability of p2p, but it must be used with new supernode.</strong>
 
-2019-5-6: Add -i parameter in edge
+2019-05-06: Add -i parameter in edge
 
-2019-3-2: Upgraded to v2.5.0 (from v2.3.0)
+2019-03-02: Upgraded to v2.5.0 (from v2.3.0)
 
-2019-1-28: Add -A parameter in edge to increase speed
+2019-01-28: Add -A parameter in edge to increase speed
 
-2018-10-7: Added configure and autogen.sh
+2018-10-07: Added configure and autogen.sh
 
-2018-9-29: Add -c parameters in supernode
+2018-09-29: Add -c parameters in supernode
 
-2018-8-16: Edge and supernode can reads a configuration file now
+2018-08-16: Edge and supernode can reads a configuration file now
 
-2018-6-6: The official restart the N2N project
+2018-06-06: The official restart the N2N project
 
 ----------------------------From--------------------------
 
