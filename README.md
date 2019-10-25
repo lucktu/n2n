@@ -34,7 +34,7 @@ NOTE:
 
 2018-08-16: v.2.3.0_r54, Edge and supernode can reads a configuration file now
 
-2018-06-08: v.2.3.0_r26, Upgraded to v2.3.0
+2018-06-08: v.2.3.0_r26, Upgraded to v2.3.0, No v.2.2.0 version
 
 2018-06-06: v.2.1.0_r20, The official restart the N2N project
 
