@@ -22,15 +22,17 @@ NOTE:
 
 2019-03-02: v.2.5.0_r104, Upgraded to v2.5.0 (from v2.3.0)
 
-2019-01-28: v.2.3.X_r94, Add -A parameter in edge to increase speed
+2019-01-28: v.2.3.0_r94, Add -A parameter in edge to increase speed
 
-2018-10-07: v.2.3.X_r74, Added configure and autogen.sh
+2018-10-07: v.2.3.0_r74, Added configure and autogen.sh
 
-2018-09-29: v.2.3.X_r71, Add -c parameters in supernode
+2018-09-29: v.2.3.0_r71, Add -c parameters in supernode
 
-2018-08-16: v.2.3.X_r54, Edge and supernode can reads a configuration file now
+2018-08-16: v.2.3.0_r54, Edge and supernode can reads a configuration file now
 
-2018-06-06: v.2.3.X_r20, The official restart the N2N project
+2018-06-08: v.2.3.0_r26, Upgraded to v2.3.0
+
+2018-06-06: v.2.1.0_r20, The official restart the N2N project
 
 ----------------------------From--------------------------
 
