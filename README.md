@@ -18,6 +18,8 @@ NOTE:
 
 2019-06-10: v.2.5.0_r162, <strong>Since today, v2 has increased the probability of p2p with the new supernode.</strong>
 
+2019-05-22: v.2.4.0_r71, Generate "2.4-stable" version, freeze
+
 2019-05-06: v.2.5.0_r134, Add -i parameter in edge
 
 2019-03-02: v.2.5.0_r104, Upgraded to v2.5.0 (from v2.3.0)
