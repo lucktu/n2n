@@ -4,13 +4,13 @@ Unfortunately, compiling is also a technical job, and many people can't, so I've
 
 NOTE:
 
-2019-08-19: v.2.5.1.r227: Remove -b option
+2019-08-19: v.2.5.1.r227, Remove -b option
 
-2019-08-16: v.2.5.1.r225: Add -D(Enable PMTU discovery)
+2019-08-16: v.2.5.1.r225, Add -D(Enable PMTU discovery)
 
-2019-07-16: v.2.5.1.r216: Add -S(disable p2p) & -T(TOS setting in edge) parameters in edge
+2019-07-16: v.2.5.1.r216, Add -S(disable p2p) & -T(TOS setting in edge) parameters in edge
 
-2019-07-06: v.2.5.1.r198: Upgraded to v2.5.1，now everyone can easily distinguish
+2019-07-06: v.2.5.1.r198, Upgraded to v2.5.1，now everyone can easily distinguish
 
 2019-07-01: Modified the method of AES, so <strong>it is different from the previous one (2019-1-28) with "-A".</strong>
 
