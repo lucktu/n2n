@@ -14,15 +14,15 @@ NOTE:
 
 2019-07-06: v.2.5.1_r198, Upgraded to v2.5.1，now everyone can easily distinguish
 
-2019-07-01: v.2.5.0_r191, Modified the method of AES, so <strong>it is different from the previous one (2019-1-28) with "-A".</strong>
+2019-07-01: v.2.5.0_r191, Modified the method of AES, so <strong>it is different from the previous one (2019-1-28) with "-A"</strong>
 
-2019-06-10: v.2.5.0_r162, <strong>Since today, v2 has increased the probability of p2p with the new supernode.</strong>
+2019-06-10: v.2.5.0_r162, <strong>Since today, v2 has increased the probability of p2p with the new supernode</strong>
 
-2019-05-22: v.2.4.0_r71, <strong>Generate "2.4-stable" version, freeze</strong>
+2019-05-22: v.2.4.0_r71, Generate "<strong>2.4-stable</strong>" version, freeze
 
 2019-05-06: v.2.5.0_r134, Add -i parameter in edge
 
-2019-03-02: v.2.5.0_r104, Upgraded to v2.5.0 (from v2.3.0)
+2019-03-02: v.2.5.0_r104, Upgraded to v2.5.0
 
 2019-01-28: v.2.3.0_r94, Add -A parameter in edge to increase speed
 
@@ -30,7 +30,7 @@ NOTE:
 
 2018-09-29: v.2.3.0_r71, Add -c parameters in supernode
 
-2018-09-28: v.2.3.0_r71, <strong>Generate "master" version, freeze</strong>
+2018-09-28: v.2.3.0_r71, Generate "<strong>master</strong>" version, freeze
 
 2018-08-16: v.2.3.0_r54, Edge and supernode can reads a configuration file now
 
