@@ -4,9 +4,9 @@ Unfortunately, compiling is also a technical job, and many people can't, so I've
 
 NOTE:
 
-2019-08-19: v.2.5.1_r227, Remove -b option
+2019-08-19: v.2.5.1_r227, Remove -b in edge
 
-2019-08-16: v.2.5.1_r225, Add -D(Enable PMTU discovery)
+2019-08-16: v.2.5.1_r225, Add -D(Enable PMTU discovery) in edge
 
 2019-07-16: v.2.5.1_r216, Add -S(disable p2p) & -T(TOS setting in edge) parameters in edge
 
