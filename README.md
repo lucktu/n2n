@@ -6,6 +6,8 @@ File Naming Method:
 
 NOTE:
 
+2019-11-13: v.2.5.1_r243, Add -L in edge
+
 2019-08-19: v.2.5.1_r227, Remove -b in edge
 
 2019-08-16: v.2.5.1_r225, Add -D(Enable PMTU discovery) in edge
