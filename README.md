@@ -1,7 +1,7 @@
 Unfortunately, compiling is also a technical job, and many people can't, so I've collated the compiled results for them.
 
 File Naming Method:
-![image](https://github.com/lucktu/other/raw/master/image/speed/19102501.PNG)
+![image](https://github.com/lucktu/other/raw/master/image/speed/19102501.png)
 ###################################################################################
 
 NOTE:
