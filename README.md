@@ -60,8 +60,8 @@ v2s n2n.lucktu.com:10088
 
 First: https://github.com/lucktu/n2n  (latest)
 
-Second: https://gitee.com/lucktu/n2n
+Second: https://gitee.com/lucktu/n2n  (Faster)
 
-Third: http://n2n.lucktu.com/n2n/     (temporary,uninsured)
+Third: http://n2n.lucktu.com/n2n/     (Convenient,uninsured)
 
 QQ group: 5804301 (Old: 256572040, disused)
