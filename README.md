@@ -61,4 +61,4 @@ One: https://github.com/lucktu/n2n
 
 Two: http://n2n.lucktu.com/n2n/     (temporary,Unreliable)
 
-qq group: 256572040
+QQ group: 5804301 (Old: 256572040)
