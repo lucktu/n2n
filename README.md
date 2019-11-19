@@ -1,7 +1,6 @@
 Unfortunately, compiling is also a technical job, and many people can't, so I've collated the compiled results for them.
 
-File Naming Method:
-![image](https://github.com/lucktu/other/raw/master/image/speed/19102501.PNG)
+![image](https://github.com/lucktu/other/raw/master/image/speed/19102501.png)
 ###################################################################################
 
 NOTE:
@@ -62,4 +61,4 @@ One: https://github.com/lucktu/n2n
 
 Two: http://n2n.lucktu.com/n2n/     (temporary,Unreliable)
 
-qq group: 256572040
+QQ group: 5804301 (Old: 256572040)
