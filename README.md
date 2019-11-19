@@ -1,5 +1,6 @@
 Unfortunately, compiling is also a technical job, and many people can't, so I've collated the compiled results for them.
 
+File Naming Method:
 ![image](https://github.com/lucktu/other/raw/master/image/speed/19102501.PNG)
 ###################################################################################
 
@@ -7,7 +8,7 @@ NOTE:
 
 2019-11-13: v.2.5.1_r243, Add -L in edge
 
-2019-08-19: v.2.5.1_r227, Remove -b in edge
+2019-08-19: v.2.5.1_r227, Remove -b in edge (ddns ip)
 
 2019-08-16: v.2.5.1_r225, Add -D(Enable PMTU discovery) in edge
 
@@ -57,8 +58,10 @@ v2s n2n.lucktu.com:10088
 
 ---------------------------download-----------------------
 
-One: https://github.com/lucktu/n2n
+First: https://github.com/lucktu/n2n  (latest)
 
-Two: http://n2n.lucktu.com/n2n/     (temporary,Unreliable)
+Second: https://gitee.com/lucktu/n2n
 
-QQ group: 5804301 (Old: 256572040)
+Third: http://n2n.lucktu.com/n2n/     (temporary,uninsured)
+
+QQ group: 5804301 (Old: 256572040, disused)
