@@ -1,6 +1,5 @@
 Unfortunately, compiling is also a technical job, and many people can't, so I've collated the compiled results for them.
 
-File Naming Method:
 ![image](https://github.com/lucktu/other/raw/master/image/speed/19102501.PNG)
 ###################################################################################
 
@@ -12,7 +11,7 @@ NOTE:
 
 2019-08-16: v.2.5.1_r225, Add -D(Enable PMTU discovery) in edge
 
-2019-07-16: v.2.5.1_r216, Add -S(disable p2p) & -T(TOS setting in edge) parameters in edge
+2019-07-16: v.2.5.1_r216, Add -S(disable p2p) & -T(TOS setting) in edge
 
 2019-07-06: v.2.5.1_r198, Upgraded to v2.5.1，now everyone can easily distinguish
 
