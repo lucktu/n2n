@@ -3,7 +3,7 @@ Unfortunately, compiling is also a technical job, and many people can't, so I've
 ![image](https://github.com/lucktu/other/raw/master/image/speed/19102501.PNG)
 ###################################################################################
 
-NOTE:
+NOTE for n2n_v2 (https://github.com/ntop/n2n):
 
 2019-11-13: v.2.5.1_r243, Add -L in edge
 
