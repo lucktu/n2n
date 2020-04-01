@@ -5,6 +5,8 @@ Unfortunately, compiling is also a technical job, and many people can't, so I've
 
 NOTE for n2n_v2 (https://github.com/ntop/n2n):
 
+2020-03-24: v.2.6.0_r250, Generate a new branche: "<strong>2.6-stable</strong>", then dev use new version number: v2.7.x
+
 2019-11-13: v.2.5.1_r243, Add -L in edge
 
 2019-08-19: v.2.5.1_r227, Remove -b in edge (it is automatic now)
