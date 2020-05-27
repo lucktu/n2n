@@ -5,6 +5,8 @@ Unfortunately, compiling is also a technical job, and many people can't, so I've
 
 NOTE for n2n_v2 (https://github.com/ntop/n2n):
 
+2020-05-23: v.2.7.0_r284, Add -n in edge (Add ability to insert linux routes in n2n)
+
 2020-05-03: v.2.7.0_r275, Add -z in edge (Enable lzo1x compression)
 
 2020-03-24: v.2.6.0_r250, Generate a new branche: "<strong>2.6-stable</strong>", then dev use new version number: v2.7.x
