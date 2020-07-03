@@ -5,7 +5,19 @@ Unfortunately, compiling is also a technical job, and many people can't, so I've
 
 NOTE for n2n_v2 (https://github.com/ntop/n2n):
 
+2020-07-01: v.2.7.0_r415, newest edge & supernode
+
+2020-05-28: v.2.7.0_r281, Add -A5 in edge(Add speck)
+
 2020-05-23: v.2.7.0_r284, Add -n in edge (Add ability to insert linux routes in n2n)
+
+2020-05-20: v.2.7.0_r284, Add -z2 in edge (Enable zstd compression)
+                          modify z1=z in edge (Enable lzo1x compression)
+
+2020-05-12: v.2.7.0_r278, Add -A4 in edge(Add chacha20)
+			  Add -A3 in edge(=-A, aes-cbc)
+			  Add -A2 in edge(=twofish)
+			  Add -A1 in edge, Disable payload encryption
 
 2020-05-03: v.2.7.0_r275, Add -z in edge (Enable lzo1x compression)
 
