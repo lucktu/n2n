@@ -1,11 +1,19 @@
 Unfortunately, compiling is also a technical job, and many people can't, so I've collated the compiled results for them.
 
 ![image](https://github.com/lucktu/other/raw/master/image/speed/19102501.PNG)
-###################################################################################
+#####################################################################
 
 NOTE for n2n_v2 (https://github.com/ntop/n2n):
 
-2020-07-01: v.2.7.0_r415, newest edge & supernode
+<strong>2020-08-12: v.2.9.0_r529, edge is no longer compatible with the previous one !!!</strong>
+
+2020-08-12: v.2.8.0_r528, Generate a new branche: "<strong>2.8-stable</strong>", then dev: v2.9.x
+
+2020-08-08: v.2.7.0_r523, Add -d in supernode, provides dynamic IP for edge, the management of supernode has been enhanced. v.2.8.0 no such feature.
+
+2020-07-29: v.2.7.0_r509, Add -u & -g in supernode
+
+2020-07-24: v.2.7.0_r460, Add -t in supernode, custom the management port
 
 2020-06-22: v.2.7.0_r378, Add -H in edge(Header Encryption)
 
@@ -13,17 +21,17 @@ NOTE for n2n_v2 (https://github.com/ntop/n2n):
 
 2020-05-23: v.2.7.0_r284, Add -n in edge (Add ability to insert linux routes in n2n)
 
-2020-05-20: v.2.7.0_r284, Add -z2 in edge (Enable zstd compression)
-------------------------, modify z1=z in edge (Enable lzo1x compression)
+2020-05-20: v.2.7.0_r284, Add -z2 in edge (Enable zstd compression) \
+-----------------------------, modify z1=z in edge (Enable lzo1x compression)
 
-2020-05-12: v.2.7.0_r278, Add -A4 in edge(Add chacha20)
-------------------------, Add -A3 in edge(=-A, aes-cbc)
-------------------------, Add -A2 in edge(=twofish)
-------------------------, Add -A1 in edge, Disable payload encryption
+2020-05-12: v.2.7.0_r278, Add -A4 in edge(Add chacha20) \
+-----------------------------, Add -A3 in edge(=-A, aes-cbc) \
+-----------------------------, Add -A2 in edge(=twofish) \
+-----------------------------, Add -A1 in edge, Disable payload encryption
 
 2020-05-03: v.2.7.0_r275, Add -z in edge (Enable lzo1x compression)
 
-2020-03-24: v.2.6.0_r250, Generate a new branche: "<strong>2.6-stable</strong>", then dev use new version number: v2.7.x
+2020-03-24: v.2.6.0_r250, Generate a new branche: "<strong>2.6-stable</strong>", then dev: v2.7.x
 
 2019-11-13: v.2.5.1_r243, Add -L in edge
 
@@ -39,7 +47,7 @@ NOTE for n2n_v2 (https://github.com/ntop/n2n):
 
 2019-06-10: v.2.5.0_r162, <strong>Since today, v2 has increased the probability of p2p with the new supernode</strong>
 
-2019-05-22: v.2.4.0_r71, Generate "<strong>2.4-stable</strong>" version, freeze
+2019-05-22: v.2.4.0_r71, Generate "<strong>2.4-stable</strong>" version, freeze, then dev: v2.5.x
 
 2019-05-06: v.2.5.0_r134, Add -i parameter in edge
 
