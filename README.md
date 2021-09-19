@@ -9,7 +9,7 @@ NOTE for n2n_v3 (https://github.com/ntop/n2n):
 
 =========================================================
 
-NOTE for n2n_v2 (https://github.com/ntop/n2n):
+NOTE for n2n_v2 (https://github.com/ntop/n2n/tree/2.8-stable):
 
 2020-08-12: v.2.8.0_r528, Generate a new branche: "<strong>2.8-stable</strong>". v.2.7.0_r525(or r523) is recommended
 
@@ -75,23 +75,27 @@ NOTE for n2n_v2 (https://github.com/ntop/n2n):
 
 v1   https://github.com/meyerd/n2n/tree/master/n2n_v1
 
-v2   https://github.com/ntop/n2n
-
 v2s  https://github.com/meyerd/n2n/tree/master/n2n_v2
+
+v2   https://github.com/ntop/n2n/tree/2.8-stable
+
+v3   https://github.com/ntop/n2n
 
 ---------------------supernode for test-------------------
 
 v1  n2n.lucktu.com:10082
 
+v2s n2n.lucktu.com:10088
+
 v2  n2n.lucktu.com:10086
 
-v2s n2n.lucktu.com:10088
+v3  n2n.lucktu.com:10090
 
 ---------------------------download-----------------------
 
-First: https://github.com/lucktu/n2n  (latest)
+First: https://github.com/lucktu/n2n 
 
-Second: https://gitee.com/lucktu/n2n  (Faster)
+Second: https://gitee.com/lucktu/n2nn2n  (Faster)
 
 Third: http://n2n.lucktu.com/n2n/     (Convenient,uninsured)
 
