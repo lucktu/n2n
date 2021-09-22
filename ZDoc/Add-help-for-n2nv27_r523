@@ -1,0 +1,37 @@
+
+这个 PR 来自于 n2n 官方源码 (v2.7_523.92dfa67，其实已经很接近官方的最终 v2.8 版本了)，目的是为了给 n2n_v2 
+保留一个 AutoIP 的功能（官方在最新的 v2.8 里面已经去掉了这个功能），我们在此基础上增加了 edge 和 supernode 
+的帮助信息，以便于使用。
+
+The pr is from the N2N official source code(v2.7_523.92dfa67, it's actually pretty close to the official final V2.8),
+the purpose is to preserve the functionality of an AutoIP for n2n_v2(it's not available in the latest V2.8). 
+We add edge & supernode's help, make it easy to use.
+
+当然你也可以去这里下载官方源码
+
+You can also download the official source code here
+
+https://github.com/ntop/n2n/tree/92dfa67e2263a9dedae91c177f822b86a04de5a4
+
+重新整理于 2021-9-17
+
+Reorganized on September 17,2021
+
+=================================================================================================
+
+为官方源码(v2.7_r523)加上帮助信息的方法
+
+Modify form v2.7_r523 to v2.7_r525 (add help for v2.7_r523)
+
+
+//  src/edge.c
+  printf("-a <mode:address>        | Set interface address. For DHCP use '-r -a dhcp:0.0.0.0'\n");
+to
+  printf("-a <mode:address>        | Set interface address. For DHCP use '-r -a dhcp:0.0.0.0'\n"
+         "                         | default(no -a) is autoip, eg. 172.17.12.x\n");
+
+
+//  src/sn.c
+	printf("-d <net/bit>  | Subnet that provides dhcp service for edge. eg. -d 172.17.12.0/24\n");
+to
+	printf("-d <net/bit>  | Set an automatically assigned subnet for edge, default -d 172.17.12.0/24\n");
