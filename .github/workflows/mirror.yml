@@ -12,6 +12,6 @@ jobs:
         uses: pixta-dev/repository-mirroring-action@v1
         with:
           target_repo_url:
-            git@gitee.com:lucktu/n2n.git
+            git@gitee.com:lucktu/n2nb.git
           ssh_private_key:
-            ${{ secrets.MIRROR_TO }} 
+            ${{ secrets.MR_GITEE_N2NB }} 

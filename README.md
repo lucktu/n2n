@@ -95,7 +95,7 @@ v3  n2n.lucktu.com:10090
 
 First: https://github.com/lucktu/n2n 
 
-Second: https://gitee.com/lucktu/n2n  (Faster)
+Second: https://gitee.com/lucktu/n2nb  (Faster)
 
 Third: http://n2n.lucktu.com/n2n/     (Convenient,uninsured)
 
