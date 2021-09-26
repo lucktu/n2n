@@ -13,7 +13,7 @@ NOTE for n2n_v2 (https://github.com/ntop/n2n/tree/2.8-stable):
 
 2020-08-12: v.2.8.0_r528, Generate a new branche: "<strong>2.8-stable</strong>". v.2.7.0_r525(or r523) is recommended
 
-2020-08-08: v.2.7.0_r523, Add -d in supernode, provides AutoIP for edge, the management of supernode has been enhanced. v.2.8.0 no such feature. Compile it yourself please. We've provided the v.2.7.0_r525, which modifies the edge and supernode help for everyone to use(-d), as detailed here: [n2n_v.2.7.0_r525](https://github.com/lucktu/n2n/tree/master/ZDoc/Add-help-for-n2nv27_r523) 
+2020-08-08: v.2.7.0_r523, Add -d in supernode, provides AutoIP for edge, the management of supernode has been enhanced. v.2.8.0 no such feature. Compile it yourself please. We've provided the v.2.7.0_r525, which modifies the edge and supernode help for everyone to use(-d), as detailed here: [n2n_v.2.7.0_r525](https://github.com/lucktu/n2n/tree/master/ZDoc/Add-help-for-n2nv27_r525) 
 
 2020-07-29: v.2.7.0_r509, Add -u & -g in supernode
 
