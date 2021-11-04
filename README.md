@@ -5,6 +5,8 @@ Unfortunately, compiling is also a technical job, and many people can't, so I've
 
 NOTE for n2n_v3 (https://github.com/ntop/n2n):
 
+2021-10-28: v.3.0.0_r1041, <strong>n2n_v3 was officially released.</strong>
+
 2020-08-12: v.2.9.0_r529, edge is no longer compatible with the previous one !!!
 
 =========================================================
