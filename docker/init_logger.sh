@@ -5,7 +5,7 @@ LOG_INFO() {
 
 LOG_ERROR() {
   echo -e $(caller) "\033[0;31m[ERROR] $* \033[0m"
-  sleep 5
+  sleep 3
 }
 
 LOG_ERROR_WAIT_EXIT() {
@@ -29,7 +29,7 @@ LOG_ERROR_WAIT_EXIT() {
 
 LOG_WARNING() {
   echo -e $(caller) "\033[0;33m[WARNING] $* \033[0m"
-  sleep 3
+  sleep 1
 }
 
 LOG_RUN() {
