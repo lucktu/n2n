@@ -35,7 +35,7 @@ SEL_PLATFORM() {
         platform="linux/arm/v7"
         ;;
     *)
-        LOG_ERROR "不支持的CPU架构类型 - ${fn_platform}"
+        LOG_ERROR "不支持的CPU架构类型 - ${machine}"
         dn_machine=${machine}
         fn_machine=${machine}
         ;;

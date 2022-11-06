@@ -3,7 +3,7 @@
 . init_logger.sh
 . init_path.sh
 . get_file_infos.sh
-. scan_all_save.sh
+# . scan_all_save.sh
 . sel_platform.sh
 
 for version_filename in $(ls ${RESULT_DIR}); do
@@ -48,15 +48,20 @@ for version_filename in $(ls ${RESULT_DIR}); do
         GET_FILE_INFOS ${src_file}
         if [[ ${build_big_version} != ${src_big_version} || ${build_small_version} != ${src_small_version} || ${build_commit} != ${src_commit} ]]; then
             LOG_WARNING "版本未匹配: ${version_filename} - ${src_file}"
+            continue
+        fi
+        if [[ ! 'x64 x86 arm64(aarch64) arm' =~ ${src_machine} ]]; then
+            LOG_WARNING 不支持的CPU架构类型 - ${src_machine}
+            continue
         fi
         cp $src_file $BUILD_SRC/
         SEL_PLATFORM ${src_machine}
         if [[ ! ${build_platforms} =~ ${platform} ]]; then
-            build_platforms="${build_platforms}, platform"
+            build_platforms="${build_platforms}, ${platform}"
         fi
     done
     export REGISTRY='https://registry.aour.zctmdc.cn/'
-    export BUILD_PLATFORMS=["${build_platforms}]"
+    export BUILD_PLATFORMS=["${build_platforms:1} ]"
     export BIG_VERSION=${build_big_version}
     export SMALL_VERSION=${build_small_version}
     export COMMIT=${build_big_version}
@@ -65,5 +70,5 @@ for version_filename in $(ls ${RESULT_DIR}); do
     docker compose push
     docker compose run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${version_b_s_c}_edge_help.txt
     docker compose run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT supernode -h >$BUILD_DESC/${version_b_s_c}_supernode_help.txt
-    
+
 done
