@@ -1,17 +1,17 @@
 FROM debian:stable-slim as downloader
 
 ARG name="n2n-downloader"
-ARG summary="Base build image for n2n_lucktu built on-top of debian:stable-slim"
+ARG summary="Base build image for n2n-lucktu built on-top of debian:stable-slim"
 LABEL description="${summary}" \
   maintainer="<zctmdc@outlook.com>" \
   app.kubernetes.io/name="${name}" \
   org.opencontainers.image.title="${name}" \
   org.opencontainers.artifact.description="${summary}" \
   org.opencontainers.image.url="https://hub.docker.com/r/zctmdc/n2n_ntop" \
-  org.opencontainers.image.source="https://github.com/zctmdc/docker/tree/alpha/n2n_lucktu" \
+  org.opencontainers.image.source="https://github.com/zctmdc/docker/tree/alpha/n2n-lucktu" \
   org.opencontainers.image.authors="zctmdc@outlook.com" \
   org.opencontainers.image.description="${summary}" \
-  org.opencontainers.image.documentation="https://github.com/zctmdc/docker/tree/alpha/n2n_lucktu/doc/build.md"\
+  org.opencontainers.image.documentation="https://github.com/zctmdc/docker/tree/alpha/n2n-lucktu/doc/build.md"\
   org.opencontainers.image.licenses="MIT"
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -36,13 +36,13 @@ RUN chmod +x /tmp/scripts/*.sh
 RUN /tmp/scripts/install_rar.sh
 
 # 选择对应版本文件
-WORKDIR /tmp/n2n_lucktu/scripts/
-COPY . /tmp/n2n_lucktu/
-RUN chmod +x /tmp/n2n_lucktu/scripts/*.sh
-RUN /tmp/n2n_lucktu/scripts/scan_one_build.sh
+WORKDIR /tmp/n2n-lucktu/scripts/
+COPY . /tmp/n2n-lucktu/
+RUN chmod +x /tmp/n2n-lucktu/scripts/*.sh
+RUN /tmp/n2n-lucktu/scripts/scan_one_build.sh
 
 WORKDIR /tmp/down
-RUN cp /tmp/n2n_lucktu/result/build_src /tmp/down
+RUN cp /tmp/n2n-lucktu/result/build_src /tmp/down
 
 # 解压，选择最大的edge文件
 WORKDIR /tmp/scripts/
@@ -53,14 +53,14 @@ RUN /tmp/scripts/sel_n2n.sh
 FROM busybox
 
 ARG name="n2n-lucktu"
-ARG summary="n2n_lucktu built on-top of busybox"
+ARG summary="n2n-lucktu built on-top of busybox"
 LABEL description="${summary}" \
   maintainer="<zctmdc@outlook.com>" \
   app.kubernetes.io/name="${name}" \
   org.opencontainers.image.title="${name}" \
   org.opencontainers.artifact.description="${summary}" \
   org.opencontainers.image.url="https://hub.docker.com/r/zctmdc/n2n_ntop" \
-  org.opencontainers.image.source="https://github.com/zctmdc/docker/tree/alpha/n2n_lucktu" \
+  org.opencontainers.image.source="https://github.com/zctmdc/docker/tree/alpha/n2n-lucktu" \
   org.opencontainers.image.authors="zctmdc@outlook.com" \
   org.opencontainers.image.description="${summary}" \
   org.opencontainers.image.licenses="MIT"
