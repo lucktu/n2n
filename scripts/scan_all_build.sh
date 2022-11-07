@@ -21,4 +21,5 @@ for version_filename in $(ls ${RESULT_DIR}); do
     version_b_s_rc=${version_b_s_rc%%.txt}
     LOG_INFO "version_b_s_rc: ${version_b_s_rc}"
     SCAN_ONE_BUILD ${version_b_s_rc}
+    
 done
