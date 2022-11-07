@@ -62,13 +62,19 @@ for version_filename in $(ls ${RESULT_DIR}); do
     done
 
     export REGISTRY='registry.aour.zctmdc.cn'
-    export BUILD_PLATFORMS=["${build_platforms:1} ]"
+    export BUILD_PLATFORMS="[${build_platforms:1} ]"
     export BIG_VERSION=${build_big_version}
     export SMALL_VERSION=${build_small_version}
     export COMMIT=${build_big_version}
-    export BIG_VERSION=${build_big_version}
+
+    LOG_INFO REGISTRY='registry.aour.zctmdc.cn'
+    LOG_INFO BUILD_PLATFORMS=${BUILD_PLATFORMS}
+    LOG_INFO BIG_VERSION=${BIG_VERSION}
+    LOG_INFO SMALL_VERSION=${SMALL_VERSION}
+    LOG_INFO COMMIT=${COMMIT}
     docker compose -f docker-compose.build.evn.yaml build --progress plain 
-    docker compose -f docker-compose.build.evn.yaml plain push
+
+    docker compose -f docker-compose.build.evn.yaml push
     docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${version_b_s_c}_edge_help.txt
     docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT supernode -h >$BUILD_DESC/${version_b_s_c}_supernode_help.txt
     sleep 15
