@@ -18,7 +18,7 @@ on:
 
   workflow_call:
     inputs:
-      version_b_s_c:
+      version_b_s_rc:
         required: true
         type: string
 
@@ -38,7 +38,7 @@ env:
   # github.repository as <account>/<repo>
 
 jobs:
-  build-psuh:
+  init-version:
     runs-on: ubuntu-latest
     env:
       APP_NAME: n2n_lucktu
@@ -49,14 +49,19 @@ jobs:
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
-
+    outputs:
+      BIG_VERSION: ${{ steps.init-build-version.outputs.BIG_VERSION }}
+      SMALL_VERSION: ${{ steps.init-build-version.outputs.SMALL_VERSION }}
+      COMMIT: ${{ steps.init-build-version.outputs.COMMIT }}
+      BUILD_PLATFORMS: ${{ steps.init-build-version.outputs.BUILD_PLATFORMS }}
+      VERSION_B_S_rC: ${{ steps.init-build-version.outputs.VERSION_B_S_rC }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Check build_version
-        id: build_version
+      - name: Check init-build-version
+        id: init-build-version
         run: |
-          PROJECT_DIR=$(pwd)
+          PROJECT_ROOT_DIR=$(pwd)
           cd ./scripts
           chmod +x *.sh
           . init_logger.sh
@@ -64,9 +69,9 @@ jobs:
           . get_file_infos.sh
           . scan_one_build.sh
 
-          if [[ ! -z "${{ inputs.version_b_s_c }}" ]];then
-            LOG_WARNING "use version_b_s_c version"
-            SCAN_ONE_BUILD ${{inputs.version_b_s_c}}
+          if [[ ! -z "${{ inputs.version_b_s_rc }}" ]];then
+            LOG_WARNING "use version_b_s_rc version"
+            SCAN_ONE_BUILD ${{inputs.version_b_s_rc}}
           elif [[ ! -z "${{ env.BIG_VERSION }}" || ! -z "${{ env.SMALL_VERSION }}"   ]];then
             LOG_WARNING "use env version"
             BIG_VERSION=${{env.BIG_VERSION}}
@@ -74,24 +79,83 @@ jobs:
             COMMIT=${{env.COMMIT}}
           else
             LOG_WARNING "use latest version"
-            src_file=$($(ls ${PROJECT_DIR}/Linux) | grep x64)
+            src_file=$($(ls ${PROJECT_ROOT_DIR}/Linux) | grep x64)
             GET_FILE_INFOS ${src_file}
             BIG_VERSION=${src_big_version}
             SMALL_VERSION=${src_small_version}
             COMMIT=${src_commit}
           fi
-          version_b_s_c=${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_}${COMMIT}
-          SCAN_ONE_BUILD ${version_b_s_c}
-
+          version_b_s_rc=${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_r}${COMMIT}
+          LOG_WARNING version_b_s_rc: ${version_b_s_rc}
+          SCAN_ONE_BUILD ${version_b_s_rc}
           echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
           echo "SMALL_VERSION=${SMALL_VERSION}" >> $GITHUB_OUTPUT
           echo "COMMIT=${COMMIT}" >> $GITHUB_OUTPUT
           echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
 
+  check-push:
+    needs: [init-version]
+    runs-on: ubuntu-latest
+    outputs:
+      last_pulled_date: ${{ steps.tag_last_pulled.outputs.last_pulled_date }}
+      skip_build_push: ${{ steps.tag_last_pulled.outputs.skip_build_push }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: get tag_last_pulled
+        id: get_tag_last_pulled
+        uses: sergeysova/jq-action@v2
+        with:
+          cmd: curl -k -sS https://hub.docker.com/v2/repositories/${{ secrets.REGISTRY_USERNAME }}/n2n_lucktu/tags/${{ needs.init-version.outputs.VERSION_B_S_rC }} | jq '.tag_last_pulled'
+
+      - name: Check tag_last_pulled
+        id: tag_last_pulled
+        run: |
+          LOG_INFO() {
+          echo -e "\033[0;32m[INFO] $* \033[0m"
+          }
+          LOG_WARNING() {
+              echo -e "\033[0;33m[WARNING] $* \033[0m"
+          }
+          LOG_ERROR() {
+              echo -e "\033[0;31m[ERROR] $* \033[0m"
+          }
+          # e.g. "2022-10-30T19:29:49.877019Z"
+          last_pulled_date=${{ steps.get_tag_last_pulled.outputs.value }}
+          echo "last_pulled_date=${last_pulled_date}" >> $GITHUB_OUTPUT
+          LOG_INFO "last_pulled_date - ${last_pulled_date}"
+          if [[ "${{ env.FORCE_PUSH }}" ]]; then
+              LOG_WARNING "强制 编译/推送"
+          elif [[ "${last_pulled_date,,}" != "null" ]]; then
+              echo 'skip_build_push=true' >> $GITHUB_OUTPUT
+              LOG_INFO "跳过 编译/推送"
+              exit 0
+          else
+              LOG_INFO "准备 编译/推送"
+          fi
+
+  build-psuh:
+    needs: [init-version, check-push]
+    if: ${{ needs.check-push.outputs.skip_build_push != 'true' }}
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: n2n_lucktu
+      DOCKER_CONTEXT_PATH: .
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+    steps:
+      - name: Checkout repository on build-psuh
+        uses: actions/checkout@v3
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
-        if: github.event_name != 'pull_request'
+        if: ${{ github.event_name != 'pull_request' }}
         uses: sigstore/cosign-installer@main
         with:
           cosign-release: "v1.13.1"
@@ -103,7 +167,7 @@ jobs:
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
-        if: github.event_name != 'pull_request'
+        if: ${{ github.event_name != 'pull_request' }}
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
@@ -121,19 +185,20 @@ jobs:
             type=raw,value=alpha,enable=${{ github.ref == format('refs/heads/{0}', 'alpha') }}
             type=raw,value=beta,enable=${{ github.ref == format('refs/heads/{0}', 'beta') }}
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
-            type=raw,value=v3,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v3' }}
-            type=raw,value=releases-v3,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v3' }}
-            type=raw,value=v2s,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v2s' && steps.build_version.outputs.SMALL_VERSION == '2.1.0' && steps.build_version.outputs.COMMIT == '124' }}
-            type=raw,value=releases-v2s,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v2s' && steps.build_version.outputs.SMALL_VERSION == '2.1.0' && steps.build_version.outputs.COMMIT == '124' }}
-            type=raw,value=v2,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v2' && steps.build_version.outputs.SMALL_VERSION == '2.7.0' && steps.build_version.outputs.COMMIT == '525' }}
-            type=raw,value=releases-v2,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v2' && steps.build_version.outputs.SMALL_VERSION == '2.7.0' && steps.build_version.outputs.COMMIT == '525' }}
-            type=raw,value=v1,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v1' && steps.build_version.outputs.SMALL_VERSION == '1.3.2' && steps.build_version.outputs.COMMIT == '124' }}
-            type=raw,value=releases-v1,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v1' && steps.build_version.outputs.SMALL_VERSION == '1.3.2' && steps.build_version.outputs.COMMIT == '124' }}
-            type=raw,value=${{ format( '{0}_{1}_r{2}', steps.build_version.outputs.BIG_VERSION, steps.build_version.outputs.SMALL_VERSION, steps.build_version.outputs.COMMIT ) }}, enable=${{ steps.build_version.outputs.BIG_VERSION != '' && steps.build_version.outputs.SMALL_VERSION != '' && steps.build_version.outputs.COMMIT != '' }}
-            type=raw,value=${{ format( 'v.{1}_r{2}',  steps.build_version.outputs.BIG_VERSION, steps.build_version.outputs.SMALL_VERSION, steps.build_version.outputs.COMMIT ) }}, enable=${{ steps.build_version.outputs.SMALL_VERSION != '' && steps.build_version.outputs.COMMIT != '' }}
-            type=raw,value=${{ format( 'v.{1}',  steps.build_version.outputs.BIG_VERSION, steps.build_version.outputs.SMALL_VERSION, steps.build_version.outputs.COMMIT ) }}, enable=${{ steps.build_version.outputs.SMALL_VERSION != '' }}
+            type=raw,value=v3,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v3' }}
+            type=raw,value=releases-v3,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v3' }}
+            type=raw,value=v2s,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2s' && needs.init-version.outputs.SMALL_VERSION == '2.1.0' && needs.init-version.outputs.COMMIT == '124' }}
+            type=raw,value=releases-v2s,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2s' && needs.init-version.outputs.SMALL_VERSION == '2.1.0' && needs.init-version.outputs.COMMIT == '124' }}
+            type=raw,value=v2,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2' && needs.init-version.outputs.SMALL_VERSION == '2.7.0' && needs.init-version.outputs.COMMIT == '525' }}
+            type=raw,value=releases-v2,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2' && needs.init-version.outputs.SMALL_VERSION == '2.7.0' && needs.init-version.outputs.COMMIT == '525' }}
+            type=raw,value=v1,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v1' && needs.init-version.outputs.SMALL_VERSION == '1.3.2' && needs.init-version.outputs.COMMIT == '124' }}
+            type=raw,value=releases-v1,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v1' && needs.init-version.outputs.SMALL_VERSION == '1.3.2' && needs.init-version.outputs.COMMIT == '124' }}
+            type=raw,value=${{ format( '{0}_{1}_r{2}', needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.BIG_VERSION != '' && needs.init-version.outputs.SMALL_VERSION != '' && needs.init-version.outputs.COMMIT != '' }}
+            type=raw,value=${{ format( '{0}_{1}', needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.BIG_VERSION != '' && needs.init-version.outputs.SMALL_VERSION != '' && needs.init-version.outputs.COMMIT == '' }}
+            type=raw,value=${{ format( 'v.{1}_r{2}',  needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.SMALL_VERSION != '' && needs.init-version.outputs.COMMIT != '' }}
+            type=raw,value=${{ format( 'v.{1}',  needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.SMALL_VERSION != '' }}
           labels: |
-            org.opencontainers.image.version=${{ format( '{0}_{1}_r{2}', steps.build_version.outputs.BIG_VERSION, steps.build_version.outputs.SMALL_VERSION, steps.build_version.outputs.COMMIT ) }}
+            org.opencontainers.image.version=${{ format( '{0}_{1}_r{2}', needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}
 
       - name: Build and export to Docker
         uses: docker/build-push-action@v3
@@ -156,16 +221,16 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ${{ env.DOCKER_CONTEXT_PATH }}
-          platforms: ${{ steps.build_version.outputs.BUILD_PLATFORMS }}
+          platforms: ${{ needs.init-version.outputs.BUILD_PLATFORMS }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=inline
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
           build-args: |
-            BIG_VERSION=${{ steps.build_version.outputs.BIG_VERSION }}
-            SMALL_VERSION=${{ steps.build_version.outputs.SMALL_VERSION }}
-            COMMIT=${{ steps.build_version.outputs.COMMIT }}
+            BIG_VERSION=${{ needs.init-version.outputs.BIG_VERSION }}
+            SMALL_VERSION=${{ needs.init-version.outputs.SMALL_VERSION }}
+            COMMIT=${{ needs.init-version.outputs.COMMIT }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker

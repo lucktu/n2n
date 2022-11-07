@@ -7,31 +7,31 @@
 
 SCAN_ONE_BUILD() {
     # 一个版本
-    version_b_s_c=$1
-    if [[ -z "${version_b_s_c}" || ! -z "${BIG_VERSION}" || ! -z "${SMALL_VERSION}" ]]; then
+    version_b_s_rc=$1
+    if [[ -z "${version_b_s_rc}" || ! -z "${BIG_VERSION}" || ! -z "${SMALL_VERSION}" ]]; then
         LOG_WARNING "use env version"
-        version_b_s_c="${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_}${COMMIT}"
+        version_b_s_rc="${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_r}${COMMIT}"
     fi
-    if [[ -z "${version_b_s_c}" ]]; then
-        LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD - version_b_s_c - 为空"
+    if [[ -z "${version_b_s_rc}" ]]; then
+        LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD - version_b_s_rc - 为空"
     fi
 
-    LOG_INFO "version_b_s_c: ${version_b_s_c}"
+    LOG_INFO "version_b_s_rc: ${version_b_s_rc}"
     # e.g. v3
-    build_big_version=${version_b_s_c%%_*}
+    build_big_version=${version_b_s_rc%%_*}
     if [[ -z "${build_big_version}" ]]; then
         LOG_ERROR_WAIT_EXIT "错误: GET_FILE_INFOS: build_big_version - 为空 - ${version_file}"
     fi
     LOG_INFO "build_big_version: ${build_big_version}"
     # e.g. 3.1.0-54
-    build_small_version=${version_b_s_c##*${build_big_version}_}
+    build_small_version=${version_b_s_rc##*${build_big_version}_}
     build_small_version=${build_small_version%%_*}
     if [[ -z "${build_small_version}" ]]; then
         LOG_ERROR_WAIT_EXIT "错误: GET_FILE_INFOS: build_small_version - 为空 - ${version_file}"
     fi
     LOG_INFO "build_small_version: ${build_small_version}"
     # e.g. 1127
-    build_commit=${version_b_s_c##*${build_small_version}}
+    build_commit=${version_b_s_rc##*${build_small_version}}
     build_commit=${build_commit#_}
     if [[ -z "${build_commit}" ]]; then
         LOG_ERROR "请注意: GET_FILE_INFOS: build_commit - 为空 - ${version_file}"
@@ -43,7 +43,7 @@ SCAN_ONE_BUILD() {
         rm -r $BUILD_SRC
     fi
     mkdir -p $BUILD_SRC
-    for src_file in $(find ${PROJECT_DIR}/Linux -name *${build_big_version}*${build_small_version}*${build_commit}* | grep -v Professional); do
+    for src_file in $(find ${PROJECT_ROOT_DIR}/Linux -name *${build_big_version}*${build_small_version}*${build_commit}* | grep -v Professional); do
         GET_FILE_INFOS ${src_file}
         if [[ ${build_big_version} != ${src_big_version} || ${build_small_version} != ${src_small_version} || ${build_commit} != ${src_commit} ]]; then
             LOG_WARNING "版本未匹配: ${version_filename} - ${src_file}"
@@ -74,7 +74,7 @@ SCAN_ONE_BUILD() {
     # docker compose -f docker-compose.build.evn.yaml build --progress plain
 
     # docker compose -f docker-compose.build.evn.yaml push
-    # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${version_b_s_c}_edge_help.txt
-    # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT supernode -h >$BUILD_DESC/${version_b_s_c}_supernode_help.txt
+    # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${version_b_s_rc}_edge_help.txt
+    # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT supernode -h >$BUILD_DESC/${version_b_s_rc}_supernode_help.txt
 
 }

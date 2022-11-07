@@ -17,8 +17,8 @@ for version_filename in $(ls ${RESULT_DIR}); do
     fi
     LOG_INFO "version_file: ${version_file}"
     # e.g. v3_3.1.0-54_1127
-    version_b_s_c=${version_file##*/}
-    version_b_s_c=${version_b_s_c%%.txt}
-    LOG_INFO "version_b_s_c: ${version_b_s_c}"
-    SCAN_ONE_BUILD ${version_b_s_c}
+    version_b_s_rc=${version_file##*/}
+    version_b_s_rc=${version_b_s_rc%%.txt}
+    LOG_INFO "version_b_s_rc: ${version_b_s_rc}"
+    SCAN_ONE_BUILD ${version_b_s_rc}
 done
