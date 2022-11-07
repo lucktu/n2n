@@ -24,15 +24,17 @@ RUN apt-get -qq -y install \
 
 ARG KERNEL=linux
 # 用于自定义机型编译,未自动识别时请赋值
-# ARG MACHINE
+ARG MACHINE
 ARG BIG_VERSION=v3
 ARG SMALL_VERSION=3.1.1-16
 ARG COMMIT=1200
+
 # 安装RAR
 WORKDIR /tmp/scripts/
 COPY scripts/{init_logger.sh,install_rar.sh} /tmp/scripts/
 RUN chmod +x /tmp/scripts/*.sh
 RUN /tmp/scripts/install_rar.sh
+
 # 选择对应版本文件
 WORKDIR /tmp/n2n_lucktu/
 RUN /tmp/n2n_lucktu/scan_one_build.sh
