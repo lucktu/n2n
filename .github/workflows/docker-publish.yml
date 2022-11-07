@@ -82,7 +82,7 @@ jobs:
             COMMIT=${{env.COMMIT}}
           fi
           version_b_s_c=${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_}${COMMIT}
-          GET_FILE_INFOS ${version_b_s_c}
+          SCAN_ONE_BUILD ${version_b_s_c}
           echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
           echo "SMALL_VERSION=${SMALL_VERSION}" >> $GITHUB_OUTPUT
           echo "COMMIT=${COMMIT}" >> $GITHUB_OUTPUT
