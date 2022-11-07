@@ -1,4 +1,4 @@
-name: Docker
+name: Docker-build-and-push
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -152,7 +152,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v3
         with:
-          context: ${{ env.APP_NAME }}
+          context: docker
           platforms: ${{ needs.check_version.outputs.platforms }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
