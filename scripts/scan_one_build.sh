@@ -44,6 +44,7 @@ SCAN_ONE_BUILD() {
         rm -r $BUILD_SRC
     fi
     mkdir -p $BUILD_SRC
+    need_files=''
     for src_file in $(find ${PROJECT_ROOT_DIR}/Linux -name *${build_big_version}*${build_small_version}*${build_commit}* | grep -v Professional); do
         GET_FILE_INFOS ${src_file}
         if [[ ${build_big_version} != ${src_big_version} || ${build_small_version} != ${src_small_version} || ${build_commit} != ${src_commit} ]]; then
@@ -54,12 +55,14 @@ SCAN_ONE_BUILD() {
             LOG_WARNING 不支持的CPU架构类型 - ${src_machine}
             continue
         fi
-        cp $src_file $BUILD_SRC/
+        # cp $src_file $BUILD_SRC/
+        need_files="$src_file $need_files"
         SEL_PLATFORM ${src_machine}
         if [[ ! ${build_platforms} =~ ${platform} ]]; then
             build_platforms="${build_platforms}, ${platform}"
         fi
     done
+    cp $need_files $BUILD_SRC/
     LOG_INFO $BUILD_SRC: $(ls $BUILD_SRC)
     export REGISTRY='registry.aour.zctmdc.cn'
     export BUILD_PLATFORMS="${build_platforms:1}"
