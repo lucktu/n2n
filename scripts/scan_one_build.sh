@@ -80,10 +80,10 @@ SCAN_ONE_BUILD() {
     # docker compose -f docker-compose.build.evn.yaml push
     # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${version_b_s_rc}_edge_help.txt
     # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT supernode -h >$BUILD_DESC/${version_b_s_rc}_supernode_help.txt
-    if [[ ${MANUAL_BUILD} ]]; then
-        LOG_RUN docker buildx build --platform linux/arm64,linux/amd64 -t ${REGISTRY}/zctmdc/n2n-lucktu:${version_b_s_rc} --build-arg VERSION_B_S_rC=${version_b_s_rc} ../. --push
-        LOG_RUN docker buildx build --platform linux/arm64,linux/amd64 -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${SMALL_VERSION}${COMMIT:+_r}${COMMIT} --build-arg VERSION_B_S_rC=${version_b_s_rc} ../. --push
-        LOG_RUN docker buildx build --platform linux/arm64,linux/amd64 -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${SMALL_VERSION} --build-arg VERSION_B_S_rC=${version_b_s_rc} ../. --push
+    if [[ ${MANUAL_BUILD} && ${BUILD_PLATFORMS} ]]; then
+        LOG_RUN docker buildx build --platform ${BUILD_PLATFORMS} -t ${REGISTRY}/zctmdc/n2n-lucktu:${version_b_s_rc} --build-arg VERSION_B_S_rC=${version_b_s_rc} ../. --push
+        LOG_RUN docker buildx build --platform ${BUILD_PLATFORMS} -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${SMALL_VERSION}${COMMIT:+_r}${COMMIT} --build-arg VERSION_B_S_rC=${version_b_s_rc} ../. --push
+        LOG_RUN docker buildx build --platform ${BUILD_PLATFORMS} -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${SMALL_VERSION} --build-arg VERSION_B_S_rC=${version_b_s_rc} ../. --push
     fi
 
 }
