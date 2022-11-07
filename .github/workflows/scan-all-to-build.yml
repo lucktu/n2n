@@ -70,10 +70,8 @@ jobs:
   build-big-version:
     if: ${{ inputs.build-big-version }}
     strategy:
-      max-parallel: 2
       matrix:
-        version_b_s_rc: ${{ needs.scan-all.outputs.all.version_b_s_rcs }}
-
+        version_b_s_rc: [v1, v2, v2s]
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
