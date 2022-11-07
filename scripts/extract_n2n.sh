@@ -5,7 +5,7 @@
 . init_kernel_name_and_machine_name.sh
 
 down_dir="/tmp/down"
-for src_file in $(find ./result/build_src/ -name *${fn_machine}*); do
+for src_file in $(find ${down_dir} -name *${fn_machine}*); do
     LOG_INFO "Try: 解压 - ${src_file}"
     EXTRACT_ALL "${src_file}"
 done
