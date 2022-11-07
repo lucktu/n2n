@@ -99,21 +99,21 @@ jobs:
     needs: [init-version]
     runs-on: ubuntu-latest
     outputs:
-      last_pulled_date: ${{ steps.tag_last_pulled.outputs.last_pulled_date }}
-      skip_build_push: ${{ steps.tag_last_pulled.outputs.skip_build_push }}
+      last_pulled_date: ${{ steps.tag_last_pushed.outputs.last_pulled_date }}
+      skip_build_push: ${{ steps.tag_last_pushed.outputs.skip_build_push }}
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: get tag_last_pulled
-        id: get_tag_last_pulled
+      - name: get tag_last_pushed
+        id: get_tag_last_pushed
         uses: sergeysova/jq-action@v2
         with:
-          cmd: curl -k -sS https://hub.docker.com/v2/repositories/${{ secrets.REGISTRY_USERNAME }}/n2n_lucktu/tags/${{ needs.init-version.outputs.VERSION_B_S_rC }} | jq '.tag_last_pulled'
+          cmd: curl -k -sS https://hub.docker.com/v2/repositories/${{ secrets.REGISTRY_USERNAME }}/n2n_lucktu/tags/${{ needs.init-version.outputs.VERSION_B_S_rC }} | jq '.tag_last_pushed'
 
-      - name: Check tag_last_pulled
-        id: tag_last_pulled
+      - name: Check tag_last_pushed
+        id: tag_last_pushed
         run: |
           LOG_INFO() {
           echo -e "\033[0;32m[INFO] $* \033[0m"
@@ -125,7 +125,7 @@ jobs:
               echo -e "\033[0;31m[ERROR] $* \033[0m"
           }
           # e.g. "2022-10-30T19:29:49.877019Z"
-          last_pulled_date=${{ steps.get_tag_last_pulled.outputs.value }}
+          last_pulled_date=${{ steps.get_tag_last_pushed.outputs.value }}
           echo "last_pulled_date=${last_pulled_date}" >> $GITHUB_OUTPUT
           LOG_INFO "last_pulled_date - ${last_pulled_date}"
           if [[ "${{ env.FORCE_PUSH }}" ]]; then
