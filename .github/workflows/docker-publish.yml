@@ -158,6 +158,7 @@ jobs:
           # e.g. "2022-10-30T19:29:49.877019Z"
           last_pulled_date=${{ steps.get_tag_last_pushed.outputs.value }}
           echo "last_pulled_date=${last_pulled_date}" >> $GITHUB_OUTPUT
+          LOG_INFO "check tag - ${{ needs.init-version.outputs.VERSION_B_S_rC }}"
           LOG_INFO "last_pulled_date - ${last_pulled_date}"
           if [[ true == "${{ env.FORCE_PUSH }}" ]]; then
               LOG_WARNING "强制 编译/推送"
@@ -249,8 +250,12 @@ jobs:
       - name: Test
         run: |
           set -e
+          echo 'Test start'
           docker run --rm ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test edge -h
+          echo 'Test pass - edge'
           docker run --rm ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test supernode -h
+          echo 'Test pass - supernode'
+          echo 'Test end'
           exit 0
 
       # Build and push Docker image with Buildx (don't push on PR)

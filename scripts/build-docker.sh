@@ -22,6 +22,5 @@ if [[ "${version_b_s_rc}" == "v2s" || "${version_b_s_rc}" == "v2" || "${version_
     return 0
 fi
 
-version_b_s_rc="${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_r}${COMMIT}"
 
 SCAN_ONE_BUILD ${version_b_s_rc}
