@@ -62,9 +62,9 @@ jobs:
       - name: Check build_version
         id: build_version
         run: |
+          PROJECT_DIR=$(pwd)
           cd ./scripts
           chmod +x *.sh
-          PROJECT_DIR=$(cd $(pwd)/..;pwd)
           . init_logger.sh
           . init_path.sh
           . get_file_infos.sh
