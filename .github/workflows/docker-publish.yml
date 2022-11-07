@@ -32,7 +32,7 @@ env:
   # Use docker.io for Docker Hub if empty
   # REGISTRY: ghcr.io
   REGISTRY: docker.io
-  
+
   BIG_VERSION: v3
   SMALL_VERSION: 3.1.1-16
   COMMIT: 1200
@@ -63,7 +63,7 @@ jobs:
         run: |
           cd ./docker/
           chmod +x *.sh
-          PROJECT_DIR=$(pwd)
+          PROJECT_DIR=$(cd $(pwd)/..;pwd)
           . init_logger.sh
           . init_path.sh
           . scan_one_build.sh
