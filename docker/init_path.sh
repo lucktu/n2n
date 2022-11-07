@@ -1,11 +1,12 @@
 #!/bin/bash
 
 . init_logger.sh
-
-PROJECT_DIR=$(
-    cd $(dirname $0)/..
-    pwd
-)
+if [[ -z ${PROJECT_DIR} ]]; then
+    PROJECT_DIR=$(
+        cd $(dirname $0)/..
+        pwd
+    )
+fi
 if [[ ${PROJECT_DIR##*/} != 'n2n-lucktu' ]]; then
     LOG_ERROR_WAIT_EXIT "错误: init_path - PROJECT_DIR - ${PROJECT_DIR}"
 fi
@@ -16,7 +17,6 @@ WORK_DIR=$(
 )
 
 RESULT_DIR=${WORK_DIR}/result
-
 
 BUILD_SRC=${RESULT_DIR}/build_src
 BUILD_DESC=${RESULT_DIR}/build_desc

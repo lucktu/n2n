@@ -63,7 +63,7 @@ jobs:
         run: |
           cd ./docker/
           chmod +x *.sh
-
+          PROJECT_DIR=$(pwd)
           . init_logger.sh
           . init_path.sh
           . scan_one_build.sh
