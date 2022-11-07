@@ -2,9 +2,6 @@
 
 . init_logger.sh
 . init_path.sh
-. get_file_infos.sh
-# . scan_all_save.sh
-. sel_platform.sh
 . scan_one_build.sh
 
 for version_filename in $(ls ${RESULT_DIR}); do
