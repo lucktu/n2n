@@ -57,6 +57,7 @@ jobs:
       VERSION_B_S_rC: ${{ steps.init-build-version.outputs.VERSION_B_S_rC }}
     steps:
       - name: Checkout repository
+        if: ${{ inputs.version_b_s_rc == '' && (env.BIG_VERSION == '' || env.SMALL_VERSION == '') }}
         uses: actions/checkout@v3
       - name: Check init-build-version
         id: init-build-version
@@ -70,10 +71,10 @@ jobs:
           . get_file_infos.sh
           . scan_one_build.sh
 
-          if [[ ! -z "${{ inputs.version_b_s_rc }}" ]];then
+          if [[ "${{ inputs.version_b_s_rc == '' }}" ]];then
             LOG_WARNING "use version_b_s_rc version"
             SCAN_ONE_BUILD ${{inputs.version_b_s_rc}}
-          elif [[ ! -z "${{ env.BIG_VERSION }}" || ! -z "${{ env.SMALL_VERSION }}"   ]];then
+          elif [[ "${{ env.BIG_VERSION == '' }}" || "${{ env.SMALL_VERSION == '' }}"   ]];then
             LOG_WARNING "use env version"
             BIG_VERSION=${{env.BIG_VERSION}}
             SMALL_VERSION=${{env.SMALL_VERSION}}
