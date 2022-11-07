@@ -13,7 +13,13 @@ on:
         required: false
         default: "v2"
         type: string
-
+    secrets:
+          REGISTRY_USERNAME:
+            description: 'USERNAME for REGISTRY'
+            required: true
+          REGISTRY_TOKEN:
+            description: 'TOKEN for REGISTRY'
+            required: true
   schedule:
     - cron: "28 17 * * *"
   push:
