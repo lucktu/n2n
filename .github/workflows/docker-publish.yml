@@ -62,6 +62,7 @@ jobs:
         id: init-build-version
         run: |
           PROJECT_ROOT_DIR=$(pwd)
+          echo "init-version - PROJECT_ROOT_DIR: ${PROJECT_ROOT_DIR}"
           cd ./scripts
           chmod +x *.sh
           . init_logger.sh
