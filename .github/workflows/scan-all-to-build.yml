@@ -13,7 +13,7 @@ jobs:
       contents: read
       packages: write
     outputs:
-      version_b_s_rcs: ${{ steps.build_version.outputs.version_b_s_rcs }}
+      version_b_s_rcs: ${{ steps.build_version.outputs.all }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -47,15 +47,15 @@ jobs:
             LOG_INFO "version_b_s_rc: ${version_b_s_rc}"
             version_b_s_rcs="${version_b_s_rcs},  \"${version_b_s_rc}\""
           done
-          version_b_s_rcs="[${version_b_s_rcs:1}]"
+          version_b_s_rcs="[${version_b_s_rcs:1} ]"
           LOG_INFO  version_b_s_rcs: ${version_b_s_rcs}
-          echo "version_b_s_rcs=${version_b_s_rcs}" >> $GITHUB_OUTPUT
+          echo "all={\"version_b_s_rcs\":${version_b_s_rcs}" >> $GITHUB_OUTPUT
   build-all:
     needs: [scan-all]
     strategy:
       max-parallel: 2
       matrix:
-        version_b_s_rc: ${{ needs.scan-all.outputs.version_b_s_rcs }}
+        version_b_s_rc: ${{ needs.scan-all.outputs.all.version_b_s_rcs }}
 
     uses: ./.github/workflows/docker-publish.yml
     with:
