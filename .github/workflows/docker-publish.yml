@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       APP_NAME: n2n_lucktu
-      DOCKER_CONTEXT_PATH: docker
+      DOCKER_CONTEXT_PATH: .
     permissions:
       contents: read
       packages: write
@@ -62,7 +62,6 @@ jobs:
       - name: Check build_version
         id: build_version
         run: |
-          cd ./docker/
           chmod +x *.sh
           PROJECT_DIR=$(cd $(pwd)/..;pwd)
           . init_logger.sh

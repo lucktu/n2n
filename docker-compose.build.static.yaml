@@ -1,0 +1,70 @@
+version: "3"
+services:
+
+  n2n_releases-v2s:
+  
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BIG_VERSION: v2s
+        SMALL_VERSION: 2.1.0
+        COMMIT: 124
+      labels:
+        org.opencontainers.image.version: v2s_2.1.0_r124
+    image: ${REGISTRY}/zctmdc/n2n_lucktu:releases-v2s
+  n2n_v2s:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BIG_VERSION: v2s
+        SMALL_VERSION: 2.1.0
+        COMMIT: 124
+      labels:
+        org.opencontainers.image.version: v2s_2.1.0_r124
+    image: ${REGISTRY}/zctmdc/n2n_lucktu:v2s
+  n2n_releases-v2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BIG_VERSION: v2
+        SMALL_VERSION: 2.7.0
+        COMMIT: 525
+      labels:
+        org.opencontainers.image.version: v2_2.7.0_r525
+    image: ${REGISTRY}/zctmdc/n2n_lucktu:releases-v2
+  n2n_v2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BIG_VERSION: v2
+        SMALL_VERSION: 2.7.0
+        COMMIT: 525
+      labels:
+        org.opencontainers.image.version: v2_2.7.0_r525
+    image: ${REGISTRY}/zctmdc/n2n_lucktu:v2
+  n2n_releases-v1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BIG_VERSION: v1
+        SMALL_VERSION: 1.3.2
+        COMMIT: 124
+      labels:
+        org.opencontainers.image.version: v1_1.3.2_r525
+    image: ${REGISTRY}/zctmdc/n2n_lucktu:releases-v1
+  n2n_v1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BIG_VERSION: v1
+        SMALL_VERSION: 1.3.2
+        COMMIT: 124
+      labels:
+        org.opencontainers.image.version: v1_1.3.2_r525
+    image: ${REGISTRY}/zctmdc/n2n_lucktu:v1
