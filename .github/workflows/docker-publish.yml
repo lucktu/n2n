@@ -101,6 +101,7 @@ jobs:
           else
             LOG_WARNING "use latest version"
             src_file=$($(ls ${PROJECT_ROOT_DIR}/Linux) | grep x64)
+            LOG_INFO "src_file: ${src_file}"
             GET_FILE_INFOS ${src_file}
             BIG_VERSION=${src_big_version}
             SMALL_VERSION=${src_small_version}

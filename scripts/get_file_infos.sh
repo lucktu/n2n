@@ -12,6 +12,7 @@ GET_FILE_INFOS() {
         LOG_WARNING "跳过: 是文件夹 - ${s_file}"
         return 0
     fi
+
     filename_suffix=${s_file##*.}
     if [[ -z ${filename_suffix} ]]; then
         LOG_ERROR_WAIT_EXIT "错误: 获取后缀失败 - ${s_file}"
@@ -28,6 +29,8 @@ GET_FILE_INFOS() {
     src_small_version=''
     src_commit=''
 
+    LOG_INFO "s_file: ${s_file}"
+    
     # e.g. n2n_v3_linux_x64_v3.1.1-16_r1200_all_by_heiye.rar
     s_file=${s_file##*/}
     LOG_INFO "s_file: ${s_file}"
