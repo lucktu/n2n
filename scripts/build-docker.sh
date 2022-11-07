@@ -19,8 +19,7 @@ if [[ "${version_b_s_rc}" == "v2s" || "${version_b_s_rc}" == "v2" || "${version_
     LOG_WARNING "BUILD BIG VERSION"
     . init_path.sh
     cp ${PROJECT_ROOT_DIR}/Linux/n2n_${BIG_VERSION}/* $RESULT_DIR
-    return 0
+    exit 0
 fi
-
 
 SCAN_ONE_BUILD ${version_b_s_rc}
