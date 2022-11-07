@@ -5,7 +5,9 @@ LOG_INFO() {
 
 LOG_ERROR() {
   echo -e $(caller) "\033[0;31m[ERROR] $* \033[0m"
-  sleep 3
+  if [[ "${SLOW_DEBUG}" ]]; then
+    sleep 3
+  fi
 }
 
 LOG_ERROR_WAIT_EXIT() {
@@ -29,7 +31,9 @@ LOG_ERROR_WAIT_EXIT() {
 
 LOG_WARNING() {
   echo -e $(caller) "\033[0;33m[WARNING] $* \033[0m"
-  sleep 1
+  if [[ "${SLOW_DEBUG}" ]]; then
+    sleep 1
+  fi
 }
 
 LOG_RUN() {

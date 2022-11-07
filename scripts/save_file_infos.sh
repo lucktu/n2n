@@ -17,7 +17,7 @@ SAVE_FILE_INFOS() {
     echo -e ${result_str} >>${RESULT_DIR}/all.txt
     vmv_dir=${RESULT_DIR}/${src_big_version}/${src_small_version}
     mkdir -p ${vmv_dir}
-    l_result_file=${RESULT_DIR}/${src_big_version}/${src_small_version}${src_commit:+/}${src_commit}.txt
+    l_result_file=${RESULT_DIR}/${src_big_version}/${src_small_version}${src_commit:+/r}${src_commit}.txt
     echo -e ${result_str} >>${l_result_file}
 }
 
