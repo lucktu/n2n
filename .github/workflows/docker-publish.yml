@@ -70,11 +70,11 @@ jobs:
           . get_file_infos.sh
           . scan_one_build.sh
 
-          if [[ ! -z ${{ inputs.BIG_VERSION }} || ! -z ${{ inputs.SMALL_VERSION }}   ]];then
+          if [[ ! -z "${{ inputs.BIG_VERSION }}" || ! -z "${{ inputs.SMALL_VERSION }}"   ]];then
             BIG_VERSION=${{inputs.BIG_VERSION}}
             SMALL_VERSION=${{inputs.SMALL_VERSION}}
             COMMIT=${{inputs.COMMIT}}
-          elif [[ ! -z ${{ env.BIG_VERSION }} || ! -z ${{ env.SMALL_VERSION }}   ]];then
+          elif [[ ! -z "${{ env.BIG_VERSION }}" || ! -z "${{ env.SMALL_VERSION }}"   ]];then
             BIG_VERSION=${{env.BIG_VERSION}}
             SMALL_VERSION=${{env.SMALL_VERSION}}
             COMMIT=${{env.COMMIT}}
