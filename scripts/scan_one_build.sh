@@ -33,6 +33,7 @@ SCAN_ONE_BUILD() {
     # e.g. 1127
     build_commit=${version_b_s_rc##*${build_small_version}}
     build_commit=${build_commit#_}
+    build_commit=${build_commit#r}
     if [[ -z "${build_commit}" ]]; then
         LOG_ERROR "请注意: GET_FILE_INFOS: build_commit - 为空 - ${version_file}"
         sleep 3

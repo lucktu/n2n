@@ -36,7 +36,7 @@ GET_FILE_INFOS() {
     filename_no_suffix=${filename_no_suffix%%.zip}
     filename_no_suffix=${filename_no_suffix%%.gz}
     filename_no_suffix=${filename_no_suffix%%.tar}
-
+    LOG_INFO "filename_no_suffix: ${filename_no_suffix}"
     # e.g. arm64 x64
     src_machine=${filename_no_suffix##*_linux_}
     src_machine=${src_machine%%_*}
