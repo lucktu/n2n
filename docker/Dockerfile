@@ -35,7 +35,10 @@ RUN chmod +x /tmp/scripts/*.sh
 
 RUN /tmp/scripts/install_rar.sh
 
-ADD .. /tmp/n2n_lucktu
+RUN apt-get install tree
+COPY .. /tmp/n2n_lucktu
+RUN tree /tmp
+
 WORKDIR /tmp/n2n_lucktu/docker
 RUN /tmp/n2n_lucktu/docker/scan_one_build.sh
 WORKDIR /tmp/down
