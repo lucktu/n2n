@@ -40,7 +40,8 @@ WORKDIR /tmp/n2n-lucktu/scripts/
 COPY . /tmp/n2n-lucktu/
 RUN chmod +x /tmp/n2n-lucktu/scripts/*.sh
 RUN /tmp/n2n-lucktu/scripts/build-docker.sh
-RUN cp /tmp/n2n-lucktu/result/build_src/* /tmp/down/
+
+RUN mkfir -p /tmp/down/ && cp /tmp/n2n-lucktu/result/build_src/* /tmp/down/
 
 # 解压，选择最大的edge文件
 RUN /tmp/n2n-lucktu/scripts/extract_n2n.sh

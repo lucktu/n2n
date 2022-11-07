@@ -64,7 +64,7 @@ SCAN_ONE_BUILD() {
     export BUILD_PLATFORMS="${build_platforms:1}"
     export BIG_VERSION=${build_big_version}
     export SMALL_VERSION=${build_small_version}
-    export COMMIT=${build_big_version}
+    export COMMIT=${build_commit}
 
     LOG_INFO REGISTRY: ${REGISTRY}
     LOG_INFO BUILD_PLATFORMS: ${BUILD_PLATFORMS}
