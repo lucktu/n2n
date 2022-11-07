@@ -219,8 +219,9 @@ jobs:
             type=raw,value=${{ format( '{0}_{1}', needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.BIG_VERSION != '' && needs.init-version.outputs.SMALL_VERSION != '' && needs.init-version.outputs.COMMIT == '' }}
             type=raw,value=${{ format( 'v.{1}_r{2}',  needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.SMALL_VERSION != '' && needs.init-version.outputs.COMMIT != '' }}
             type=raw,value=${{ format( 'v.{1}',  needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.SMALL_VERSION != '' }}
+            type=raw,value=${{ needs.init-version.outputs.VERSION_B_S_rC }}
           labels: |
-            org.opencontainers.image.version=${{ format( '{0}_{1}_r{2}', needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}
+            org.opencontainers.image.version=${{ needs.init-version.outputs.VERSION_B_S_rC }}
 
       - name: Build and export to Docker
         uses: docker/build-push-action@v3
