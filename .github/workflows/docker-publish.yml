@@ -68,6 +68,7 @@ jobs:
       COMMIT: ${{ steps.init-build-version.outputs.COMMIT }}
       BUILD_PLATFORMS: ${{ steps.init-build-version.outputs.BUILD_PLATFORMS }}
       VERSION_B_S_rC: ${{ steps.init-build-version.outputs.VERSION_B_S_rC }}
+      LATEST_VERSION: ${{ steps.init-build-version.outputs.LATEST_VERSION }}
     steps:
       - name: Checkout repository
         # depends on this library
@@ -79,9 +80,12 @@ jobs:
           if [[ "true" == "${{ ('v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc) || (('v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION) && env.SMALL_VERSION == '') }}" ]];then
             if [[ "true" == "${{ 'v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc }}" ]];then
               BIG_VERSION=${{ inputs.version_b_s_rc }}
+              echo USE inputs.version_b_s_rc
             elif [[ "true" == "${{ 'v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION }}" ]];then
+              echo USE env.BIG_VERSION
               BIG_VERSION=${{ env.BIG_VERSION }}
             fi
+            echo BIG_VERSION: ${BIG_VERSION}
             echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
             echo "VERSION_B_S_rC=${BIG_VERSION}" >> $GITHUB_OUTPUT
             exit 0
@@ -111,6 +115,7 @@ jobs:
             BIG_VERSION=${src_big_version}
             SMALL_VERSION=${src_small_version}
             COMMIT=${src_commit}
+            echo "LATEST_VERSION=true" >> $GITHUB_OUTPUT
           fi
           version_b_s_rc=${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_r}${COMMIT}
           LOG_WARNING version_b_s_rc: ${version_b_s_rc}
@@ -154,7 +159,7 @@ jobs:
           last_pulled_date=${{ steps.get_tag_last_pushed.outputs.value }}
           echo "last_pulled_date=${last_pulled_date}" >> $GITHUB_OUTPUT
           LOG_INFO "last_pulled_date - ${last_pulled_date}"
-          if [[ "${{ env.FORCE_PUSH }}" ]]; then
+          if [[ true == "${{ env.FORCE_PUSH }}" ]]; then
               LOG_WARNING "强制 编译/推送"
           elif [[ "${last_pulled_date,,}" != "null" ]]; then
               echo 'skip_build_push=true' >> $GITHUB_OUTPUT
@@ -210,9 +215,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}
           tags: |
-            type=raw,value=alpha,enable=${{ github.ref == format('refs/heads/{0}', 'alpha') }}
-            type=raw,value=beta,enable=${{ github.ref == format('refs/heads/{0}', 'beta') }}
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
+            type=raw,value=latest,${{ needs.init-version.outputs.LATEST_VERSION }}
             type=raw,value=v3,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v3' }}
             type=raw,value=releases-v3,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v3' }}
             type=raw,value=v2s,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2s' && needs.init-version.outputs.SMALL_VERSION == '' && needs.init-version.outputs.COMMIT == '' }}
