@@ -36,7 +36,7 @@ RUN chmod +x /tmp/scripts/*.sh
 RUN /tmp/scripts/install_rar.sh
 
 RUN apt-get install tree
-COPY .. /tmp/n2n_lucktu
+COPY ../. /tmp/n2n_lucktu
 RUN tree /tmp
 
 WORKDIR /tmp/n2n_lucktu/docker
