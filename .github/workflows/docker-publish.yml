@@ -240,7 +240,12 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache
           cache-to: type=inline
-
+          build-args: |
+            VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            BIG_VERSION=${{ needs.init-version.outputs.BIG_VERSION }}
+            SMALL_VERSION=${{ needs.init-version.outputs.SMALL_VERSION }}
+            COMMIT=${{ needs.init-version.outputs.COMMIT }}
+            
       - name: Test
         run: |
           docker run --rm ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test edge -h
@@ -261,6 +266,9 @@ jobs:
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
           build-args: |
             VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            BIG_VERSION=${{ needs.init-version.outputs.BIG_VERSION }}
+            SMALL_VERSION=${{ needs.init-version.outputs.SMALL_VERSION }}
+            COMMIT=${{ needs.init-version.outputs.COMMIT }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
