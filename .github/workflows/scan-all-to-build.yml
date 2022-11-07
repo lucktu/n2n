@@ -21,7 +21,7 @@ jobs:
         id: build_version
         run: |
           PROJECT_ROOT_DIR=$(pwd)
-          LOG_INFO $(ls ${PROJECT_ROOT_DIR})
+          ls ${PROJECT_ROOT_DIR}
           cd ./scripts
           chmod +x *.sh
           . init_logger.sh
