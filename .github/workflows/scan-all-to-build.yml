@@ -18,7 +18,7 @@ jobs:
       contents: read
       packages: write
     outputs:
-      version_b_s_rcs: ${{ steps.build_version.outputs.all }}
+      version_b_s_rcs: ${{ steps.build_version.outputs.version_b_s_rcs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
