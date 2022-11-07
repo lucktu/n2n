@@ -40,13 +40,13 @@ env:
   # REGISTRY: ghcr.io
   REGISTRY: docker.io
 
-  # BIG_VERSION: v3
-  # SMALL_VERSION: 3.1.1-16
-  # COMMIT: 1200
+  BIG_VERSION: v3
+  SMALL_VERSION: 3.1.1-16
+  COMMIT: 1200
 
-  BIG_VERSION: v2
-  SMALL_VERSION: 2.7.0
-  COMMIT: 528
+  # BIG_VERSION: v2
+  # SMALL_VERSION: 2.7.0
+  # COMMIT: 528
 
   # github.repository as <account>/<repo>
 
@@ -77,12 +77,21 @@ jobs:
       - name: Check init-build-version
         id: init-build-version
         run: |
+          LOG_INFO() {
+              echo -e "\033[0;32m[INFO] $* \033[0m"
+          }
+          LOG_WARNING() {
+              echo -e "\033[0;33m[WARNING] $* \033[0m"
+          }
+          LOG_ERROR() {
+              echo -e "\033[0;31m[ERROR] $* \033[0m"
+          }
           if [[ "true" == "${{ ('v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc) || (('v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION) && env.SMALL_VERSION == '') }}" ]];then
             if [[ "true" == "${{ 'v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc }}" ]];then
               BIG_VERSION=${{ inputs.version_b_s_rc }}
-              echo USE inputs.version_b_s_rc
+              LOG_WARNING USE inputs.version_b_s_rc
             elif [[ "true" == "${{ 'v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION }}" ]];then
-              echo USE env.BIG_VERSION
+              LOG_WARNING USE env.BIG_VERSION
               BIG_VERSION=${{ env.BIG_VERSION }}
             fi
             echo BIG_VERSION: ${BIG_VERSION}
@@ -249,14 +258,23 @@ jobs:
 
       - name: Test
         run: |
+          LOG_INFO() {
+              echo -e "\033[0;32m[INFO] $* \033[0m"
+          }
+          LOG_WARNING() {
+              echo -e "\033[0;33m[WARNING] $* \033[0m"
+          }
+          LOG_ERROR() {
+              echo -e "\033[0;31m[ERROR] $* \033[0m"
+          }
           set -e
-          echo 'Test start'
+          LOG_WARNING 'Test start'
           docker run --rm ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test edge -h
-          echo 'Test pass - edge'
+          LOG_WARNING 'Test pass - edge'
           # check will not pass
           # docker run --rm ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test supernode -h
-          # echo 'Test pass - supernode'
-          echo 'Test end'
+          # LOG_WARNING 'Test pass - supernode'
+          LOG_WARNING 'Test end'
           exit 0
 
       # Build and push Docker image with Buildx (don't push on PR)
