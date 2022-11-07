@@ -59,6 +59,9 @@ jobs:
 
   build-all:
     needs: [scan-all]
+    permissions:
+      contents: read
+      packages: write
     strategy:
       max-parallel: 2
       matrix:
@@ -72,6 +75,9 @@ jobs:
       REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
 
   build-big-version:
+    permissions:
+      contents: read
+      packages: write
     if: ${{ inputs.build-big-version }}
     strategy:
       matrix:
