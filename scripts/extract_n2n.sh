@@ -1,8 +1,8 @@
 #!/bin/bash
 
 . init_logger.sh
-
 . init_kernel_name_and_machine_name.sh
+. init_extract.sh
 
 down_dir="/tmp/down"
 for src_file in $(find ${down_dir} -name *${fn_machine}*); do
