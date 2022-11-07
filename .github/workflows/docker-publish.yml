@@ -44,9 +44,9 @@ env:
   # SMALL_VERSION: 3.1.1-16
   # COMMIT: 1200
 
-  # BIG_VERSION: v2
-  # SMALL_VERSION: 2.7.0
-  # COMMIT: 528
+  BIG_VERSION: v2
+  SMALL_VERSION: 2.7.0
+  COMMIT: 528
 
   # github.repository as <account>/<repo>
 
