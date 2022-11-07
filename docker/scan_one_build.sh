@@ -1,4 +1,8 @@
 #!/bin/bash
+
+. init_logger.sh
+. sel_platform.sh
+
 SCAN_ONE_BUILD() {
     version_b_s_c=$1
     if [[ -z "${version_b_s_c}" ]]; then
