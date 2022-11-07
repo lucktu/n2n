@@ -78,9 +78,6 @@ jobs:
               BIG_VERSION=${{ env.BIG_VERSION }}
             fi
             echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
-            echo "SMALL_VERSION=''" >> $GITHUB_OUTPUT
-            echo "COMMIT=''" >> $GITHUB_OUTPUT
-            echo "BUILD_PLATFORMS=''" >> $GITHUB_OUTPUT
             echo "VERSION_B_S_rC=${BIG_VERSION}" >> $GITHUB_OUTPUT
             exit 0
           fi
