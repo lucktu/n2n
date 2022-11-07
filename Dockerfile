@@ -41,7 +41,7 @@ ARG VERSION_B_S_rC
 WORKDIR /tmp/n2n-lucktu/scripts/
 COPY . /tmp/n2n-lucktu/
 RUN chmod +x /tmp/n2n-lucktu/scripts/*.sh
-RUN /tmp/n2n-lucktu/scripts/build-docker.sh
+RUN /tmp/n2n-lucktu/scripts/build-docker.sh ${VERSION_B_S_rC}
 
 RUN mkdir -p /tmp/down/ && cp /tmp/n2n-lucktu/result/build_src/* /tmp/down/
 

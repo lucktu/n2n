@@ -3,9 +3,14 @@
 . init_logger.sh
 
 . scan_one_build.sh
+
 if [[ ! -z "${VERSION_B_S_rC}" ]]; then
     version_b_s_rc="${VERSION_B_S_rC}"
-else
+fi
+if [[ ! -z "$1" ]]; then
+    version_b_s_rc="$1"
+fi
+if [[ -z "${version_b_s_rc}" ]]; then
     version_b_s_rc="${BIG_VERSION}${SMALL_VERSION:+_}${SMALL_VERSION}${COMMIT:+_r}${COMMIT}"
 fi
 LOG_WARNING "Try Build: version_b_s_rc - ${version_b_s_rc}"
