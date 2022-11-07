@@ -1,0 +1,59 @@
+name: Reusable workflow with matrix strategy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  scan-all:
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: n2n_lucktu
+      DOCKER_CONTEXT_PATH: .
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      version_b_s_cs: ${{ steps.build_version.outputs.version_b_s_cs }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Check build_version
+        id: build_version
+        run: |
+          PROJECT_DIR=$(pwd)
+          cd ./scripts
+          chmod +x *.sh
+          . init_logger.sh
+          . scan_all_save.sh
+          version_b_s_cs=''
+          for version_filename in $(ls ${RESULT_DIR}); do
+            version_file=${RESULT_DIR}/${version_filename}
+
+            if [[ -d ${version_file} ]]; then
+                LOG_WARNING "跳过: 是文件夹 - ${version_file}"
+                continue
+            fi
+            if [[ ${version_filename} == 'all.txt' ]]; then
+                LOG_WARNING "跳过: 汇总文件 - ${version_file}"
+                continue
+            fi
+            LOG_INFO "version_file: ${version_file}"
+            # e.g. v3_3.1.0-54_1127
+            version_b_s_c=${version_file##*/}
+            version_b_s_c=${version_b_s_c%%.txt}
+            LOG_INFO "version_b_s_c: ${version_b_s_c}"
+            version_b_s_cs="${version_b_s_cs},  \"${version_b_s_c}\""
+          done
+          version_b_s_cs="[${version_b_s_cs:1}]"
+          LOG_INFO  version_b_s_cs: ${version_b_s_cs}
+          echo "version_b_s_cs=${version_b_s_cs}"
+  build-all:
+    needs: [scan-all]
+    strategy:
+      max-parallel: 2
+      matrix:
+        version_b_s_c: ${{ needs.scan-all.outputs.version_b_s_cs }}
+
+    uses: ./.github/workflows/docker-publish.yml
+    with:
+      version_b_s_c: ${{ matrix.version_b_s_c }}
