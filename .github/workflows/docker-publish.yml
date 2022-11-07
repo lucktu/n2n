@@ -87,11 +87,18 @@ jobs:
           fi
           version_b_s_c=${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_}${COMMIT}
           SCAN_ONE_BUILD ${version_b_s_c}
+
           echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
           echo "SMALL_VERSION=${SMALL_VERSION}" >> $GITHUB_OUTPUT
           echo "COMMIT=${COMMIT}" >> $GITHUB_OUTPUT
           echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
 
+          echo "./docker/result" >> $GITHUB_PATH
+      - name: Check result
+        run: |
+          echo $GITHUB_PATH
+          ls ./docker/result
+          exit 1
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
