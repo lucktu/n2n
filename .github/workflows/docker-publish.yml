@@ -93,7 +93,7 @@ jobs:
           echo "SMALL_VERSION=${SMALL_VERSION}" >> $GITHUB_OUTPUT
           echo "COMMIT=${COMMIT}" >> $GITHUB_OUTPUT
           echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
-          echo "VERSION_B_S_rC=${VERSION_B_S_rC}" >> $GITHUB_OUTPUT
+          echo "VERSION_B_S_rC=${version_b_s_rc}" >> $GITHUB_OUTPUT
 
   check-push:
     needs: [init-version]
