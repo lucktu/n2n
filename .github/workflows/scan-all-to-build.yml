@@ -25,8 +25,8 @@ jobs:
           cd ./scripts
           chmod +x *.sh
           . init_logger.sh
-          . scan_all_save.sh
           . init_path.sh
+          . scan_all_save.sh
           LOG_INFO 'scan_all_save Successful'
           version_b_s_rcs=''
           for version_filename in $(ls ${RESULT_DIR}); do

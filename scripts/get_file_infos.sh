@@ -10,16 +10,16 @@ GET_FILE_INFOS() {
 
     if [[ -d ${s_file} ]]; then
         LOG_WARNING "跳过: 是文件夹 - ${s_file}"
-        return 1
+        return 0
     fi
     filename_suffix=${s_file##*.}
     if [[ -z ${filename_suffix} ]]; then
         LOG_ERROR_WAIT_EXIT "错误: 获取后缀失败 - ${s_file}"
-        return 1
+        return 0
     fi
     if [[ ! 'rar zip tar.gz gz' =~ ${filename_suffix} ]]; then
         LOG_WARNING "跳过: 不是压缩文件 - ${s_file}"
-        return 1
+        return 0
     fi
 
     src_machine=''
