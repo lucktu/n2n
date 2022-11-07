@@ -33,7 +33,11 @@ WORKDIR /tmp/scripts/
 COPY ./scripts/*.sh /tmp/scripts/
 RUN chmod +x /tmp/scripts/*.sh
 
-ADD ./result/build_src/ /tmp/down/
+ADD . /tmp/down/docker
+
+RUN apt-get -qq -y install tree
+RUN tree 
+RUN exit 1
 
 RUN /tmp/scripts/install_rar.sh
 RUN /tmp/scripts/extract_n2n.sh
