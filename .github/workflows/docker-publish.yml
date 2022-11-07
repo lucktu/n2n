@@ -48,6 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       APP_NAME: n2n_lucktu
+      DOCKER_CONTEXT_PATH: docker
     permissions:
       contents: read
       packages: write
@@ -66,6 +67,7 @@ jobs:
           PROJECT_DIR=$(cd $(pwd)/..;pwd)
           . init_logger.sh
           . init_path.sh
+          . get_file_infos.sh
           . scan_one_build.sh
 
           if [[ -z ${{ env.BIG_VERSION }} || -z ${{ env.SMALL_VERSION }}   ]];then
@@ -79,8 +81,8 @@ jobs:
             SMALL_VERSION=${{env.SMALL_VERSION}}
             COMMIT=${{env.COMMIT}}
           fi
-          version_b_s_c=${BIG_VERSION}/${SMALL_VERSION}${COMMIT:+/}${COMMIT}
-          SCAN_ONE_BUILD ${version_b_s_c}
+          version_b_s_c=${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_}${COMMIT}
+          GET_FILE_INFOS ${version_b_s_c}
           echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
           echo "SMALL_VERSION=${SMALL_VERSION}" >> $GITHUB_OUTPUT
           echo "COMMIT=${COMMIT}" >> $GITHUB_OUTPUT
@@ -135,7 +137,7 @@ jobs:
       - name: Build and export to Docker
         uses: docker/build-push-action@v3
         with:
-          context: ${{ env.APP_NAME }}
+          context: ${{ env.DOCKER_CONTEXT_PATH }}
           load: true
           tags: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache
@@ -152,7 +154,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v3
         with:
-          context: docker
+          context: ${{ env.DOCKER_CONTEXT_PATH }}
           platforms: ${{ needs.check_version.outputs.platforms }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}

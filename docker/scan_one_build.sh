@@ -4,11 +4,14 @@ SCAN_ONE_BUILD() {
     if [[ -z "${version_b_s_c}" ]]; then
         LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD - version_b_s_c - 为空"
     fi
+
+    LOG_INFO "version_b_s_c: ${version_b_s_c}"
     # e.g. v3
     build_big_version=${version_b_s_c%%_*}
     if [[ -z "${build_big_version}" ]]; then
         LOG_ERROR_WAIT_EXIT "错误: GET_FILE_INFOS: build_big_version - 为空 - ${version_file}"
     fi
+    LOG_INFO "build_big_version: ${build_big_version}"
     # e.g. 3.1.0-54
     build_small_version=${version_b_s_c##*${build_big_version}_}
     build_small_version=${build_small_version%%_*}
