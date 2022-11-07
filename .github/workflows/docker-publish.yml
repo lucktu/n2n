@@ -260,9 +260,7 @@ jobs:
           cache-from: type=inline
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
           build-args: |
-            BIG_VERSION=${{ needs.init-version.outputs.BIG_VERSION }}
-            SMALL_VERSION=${{ needs.init-version.outputs.SMALL_VERSION }}
-            COMMIT=${{ needs.init-version.outputs.COMMIT }}
+            VERSION_B_S_rC=${{ needs.init-version.outputs.VERSION_B_S_rC }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker

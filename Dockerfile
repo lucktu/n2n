@@ -29,13 +29,14 @@ COPY ./scripts/init_logger.sh ./scripts/install_rar.sh /tmp/scripts/
 ARG KERNEL=linux
 # 用于自定义机型编译,未自动识别时请赋值
 ARG MACHINE
-ARG BIG_VERSION
 
 RUN chmod +x /tmp/scripts/*.sh
 RUN /tmp/scripts/install_rar.sh
 
+ARG BIG_VERSION
 ARG SMALL_VERSION
 ARG COMMIT
+ARG VERSION_B_S_rC
 # 选择对应版本文件
 WORKDIR /tmp/n2n-lucktu/scripts/
 COPY . /tmp/n2n-lucktu/
