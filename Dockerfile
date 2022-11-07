@@ -39,10 +39,10 @@ RUN /tmp/scripts/install_rar.sh
 WORKDIR /tmp/n2n-lucktu/scripts/
 COPY . /tmp/n2n-lucktu/
 RUN chmod +x /tmp/n2n-lucktu/scripts/*.sh
-RUN /tmp/n2n-lucktu/scripts/scan_one_build.sh
+RUN /tmp/n2n-lucktu/scripts/build-docker.sh
 
 WORKDIR /tmp/down
-RUN cp /tmp/n2n-lucktu/result/build_src/* /tmp/down
+RUN cp /tmp/n2n-lucktu/result/build_src/* /tmp/down/
 
 # 解压，选择最大的edge文件
 WORKDIR /tmp/scripts/
