@@ -18,13 +18,7 @@ on:
 
   workflow_call:
     inputs:
-      BIG_VERSION:
-        required: true
-        type: string
-      SMALL_VERSION:
-        required: true
-        type: string
-      COMMIT:
+      version_b_s_c:
         required: true
         type: string
 
@@ -70,15 +64,16 @@ jobs:
           . get_file_infos.sh
           . scan_one_build.sh
 
-          if [[ ! -z "${{ inputs.BIG_VERSION }}" || ! -z "${{ inputs.SMALL_VERSION }}"   ]];then
-            BIG_VERSION=${{inputs.BIG_VERSION}}
-            SMALL_VERSION=${{inputs.SMALL_VERSION}}
-            COMMIT=${{inputs.COMMIT}}
+          if [[ ! -z "${{ inputs.version_b_s_c }}" ]];then
+            LOG_WARNING "use version_b_s_c version"
+            SCAN_ONE_BUILD ${{inputs.version_b_s_c}}
           elif [[ ! -z "${{ env.BIG_VERSION }}" || ! -z "${{ env.SMALL_VERSION }}"   ]];then
+            LOG_WARNING "use env version"
             BIG_VERSION=${{env.BIG_VERSION}}
             SMALL_VERSION=${{env.SMALL_VERSION}}
             COMMIT=${{env.COMMIT}}
           else
+            LOG_WARNING "use latest version"
             src_file=$($(ls ${PROJECT_DIR}/Linux) | grep x64)
             GET_FILE_INFOS ${src_file}
             BIG_VERSION=${src_big_version}
@@ -92,8 +87,6 @@ jobs:
           echo "SMALL_VERSION=${SMALL_VERSION}" >> $GITHUB_OUTPUT
           echo "COMMIT=${COMMIT}" >> $GITHUB_OUTPUT
           echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
-
-          echo "./docker/result" >> $GITHUB_PATH
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
