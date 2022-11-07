@@ -31,7 +31,7 @@ ARG COMMIT=1200
 
 # 安装RAR
 WORKDIR /tmp/scripts/
-COPY scripts/{init_logger.sh,install_rar.sh} /tmp/scripts/
+COPY ./scripts/init_logger.sh ./scripts/install_rar.sh /tmp/scripts/
 RUN chmod +x /tmp/scripts/*.sh
 RUN /tmp/scripts/install_rar.sh
 
