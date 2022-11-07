@@ -53,7 +53,7 @@ jobs:
             version_b_s_rcs="${version_b_s_rcs}, {\"version_b_s_rc\": \"${version_b_s_rc}\"}"
           done
           version_b_s_rcs="${version_b_s_rcs:1} "
-          version_b_s_rcs="{\"include\":[${version_b_s_rcs}]"
+          version_b_s_rcs="{\"include\":[${version_b_s_rcs}]}"
           LOG_INFO  version_b_s_rcs: ${version_b_s_rcs}
           echo "version_b_s_rcs=${version_b_s_rcs}" >> $GITHUB_OUTPUT
 
