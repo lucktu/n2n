@@ -3,6 +3,7 @@
 . init_logger.sh
 . sel_platform.sh
 . init_path.sh
+. get_file_infos.sh
 
 SCAN_ONE_BUILD() {
     # 一个版本
