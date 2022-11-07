@@ -71,7 +71,7 @@ jobs:
       - name: Check init-build-version
         id: init-build-version
         run: |
-          if [[ ('v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc)|| (('v2s' == env.BIG_VERSION) || 'v2' == env.BIG_VERSION) || 'v1' == env.BIG_VERSION) && env.SMALL_VERSION == '') ]];then
+          if [[ ${{ ('v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc) || (('v2s' == env.BIG_VERSION) || 'v2' == env.BIG_VERSION) || 'v1' == env.BIG_VERSION) && env.SMALL_VERSION == '') }} ]];then
             if [[ ${{ 'v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc }} ]];then
               BIG_VERSION=${{ inputs.version_b_s_rc }}
             elif [[ ${{ 'v2s' == env.BIG_VERSION) || 'v2' == env.BIG_VERSION) || 'v1' == env.BIG_VERSION }} ]];then
