@@ -55,14 +55,14 @@ SCAN_ONE_BUILD() {
             LOG_WARNING 不支持的CPU架构类型 - ${src_machine}
             continue
         fi
-        # cp $src_file $BUILD_SRC/
+        cp $src_file $BUILD_SRC/
         need_files="$src_file $need_files"
         SEL_PLATFORM ${src_machine}
         if [[ ! ${build_platforms} =~ ${platform} ]]; then
             build_platforms="${build_platforms}, ${platform}"
         fi
     done
-    cp $need_files $BUILD_SRC/
+    LOG_WARNING cp $need_files $BUILD_SRC/
     LOG_INFO $BUILD_SRC: $(ls $BUILD_SRC)
     export REGISTRY='registry.aour.zctmdc.cn'
     export BUILD_PLATFORMS="${build_platforms:1}"
