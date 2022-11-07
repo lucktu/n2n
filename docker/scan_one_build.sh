@@ -2,9 +2,15 @@
 
 . init_logger.sh
 . sel_platform.sh
+. init_path.sh
 
 SCAN_ONE_BUILD() {
+    # 一个版本
     version_b_s_c=$1
+    if [[ -z "${version_b_s_c}" || ! -z "${BIG_VERSION}" || ! -z "${SMALL_VERSION}" ]]; then
+        LOG_WARNING "use env version"
+        version_b_s_c="${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_}${COMMIT}"
+    fi
     if [[ -z "${version_b_s_c}" ]]; then
         LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD - version_b_s_c - 为空"
     fi
@@ -59,11 +65,11 @@ SCAN_ONE_BUILD() {
     export SMALL_VERSION=${build_small_version}
     export COMMIT=${build_big_version}
 
-    LOG_INFO REGISTRY='registry.aour.zctmdc.cn'
-    LOG_INFO BUILD_PLATFORMS=${BUILD_PLATFORMS}
-    LOG_INFO BIG_VERSION=${BIG_VERSION}
-    LOG_INFO SMALL_VERSION=${SMALL_VERSION}
-    LOG_INFO COMMIT=${COMMIT}
+    LOG_INFO REGISTRY: ${REGISTRY}
+    LOG_INFO BUILD_PLATFORMS: ${BUILD_PLATFORMS}
+    LOG_INFO BIG_VERSION: ${BIG_VERSION}
+    LOG_INFO SMALL_VERSION: ${SMALL_VERSION}
+    LOG_INFO COMMIT: ${COMMIT}
     # docker compose -f docker-compose.build.evn.yaml build --progress plain
 
     # docker compose -f docker-compose.build.evn.yaml push

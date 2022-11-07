@@ -33,13 +33,13 @@ WORKDIR /tmp/scripts/
 COPY ./*.sh /tmp/scripts/
 RUN chmod +x /tmp/scripts/*.sh
 
-ADD . /tmp/down/docker
-
-RUN apt-get -qq -y install tree
-RUN tree 
-RUN exit 1
-
 RUN /tmp/scripts/install_rar.sh
+
+ADD .. /tmp/n2n_lucktu
+WORKDIR /tmp/n2n_lucktu/docker
+RUN /tmp/n2n_lucktu/docker/scan_one_build.sh
+WORKDIR /tmp/down
+RUN cp /tmp/n2n_lucktu/docker/result/build_src /tmp/down
 RUN /tmp/scripts/extract_n2n.sh
 RUN /tmp/scripts/sel_n2n.sh
 
