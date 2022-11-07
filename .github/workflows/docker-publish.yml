@@ -97,7 +97,7 @@ jobs:
       - name: Check result
         run: |
           echo $GITHUB_PATH
-          ls ./docker/result
+          ls $GITHUB_PATH
           exit 1
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
