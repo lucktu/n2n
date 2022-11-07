@@ -50,6 +50,7 @@ jobs:
           version_b_s_rcs="[${version_b_s_rcs:1} ]"
           LOG_INFO  version_b_s_rcs: ${version_b_s_rcs}
           echo "all={\"version_b_s_rcs\":${version_b_s_rcs}" >> $GITHUB_OUTPUT
+          
   build-all:
     needs: [scan-all]
     strategy:

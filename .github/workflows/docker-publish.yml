@@ -6,6 +6,14 @@ name: Docker-build-and-push
 # documentation.
 
 on:
+  workflow_dispatch:
+    inputs:
+      version_b_s_rc:
+        description: "version_b_s_rc e.g. v2_2.7.0_r528 | v2"
+        required: true
+        default: "v2"
+        type: string
+
   schedule:
     - cron: "28 17 * * *"
   push:
@@ -27,9 +35,9 @@ env:
   # REGISTRY: ghcr.io
   REGISTRY: docker.io
 
-  BIG_VERSION: v3
-  SMALL_VERSION: 3.1.1-16
-  COMMIT: 1200
+  # BIG_VERSION: v3
+  # SMALL_VERSION: 3.1.1-16
+  # COMMIT: 1200
 
   # BIG_VERSION: v2
   # SMALL_VERSION: 2.7.0
@@ -58,11 +66,24 @@ jobs:
     steps:
       - name: Checkout repository
         # depends on this library
-        # if: ${{ inputs.version_b_s_rc == '' && (env.BIG_VERSION == '' || env.SMALL_VERSION == '') }}
+        if: ${{ contains('v2s v2 v1', inputs.version_b_s_rc) || (contains('v2s v2 v1', env.BIG_VERSION) && env.SMALL_VERSION == '') }}
         uses: actions/checkout@v3
       - name: Check init-build-version
         id: init-build-version
         run: |
+          if [[ ${{ contains('v2s v2 v1', inputs.version_b_s_rc) || (contains('v2s v2 v1', env.BIG_VERSION) && env.SMALL_VERSION == '') }} ]];then
+            if [[ ${{ contains('v2s v2 v1', inputs.version_b_s_rc) }} ]];then
+              BIG_VERSION=${{ inputs.version_b_s_rc }}
+            elif [[ ${{ contains('v2s v2 v1',env.BIG_VERSION) }} ]];then
+              BIG_VERSION=${{ env.BIG_VERSION }}
+            fi
+            echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
+            echo "SMALL_VERSION=''" >> $GITHUB_OUTPUT
+            echo "COMMIT=''" >> $GITHUB_OUTPUT
+            echo "BUILD_PLATFORMS=''" >> $GITHUB_OUTPUT
+            echo "VERSION_B_S_rC=${BIG_VERSION}" >> $GITHUB_OUTPUT
+            return 0;
+          fi
           PROJECT_ROOT_DIR=$(pwd)
           echo "init-version - PROJECT_ROOT_DIR: ${PROJECT_ROOT_DIR}"
           cd ./scripts
@@ -191,12 +212,12 @@ jobs:
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
             type=raw,value=v3,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v3' }}
             type=raw,value=releases-v3,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v3' }}
-            type=raw,value=v2s,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2s' && needs.init-version.outputs.SMALL_VERSION == '2.1.0' && needs.init-version.outputs.COMMIT == '124' }}
-            type=raw,value=releases-v2s,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2s' && needs.init-version.outputs.SMALL_VERSION == '2.1.0' && needs.init-version.outputs.COMMIT == '124' }}
-            type=raw,value=v2,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2' && needs.init-version.outputs.SMALL_VERSION == '2.7.0' && needs.init-version.outputs.COMMIT == '525' }}
-            type=raw,value=releases-v2,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2' && needs.init-version.outputs.SMALL_VERSION == '2.7.0' && needs.init-version.outputs.COMMIT == '525' }}
-            type=raw,value=v1,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v1' && needs.init-version.outputs.SMALL_VERSION == '1.3.2' && needs.init-version.outputs.COMMIT == '124' }}
-            type=raw,value=releases-v1,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v1' && needs.init-version.outputs.SMALL_VERSION == '1.3.2' && needs.init-version.outputs.COMMIT == '124' }}
+            type=raw,value=v2s,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2s' && needs.init-version.outputs.SMALL_VERSION == '' && needs.init-version.outputs.COMMIT == '' }}
+            type=raw,value=releases-v2s,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2s' && needs.init-version.outputs.SMALL_VERSION == '2.1.0' && needs.init-version.outputs.COMMIT == '' }}
+            type=raw,value=v2,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2' && needs.init-version.outputs.SMALL_VERSION == '' && needs.init-version.outputs.COMMIT == '' }}
+            type=raw,value=releases-v2,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2' && needs.init-version.outputs.SMALL_VERSION == '' && needs.init-version.outputs.COMMIT == '' }}
+            type=raw,value=v1,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v1' && needs.init-version.outputs.SMALL_VERSION == '' && needs.init-version.outputs.COMMIT == '' }}
+            type=raw,value=releases-v1,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v1' && needs.init-version.outputs.SMALL_VERSION == '' && needs.init-version.outputs.COMMIT == '' }}
             type=raw,value=${{ format( '{0}_{1}_r{2}', needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.BIG_VERSION != '' && needs.init-version.outputs.SMALL_VERSION != '' && needs.init-version.outputs.COMMIT != '' }}
             type=raw,value=${{ format( '{0}_{1}', needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.BIG_VERSION != '' && needs.init-version.outputs.SMALL_VERSION != '' && needs.init-version.outputs.COMMIT == '' }}
             type=raw,value=${{ format( 'v.{1}_r{2}',  needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.SMALL_VERSION != '' && needs.init-version.outputs.COMMIT != '' }}
