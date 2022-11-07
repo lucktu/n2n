@@ -86,6 +86,7 @@ jobs:
           echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
           echo "SMALL_VERSION=${SMALL_VERSION}" >> $GITHUB_OUTPUT
           echo "COMMIT=${COMMIT}" >> $GITHUB_OUTPUT
+          echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
@@ -155,7 +156,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ${{ env.DOCKER_CONTEXT_PATH }}
-          platforms: ${{ needs.check_version.outputs.platforms }}
+          platforms: ${{ steps.build_version.outputs.BUILD_PLATFORMS }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

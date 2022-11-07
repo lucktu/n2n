@@ -52,9 +52,9 @@ SCAN_ONE_BUILD() {
             build_platforms="${build_platforms}, ${platform}"
         fi
     done
-
+    LOG_INFO $BUILD_SRC: $(ls $BUILD_SRC)
     export REGISTRY='registry.aour.zctmdc.cn'
-    export BUILD_PLATFORMS="[${build_platforms:1} ]"
+    export BUILD_PLATFORMS="${build_platforms:1}"
     export BIG_VERSION=${build_big_version}
     export SMALL_VERSION=${build_small_version}
     export COMMIT=${build_big_version}
