@@ -94,11 +94,7 @@ jobs:
           echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
 
           echo "./docker/result" >> $GITHUB_PATH
-      - name: Check result
-        run: |
-          echo $PATH
-          ls $PATH
-          exit 1
+
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
