@@ -2,7 +2,10 @@ name: manual-scan-all-to-build
 
 on:
   workflow_dispatch:
-
+    tags:
+      description: "Build all big versions? v2s|v2|v1"
+      required: false
+      type: boolean
 jobs:
   scan-all:
     runs-on: ubuntu-latest
@@ -49,10 +52,21 @@ jobs:
           done
           version_b_s_rcs="[${version_b_s_rcs:1} ]"
           LOG_INFO  version_b_s_rcs: ${version_b_s_rcs}
-          echo "all={\"version_b_s_rcs\":${version_b_s_rcs}" >> $GITHUB_OUTPUT
-          
+          echo "version_b_s_rcs={\"include\":${version_b_s_rcs}" >> $GITHUB_OUTPUT
+
   build-all:
     needs: [scan-all]
+    strategy:
+      max-parallel: 2
+      matrix:
+        version_b_s_rc: ${{ needs.scan-all.outputs.version_b_s_rcs }}
+
+    uses: ./.github/workflows/docker-publish.yml
+    with:
+      version_b_s_rc: ${{ matrix.version_b_s_rc }}
+
+  build-big-version:
+    if: ${{ inputs.tags }}
     strategy:
       max-parallel: 2
       matrix:
