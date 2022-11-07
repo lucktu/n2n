@@ -70,10 +70,7 @@ jobs:
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
-    secrets:
-      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-      REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
-
+    secrets: inherit
   build-big-version:
     permissions:
       contents: read
@@ -85,6 +82,4 @@ jobs:
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
-    secrets:
-      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-      REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+    secrets: inherit

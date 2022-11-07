@@ -12,13 +12,13 @@ on:
         description: "version_b_s_rc e.g. v2_2.7.0_r528 | v2"
         required: false
         default: "v2"
-    secrets:
-          REGISTRY_USERNAME:
-            description: 'USERNAME for REGISTRY'
-            required: true
-          REGISTRY_TOKEN:
-            description: 'TOKEN for REGISTRY'
-            required: true
+    # secrets:
+    #       REGISTRY_USERNAME:
+    #         description: 'USERNAME for REGISTRY'
+    #         required: true
+    #       REGISTRY_TOKEN:
+    #         description: 'TOKEN for REGISTRY'
+    #         required: true
   schedule:
     - cron: "28 17 * * *"
   push:
