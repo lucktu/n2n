@@ -82,7 +82,7 @@ jobs:
             echo "COMMIT=''" >> $GITHUB_OUTPUT
             echo "BUILD_PLATFORMS=''" >> $GITHUB_OUTPUT
             echo "VERSION_B_S_rC=${BIG_VERSION}" >> $GITHUB_OUTPUT
-            return 0;
+            exit 0
           fi
           PROJECT_ROOT_DIR=$(pwd)
           echo "init-version - PROJECT_ROOT_DIR: ${PROJECT_ROOT_DIR}"
