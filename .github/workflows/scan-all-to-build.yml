@@ -50,11 +50,12 @@ jobs:
             version_b_s_rc=${version_file##*/}
             version_b_s_rc=${version_b_s_rc%%.txt}
             LOG_INFO "version_b_s_rc: ${version_b_s_rc}"
-            version_b_s_rcs="${version_b_s_rcs},  \"${version_b_s_rc}\""
+            version_b_s_rcs="${version_b_s_rcs}, {\"version_b_s_rc\": \"${version_b_s_rc}\"}"
           done
-          version_b_s_rcs="[${version_b_s_rcs:1} ]"
+          version_b_s_rcs="${version_b_s_rcs:1} "
+          version_b_s_rcs="{\"include\":[${version_b_s_rcs}]"
           LOG_INFO  version_b_s_rcs: ${version_b_s_rcs}
-          echo "version_b_s_rcs={\"include\":${version_b_s_rcs}" >> $GITHUB_OUTPUT
+          echo "version_b_s_rcs=${version_b_s_rcs}" >> $GITHUB_OUTPUT
 
   build-all:
     needs: [scan-all]
@@ -69,7 +70,7 @@ jobs:
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
       REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
-      
+
   build-big-version:
     if: ${{ inputs.build-big-version }}
     strategy:
