@@ -2,7 +2,7 @@
 SCAN_ONE_BUILD() {
     version_b_s_c=$1
     if [[ -z "${version_b_s_c}" ]]; then
-        SCAN_ONE_BUILD "错误: SAVE_FILE_INFOS - version_b_s_c - 为空"
+        LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD - version_b_s_c - 为空"
     fi
     # e.g. v3
     build_big_version=${version_b_s_c%%_*}
@@ -25,7 +25,10 @@ SCAN_ONE_BUILD() {
     fi
     LOG_INFO "build_commit: ${build_commit}"
     build_platforms=''
-    rm $BUILD_SRC/*
+    if [[ -d $BUILD_SRC ]]; then
+        rm -r $BUILD_SRC
+    fi
+    mkdir -p $BUILD_SRC
     for src_file in $(find ${PROJECT_DIR}/Linux -name *${build_big_version}*${build_small_version}*${build_commit}* | grep -v Professional); do
         GET_FILE_INFOS ${src_file}
         if [[ ${build_big_version} != ${src_big_version} || ${build_small_version} != ${src_small_version} || ${build_commit} != ${src_commit} ]]; then

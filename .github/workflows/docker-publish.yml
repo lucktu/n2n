@@ -79,7 +79,7 @@ jobs:
             SMALL_VERSION=${{env.SMALL_VERSION}}
             COMMIT=${{env.COMMIT}}
           fi
-
+          version_b_s_c=${BIG_VERSION}/${SMALL_VERSION}${COMMIT:+/}${COMMIT}
           SCAN_ONE_BUILD ${version_b_s_c}
           echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
           echo "SMALL_VERSION=${SMALL_VERSION}" >> $GITHUB_OUTPUT
