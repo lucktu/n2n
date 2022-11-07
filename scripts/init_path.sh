@@ -2,15 +2,13 @@
 
 . init_logger.sh
 if [[ -z ${PROJECT_DIR} ]]; then
-    PROJECT_DIR=$(
-        cd $(dirname $0)/..
-        pwd
-    )
+    PROJECT_DIR=$(pwd)
 fi
-PROJECT_DIR="${PROJECT_DIR##*/n2n-lucktu}n2n-lucktu"
-if [[ ${PROJECT_DIR##*/} != 'n2n-lucktu' ]]; then
+if [[ ! ${PROJECT_DIR} =~ 'n2n-lucktu' ]]; then
     LOG_ERROR_WAIT_EXIT "错误: init_path - PROJECT_DIR - ${PROJECT_DIR}"
 fi
+
+PROJECT_DIR="${PROJECT_DIR%%n2n-lucktu/*}n2n-lucktu"
 
 SCRIPTS_DIR=$(
     cd $(dirname $0)/
