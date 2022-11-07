@@ -37,6 +37,7 @@ RUN /tmp/scripts/install_rar.sh
 
 # 选择对应版本文件
 WORKDIR /tmp/n2n_lucktu/
+COPY . /tmp/n2n_lucktu/
 RUN chmod +x /tmp/n2n_lucktu/scripts/*.sh
 RUN /tmp/n2n_lucktu/scripts/scan_one_build.sh
 WORKDIR /tmp/down
