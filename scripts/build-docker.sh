@@ -19,8 +19,8 @@ if [[ "${version_b_s_rc}" == "v2s" || "${version_b_s_rc}" == "v2" || "${version_
     LOG_WARNING "BUILD BIG VERSION"
     . init_path.sh
     LOG_WARNING $(ls ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/)
-    LOG_WARNING cp ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/* $RESULT_DIR
-    cp ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/* $RESULT_DIR
+    LOG_WARNING cp ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/* $BUILD_SRC
+    cp ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/* $BUILD_SRC
     exit 0
 fi
 
