@@ -1,27 +1,9 @@
 #!/bin/bash
-
-. init_logger.sh
-. init_path.sh
-. get_file_infos.sh
-# . scan_all_save.sh
-. sel_platform.sh
-
-for version_filename in $(ls ${RESULT_DIR}); do
-    version_file=${RESULT_DIR}/${version_filename}
-
-    if [[ -d ${version_file} ]]; then
-        LOG_WARNING "跳过: 是文件夹 - ${version_file}"
-        continue
+SCAN_ONE_BUILD() {
+    version_b_s_c=$1
+    if [[ -z "${version_b_s_c}" ]]; then
+        SCAN_ONE_BUILD "错误: SAVE_FILE_INFOS - version_b_s_c - 为空"
     fi
-    if [[ ${version_filename} == 'all.txt' ]]; then
-        LOG_WARNING "跳过: 汇总文件 - ${version_file}"
-        continue
-    fi
-    LOG_INFO "version_file: ${version_file}"
-    # e.g. v3_3.1.0-54_1127
-    version_b_s_c=${version_file##*/}
-    version_b_s_c=${version_b_s_c%%.txt}
-    LOG_INFO "build_big_version: ${build_big_version}"
     # e.g. v3
     build_big_version=${version_b_s_c%%_*}
     if [[ -z "${build_big_version}" ]]; then
@@ -72,10 +54,10 @@ for version_filename in $(ls ${RESULT_DIR}); do
     LOG_INFO BIG_VERSION=${BIG_VERSION}
     LOG_INFO SMALL_VERSION=${SMALL_VERSION}
     LOG_INFO COMMIT=${COMMIT}
-    docker compose -f docker-compose.build.evn.yaml build --progress plain 
+    # docker compose -f docker-compose.build.evn.yaml build --progress plain
 
-    docker compose -f docker-compose.build.evn.yaml push
-    docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${version_b_s_c}_edge_help.txt
-    docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT supernode -h >$BUILD_DESC/${version_b_s_c}_supernode_help.txt
-    sleep 15
-done
+    # docker compose -f docker-compose.build.evn.yaml push
+    # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${version_b_s_c}_edge_help.txt
+    # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT supernode -h >$BUILD_DESC/${version_b_s_c}_supernode_help.txt
+
+}

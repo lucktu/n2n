@@ -25,15 +25,15 @@ RUN apt-get -qq -y install \
 ARG KERNEL=linux
 # 用于自定义机型编译,未自动识别时请赋值
 # ARG MACHINE
-# ARG BIG_VERSION=v3
-# ARG SMALL_VERSION=3.1.1-16
-# ARG COMMIT=1200
+ARG BIG_VERSION=v3
+ARG SMALL_VERSION=3.1.1-16
+ARG COMMIT=1200
 
 WORKDIR /tmp/scripts/
 COPY ./scripts/*.sh /tmp/scripts/
 RUN chmod +x /tmp/scripts/*.sh
 
-COPY ./result/build_src/ /tmp/down/
+ADD ./result/build_src/ /tmp/down/
 
 RUN /tmp/scripts/install_rar.sh
 RUN /tmp/scripts/extract_n2n.sh

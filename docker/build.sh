@@ -5,4 +5,4 @@
 docker buildx create --use
 
 . scan_all_save.sh
-. read_all_build.sh
+. scan_all_build.sh

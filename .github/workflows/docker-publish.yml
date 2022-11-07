@@ -1,0 +1,178 @@
+name: Docker
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  schedule:
+    - cron: "28 17 * * *"
+  push:
+    branches: ["master"]
+    # Publish semver tags as releases.
+    tags: ["v*.*.*"]
+
+  pull_request:
+    branches: ["master"]
+
+  workflow_call:
+    inputs:
+      BIG_VERSION:
+        required: true
+        type: string
+      SMALL_VERSION:
+        required: true
+        type: string
+      COMMIT:
+        required: true
+        type: string
+
+env:
+  # Use docker.io for Docker Hub if empty
+  # REGISTRY: ghcr.io
+  REGISTRY: docker.io
+  
+  BIG_VERSION: v3
+  SMALL_VERSION: 3.1.1-16
+  COMMIT: 1200
+
+  # BIG_VERSION: v2
+  # SMALL_VERSION: 2.7.0
+  # COMMIT: 528
+
+  # github.repository as <account>/<repo>
+
+jobs:
+  build-psuh:
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: n2n_lucktu
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Check build_version
+        id: build_version
+        run: |
+          cd ./docker/
+          chmod +x *.sh
+
+          . init_logger.sh
+          . init_path.sh
+          . scan_one_build.sh
+
+          if [[ -z ${{ env.BIG_VERSION }} || -z ${{ env.SMALL_VERSION }}   ]];then
+            src_file=$($(ls ${PROJECT_DIR}/Linux) | grep x64)
+            GET_FILE_INFOS ${src_file}
+            BIG_VERSION=${src_big_version}
+            SMALL_VERSION=${src_small_version}
+            COMMIT=${src_commit}
+          else
+            BIG_VERSION=${{env.BIG_VERSION}}
+            SMALL_VERSION=${{env.SMALL_VERSION}}
+            COMMIT=${{env.COMMIT}}
+          fi
+
+          SCAN_ONE_BUILD ${version_b_s_c}
+          echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
+          echo "SMALL_VERSION=${SMALL_VERSION}" >> $GITHUB_OUTPUT
+          echo "COMMIT=${COMMIT}" >> $GITHUB_OUTPUT
+
+      # Install the cosign tool except on PR
+      # https://github.com/sigstore/cosign-installer
+      - name: Install cosign
+        if: github.event_name != 'pull_request'
+        uses: sigstore/cosign-installer@main
+        with:
+          cosign-release: "v1.13.1"
+
+      # Workaround: https://github.com/docker/build-push-action/issues/461
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@2
+
+      # Login against a Docker registry except on PR
+      # https://github.com/docker/login-action
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}
+          tags: |
+            type=raw,value=alpha,enable=${{ github.ref == format('refs/heads/{0}', 'alpha') }}
+            type=raw,value=beta,enable=${{ github.ref == format('refs/heads/{0}', 'beta') }}
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
+            type=raw,value=v3,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v3' }}
+            type=raw,value=releases-v3,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v3' }}
+            type=raw,value=v2s,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v2s' && steps.build_version.outputs.SMALL_VERSION == '2.1.0' && steps.build_version.outputs.COMMIT == '124' }}
+            type=raw,value=releases-v2s,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v2s' && steps.build_version.outputs.SMALL_VERSION == '2.1.0' && steps.build_version.outputs.COMMIT == '124' }}
+            type=raw,value=v2,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v2' && steps.build_version.outputs.SMALL_VERSION == '2.7.0' && steps.build_version.outputs.COMMIT == '525' }}
+            type=raw,value=releases-v2,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v2' && steps.build_version.outputs.SMALL_VERSION == '2.7.0' && steps.build_version.outputs.COMMIT == '525' }}
+            type=raw,value=v1,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v1' && steps.build_version.outputs.SMALL_VERSION == '1.3.2' && steps.build_version.outputs.COMMIT == '124' }}
+            type=raw,value=releases-v1,enable=${{ steps.build_version.outputs.BIG_VERSION == 'v1' && steps.build_version.outputs.SMALL_VERSION == '1.3.2' && steps.build_version.outputs.COMMIT == '124' }}
+            type=raw,value=${{ format( '{0}_{1}_r{2}', steps.build_version.outputs.BIG_VERSION, steps.build_version.outputs.SMALL_VERSION, steps.build_version.outputs.COMMIT ) }}, enable=${{ steps.build_version.outputs.BIG_VERSION != '' && steps.build_version.outputs.SMALL_VERSION != '' && steps.build_version.outputs.COMMIT != '' }}
+            type=raw,value=${{ format( 'v.{1}_r{2}',  steps.build_version.outputs.BIG_VERSION, steps.build_version.outputs.SMALL_VERSION, steps.build_version.outputs.COMMIT ) }}, enable=${{ steps.build_version.outputs.SMALL_VERSION != '' && steps.build_version.outputs.COMMIT != '' }}
+            type=raw,value=${{ format( 'v.{1}',  steps.build_version.outputs.BIG_VERSION, steps.build_version.outputs.SMALL_VERSION, steps.build_version.outputs.COMMIT ) }}, enable=${{ steps.build_version.outputs.SMALL_VERSION != '' }}
+          labels: |
+            org.opencontainers.image.version=${{ format( '{0}_{1}_r{2}', steps.build_version.outputs.BIG_VERSION, steps.build_version.outputs.SMALL_VERSION, steps.build_version.outputs.COMMIT ) }}
+
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ env.APP_NAME }}
+          load: true
+          tags: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache
+          cache-to: type=inline
+
+      - name: Test
+        run: |
+          docker run --rm ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test edge -h
+          docker run --rm ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test supernode -h
+
+      # Build and push Docker image with Buildx (don't push on PR)
+      # https://github.com/docker/build-push-action
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ env.APP_NAME }}
+          platforms: ${{ needs.check_version.outputs.platforms }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=inline
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
+          build-args: |
+            BIG_VERSION=${{ steps.build_version.outputs.BIG_VERSION }}
+            SMALL_VERSION=${{ steps.build_version.outputs.SMALL_VERSION }}
+            COMMIT=${{ steps.build_version.outputs.COMMIT }}
+
+      # Sign the resulting Docker image digest except on PRs.
+      # This will only write to the public Rekor transparency log when the Docker
+      # repository is public to avoid leaking data.  If you would like to publish
+      # transparency data even for private images, pass --force to cosign below.
+      # https://github.com/sigstore/cosign
+      - name: Sign the published Docker image
+        if: ${{ github.event_name != 'pull_request' }}
+        env:
+          COSIGN_EXPERIMENTAL: "true"
+        # This step uses the identity token to provision an ephemeral certificate
+        # against the sigstore community Fulcio instance.
+        run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign {}@${{ steps.build-and-push.outputs.digest }}
