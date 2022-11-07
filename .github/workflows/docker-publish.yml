@@ -70,16 +70,20 @@ jobs:
           . get_file_infos.sh
           . scan_one_build.sh
 
-          if [[ -z ${{ env.BIG_VERSION }} || -z ${{ env.SMALL_VERSION }}   ]];then
+          if [[ ! -z ${{ inputs.BIG_VERSION }} || ! -z ${{ inputs.SMALL_VERSION }}   ]];then
+            BIG_VERSION=${{inputs.BIG_VERSION}}
+            SMALL_VERSION=${{inputs.SMALL_VERSION}}
+            COMMIT=${{inputs.COMMIT}}
+          elif [[ ! -z ${{ env.BIG_VERSION }} || ! -z ${{ env.SMALL_VERSION }}   ]];then
+            BIG_VERSION=${{env.BIG_VERSION}}
+            SMALL_VERSION=${{env.SMALL_VERSION}}
+            COMMIT=${{env.COMMIT}}
+          else
             src_file=$($(ls ${PROJECT_DIR}/Linux) | grep x64)
             GET_FILE_INFOS ${src_file}
             BIG_VERSION=${src_big_version}
             SMALL_VERSION=${src_small_version}
             COMMIT=${src_commit}
-          else
-            BIG_VERSION=${{env.BIG_VERSION}}
-            SMALL_VERSION=${{env.SMALL_VERSION}}
-            COMMIT=${{env.COMMIT}}
           fi
           version_b_s_c=${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_}${COMMIT}
           SCAN_ONE_BUILD ${version_b_s_c}

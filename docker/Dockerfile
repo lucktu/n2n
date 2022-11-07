@@ -30,7 +30,7 @@ ARG SMALL_VERSION=3.1.1-16
 ARG COMMIT=1200
 
 WORKDIR /tmp/scripts/
-COPY ./scripts/*.sh /tmp/scripts/
+COPY ./*.sh /tmp/scripts/
 RUN chmod +x /tmp/scripts/*.sh
 
 ADD . /tmp/down/docker
