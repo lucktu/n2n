@@ -45,10 +45,8 @@ WORKDIR /tmp/down
 RUN cp /tmp/n2n-lucktu/result/build_src/* /tmp/down/
 
 # 解压，选择最大的edge文件
-WORKDIR /tmp/scripts/
-WORKDIR /the/workdir/path
-RUN /tmp/scripts/extract_n2n.sh
-RUN /tmp/scripts/sel_n2n.sh
+RUN /tmp/n2n-lucktu/scripts/extract_n2n.sh
+RUN /tmp/n2n-lucktu/scripts/sel_n2n.sh
 
 FROM busybox
 
