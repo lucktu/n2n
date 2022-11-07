@@ -15,6 +15,8 @@ SCRIPTS_DIR=$(
     pwd
 )
 
+DOWN_DIR="/tmp/down"
+
 RESULT_DIR=${PROJECT_DIR}/result
 
 BUILD_SRC=${RESULT_DIR}/build_src

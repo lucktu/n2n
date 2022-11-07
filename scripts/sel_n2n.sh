@@ -1,7 +1,8 @@
 #!/bin/bash
 . init_logger.sh
+. init_path.sh
 
-n2n_edge_biggest=$(find ${down_dir} -type f | grep edge | grep -v upx | xargs -I {} du -h {} | sort -rh | head -n 1 | awk '{print$2}')
+n2n_edge_biggest=$(find ${DOWN_DIR} -type f | grep edge | grep -v upx | xargs -I {} du -h {} | sort -rh | head -n 1 | awk '{print$2}')
 if [[ -z "${n2n_edge_biggest}" ]]; then
     LOG_ERROR_WAIT_EXIT "n2n_edge_biggest 获取失败"
 fi

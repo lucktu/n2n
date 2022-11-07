@@ -37,10 +37,10 @@ if [[ "${mycpu}" == "i386" || "${mycpu}" == "amd64" ]]; then
         LOG_ERROR_WAIT_EXIT "down_url 获取失败"
 
     fi
-    down_dir="/tmp/rar"
-    down_filename="${down_dir}/${down_url##*/}"
+    rar_down_dir="/tmp/rar"
+    down_filename="${rar_down_dir}/${down_url##*/}"
     LOG_INFO "Try: 下载 - ${down_url}"
-    mkdir "${down_dir}"
+    mkdir "${rar_down_dir}"
     wget --no-check-certificate -q ${down_url} -O "${down_filename}"
     if [[ $? != 0 ]]; then
         LOG_ERROR_WAIT_EXIT "下载失败: ${down_url}"
