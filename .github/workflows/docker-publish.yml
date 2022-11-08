@@ -63,11 +63,11 @@ jobs:
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
     outputs:
-      BIG_VERSION: ${{ steps.init-build-version.outputs.BIG_VERSION }}
-      SMALL_VERSION: ${{ steps.init-build-version.outputs.SMALL_VERSION }}
-      COMMIT: ${{ steps.init-build-version.outputs.COMMIT }}
+      BUILD_BIG_VERSION: ${{ steps.init-build-version.outputs.BUILD_BIG_VERSION }}
+      BUILD_SMALL_VERSION: ${{ steps.init-build-version.outputs.BUILD_SMALL_VERSION }}
+      BUILD_COMMIT: ${{ steps.init-build-version.outputs.BUILD_COMMIT }}
       BUILD_PLATFORMS: ${{ steps.init-build-version.outputs.BUILD_PLATFORMS }}
-      VERSION_B_S_rC: ${{ steps.init-build-version.outputs.VERSION_B_S_rC }}
+      BUILD_VERSION_B_S_rC: ${{ steps.init-build-version.outputs.BUILD_VERSION_B_S_rC }}
       LATEST_VERSION: ${{ steps.init-build-version.outputs.LATEST_VERSION }}
     steps:
       - name: Checkout repository
@@ -89,14 +89,14 @@ jobs:
           if [[ "true" == "${{ ('v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc) || (('v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION) && env.SMALL_VERSION == '') }}" ]];then
             if [[ "true" == "${{ 'v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc }}" ]];then
               LOG_WARNING USE inputs.version_b_s_rc
-              BIG_VERSION=${{ inputs.version_b_s_rc }}
+              BUILD_BIG_VERSION=${{ inputs.version_b_s_rc }}
             elif [[ "true" == "${{ 'v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION }}" ]];then
               LOG_WARNING USE env.BIG_VERSION
-              BIG_VERSION=${{ env.BIG_VERSION }}
+              BUILD_BIG_VERSION=${{ env.BIG_VERSION }}
             fi
-            echo BIG_VERSION: ${BIG_VERSION}
-            echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
-            echo "VERSION_B_S_rC=${BIG_VERSION}" >> $GITHUB_OUTPUT
+            echo BBUILD_IG_VERSION: ${BUILD_BIG_VERSION}
+            echo "BUILD_BIG_VERSION=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
+            echo "BUILD_VERSION_B_S_rC=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
             exit 0
           fi
           PROJECT_ROOT_DIR=$(pwd)
@@ -111,22 +111,22 @@ jobs:
           if [[  "true" == "${{ inputs.version_b_s_rc != '' }}" ]];then
             LOG_WARNING "use version_b_s_rc version"
             SCAN_ONE_BUILD ${{ inputs.version_b_s_rc }}
-            BIG_VERSION=${src_big_version}
-            SMALL_VERSION=${src_small_version}
-            COMMIT=${src_commit}
+            BUILD_BIG_VERSION=${build_big_version}
+            BUILD_SMALL_VERSION=${build_small_version}
+            BUILD_COMMIT=${build_commit}
           elif [[ "true" == "${{ env.BIG_VERSION != '' }}" || "true" == "${{ env.SMALL_VERSION != '' }}"   ]];then
-            LOG_WARNING "use env version"
-            BIG_VERSION=${{env.BIG_VERSION}}
-            SMALL_VERSION=${{env.SMALL_VERSION}}
-            COMMIT=${{env.COMMIT}}
+            BUILD_LOG_WARNING "use env version"
+            BUILD_BIG_VERSION=${{env.BIG_VERSION}}
+            BUILD_SMALL_VERSION=${{env.SMALL_VERSION}}
+            BUILD_COMMIT=${{env.COMMIT}}
           else
             LOG_WARNING "use latest version"
             src_file=$(ls ${PROJECT_ROOT_DIR}/Linux | grep x64)
             LOG_INFO "src_file: ${src_file}"
             GET_FILE_INFOS ${src_file}
-            BIG_VERSION=${src_big_version}
-            SMALL_VERSION=${src_small_version}
-            COMMIT=${src_commit}
+            BUILD_BIG_VERSION=${src_big_version}
+            BUILD_SMALL_VERSION=${src_small_version}
+            BUILD_COMMIT=${src_commit}
             echo "LATEST_VERSION=true" >> $GITHUB_OUTPUT
           fi
           version_b_s_rc=${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_r}${COMMIT}
