@@ -60,13 +60,14 @@ SCAN_ONE_BUILD() {
             LOG_WARNING "版本未匹配: ${version_filename} - ${src_file}"
             continue
         fi
-        if [[ ! 'x64 x86 arm64(aarch64) arm' =~ ${src_machine} ]]; then
+        if [[ -z $(echo "${src_machine}" | grep -vE '(eb)|(mips)') ]]; then
             LOG_WARNING 不支持的CPU架构类型 - ${src_machine}
             continue
         fi
         if [[ ! -z "${VERSION_B_S_rC}" ]]; then
             cp $src_file ${BUILD_SRC}/
         fi
+        LOG_INFO "匹配成功: ${version_filename} - ${src_file}"
         need_files="${need_files} ${src_file}"
         SEL_PLATFORM ${src_machine}
         if [[ ! ${build_platforms} =~ ${platform} ]]; then

@@ -2,13 +2,13 @@
 . init_logger.sh
 
 SEL_PLATFORM() {
-    machine=$1
+    sel_machine=$1
     platform=''
-    if [[ -z "${machine}" ]]; then
-        LOG_ERROR_WAIT_EXIT "错误: SEL_PLATFORM - machine - 为空"
+    if [[ -z "${sel_machine}" ]]; then
+        LOG_ERROR_WAIT_EXIT "错误: SEL_PLATFORM - sel_machine - 为空"
     fi
 
-    case ${machine} in
+    case ${sel_machine} in
     x64)
         dn_machine="x64"
         fn_machine="x64"
@@ -35,9 +35,9 @@ SEL_PLATFORM() {
         platform="linux/arm/v7"
         ;;
     *)
-        LOG_ERROR "不支持的CPU架构类型 - ${machine}"
-        dn_machine=${machine}
-        fn_machine=${machine}
+        LOG_ERROR "不支持的CPU架构类型 - ${sel_machine}"
+        dn_machine=${sel_machine}
+        fn_machine=${sel_machine}
         ;;
     esac
 

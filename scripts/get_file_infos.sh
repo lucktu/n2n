@@ -8,17 +8,17 @@ GET_FILE_INFOS() {
         LOG_ERROR_WAIT_EXIT "错误: SAVE_FILE_INFOS - s_file - 为空"
     fi
 
-    if [[ -d ${s_file} ]]; then
+    if [[ -d "${s_file}" ]]; then
         LOG_WARNING "跳过: 是文件夹 - ${s_file}"
         return 0
     fi
 
     filename_suffix=${s_file##*.}
-    if [[ -z ${filename_suffix} ]]; then
+    if [[ -z "${filename_suffix}" ]]; then
         LOG_ERROR_WAIT_EXIT "错误: 获取后缀失败 - ${s_file}"
         return 0
     fi
-    if [[ ! 'rar zip tar.gz gz' =~ ${filename_suffix} ]]; then
+    if [[ ! "rar zip tar.gz gz" =~ "${filename_suffix}" ]]; then
         LOG_WARNING "跳过: 不是压缩文件 - ${s_file}"
         return 0
     fi
@@ -28,9 +28,10 @@ GET_FILE_INFOS() {
     src_big_version=''
     src_small_version=''
     src_commit=''
+    src_version_b_s_rc=''
 
     LOG_INFO "s_file: ${s_file}"
-    
+
     # e.g. n2n_v3_linux_x64_v3.1.1-16_r1200_all_by_heiye.rar
     s_file=${s_file##*/}
     LOG_INFO "s_file: ${s_file}"
@@ -72,13 +73,17 @@ GET_FILE_INFOS() {
     if [[ -z "${src_commit}" ]]; then
         LOG_ERROR "请注意: GET_FILE_INFOS: src_commit - 为空 - ${s_file}"
     fi
+    # e.g. v3_3.1.1-16_r1200
     LOG_INFO "src_commit: ${src_commit}"
+    src_version_b_s_rc=${src_big_version}${src_small_version:+_}${src_small_version}${src_commit:+_r}${src_commit}
+    LOG_INFO "src_version_b_s_rc: ${src_version_b_s_rc}"
+
     # e.g. aarch64
     src_machine_alias=${filename_no_suffix##*${src_machine}}
     src_machine_alias=${src_machine_alias%%_v${src_small_version}*}
     src_machine_alias=${src_machine_alias##*(}
     src_machine_alias=${src_machine_alias%%)*}
-    if [[  $src_machine_alias ]];then
+    if [[ ! -z "$src_machine_alias" ]]; then
         LOG_ERROR src_machine_alias: $src_machine_alias
     fi
 

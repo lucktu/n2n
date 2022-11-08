@@ -17,6 +17,7 @@ fi
 
 n2n_src_dir=${n2n_edge_biggest%/*}
 if [[ -z "${n2n_src_dir}" ]]; then
+    LOG_ALL
     LOG_ERROR_WAIT_EXIT "n2n_src_dir 获取失败"
 fi
 

@@ -4,14 +4,15 @@
 EXTRACT() {
     extract_file="$1"
     extract_path="$2"
+    extract_every="$3"
     LOG_INFO "Try: 解压文件 ${extract_file} - ${extract_path}"
     if [[ -z "${extract_file}" ]]; then
         LOG_ERROR_WAIT_EXIT "解压文件错误: extract_file - 为空"
     fi
-    if [[ -d ${extract_file} ]]; then
+    if [[ -d "${extract_file}" ]]; then
         LOG_ERROR_WAIT_EXIT "解压文件错误: 文件夹 - ${extract_file}"
     fi
-    if [[ ! -f ${extract_file} ]]; then
+    if [[ ! -f "${extract_file}" ]]; then
         LOG_ERROR_WAIT_EXIT "解压文件错误: 不存在 - ${extract_file}"
     fi
     extract_filename=${extract_file##*/}
@@ -24,28 +25,39 @@ EXTRACT() {
     if [[ ! -d "${extract_path}" ]]; then
         mkdir -p "${extract_path}"
     fi
-
-    case "${extract_filename_suffix}" in
-    tar)
-        tar -xvf $extract_file -C ${extract_path}
-        ;;
-    tar.gz)
-        tar -zxvf $extract_file -C ${extract_path}
-        ;;
-    zip)
-        unzip -o $extract_file -d ${extract_path}
-        ;;
-    rar)
-        unrar x $extract_file ${extract_path}
-        ;;
-    *)
-        LOG_ERROR "不支持文件类型 - ${extract_filename_suffix}"
-        ;;
-    esac
-    if [[ -z "$(ls ${extract_path})" ]]; then
-        LOG_ERROR "解压失败 - ${extract_file}"
-        EXTRACT_EVERY ${extract_file} ${extract_path}
+    fn_suffixs=${extract_filename_suffix}
+    if [[ ! -z "${extract_every}" ]]; then
+        fn_suffixs="tar,ar.gz,zip,rar,${extract_filename_suffix}"
     fi
+    l_fn_suffixs=(${fn_suffixs//,/ })
+    for fn_suffix in ${l_fn_suffixs[@]}; do
+        case "${extract_filename_suffix}" in
+        tar)
+            tar -xvf $extract_file -C ${extract_path}
+            ;;
+        tar.gz)
+            tar -zxvf $extract_file -C ${extract_path}
+            ;;
+        zip)
+            unzip -o $extract_file -d ${extract_path}
+            ;;
+        rar)
+            unrar x $extract_file ${extract_path}
+            ;;
+        *)
+            LOG_ERROR "不支持文件类型 - ${extract_filename_suffix}"
+            ;;
+        esac
+        if [[ -z "$(ls ${extract_path})" && -z "${extract_every}" ]]; then
+            LOG_ERROR "解压失败 - ${extract_file}"
+            # EXTRACT_EVERY
+            EXTRACT ${extract_file} ${extract_path} true
+        fi
+        if [[ ! -z "$(ls ${extract_path})" ]]; then
+            LOG_WARNING "The real: ${fn_suffix} - ${extract_file}"
+            break
+        fi
+    done
 }
 
 EXTRACT_ALL() {
@@ -54,7 +66,7 @@ EXTRACT_ALL() {
     if [[ -z "${extract_file}" ]]; then
         LOG_ERROR_WAIT_EXIT "解压全部错误: extract_file- 为空"
     fi
-    if [[ ! -e ${extract_file} ]]; then
+    if [[ ! -e "${extract_file}" ]]; then
         LOG_ERROR_WAIT_EXIT "解压全部错误: 不存在 - ${extract_file}"
     fi
     if [[ -f "${extract_file}" ]]; then
@@ -69,52 +81,3 @@ EXTRACT_ALL() {
 }
 
 LOG_INFO "init_extract success"
-
-EXTRACT_EVERY() {
-    extract_file="$1"
-    extract_path="$2"
-    LOG_INFO "Try: 解压文件 ${extract_file} - ${extract_path}"
-    if [[ -z "${extract_file}" ]]; then
-        LOG_ERROR_WAIT_EXIT "解压文件错误: extract_file - 为空"
-    fi
-    if [[ -d ${extract_file} ]]; then
-        LOG_ERROR_WAIT_EXIT "解压文件错误: 文件夹 - ${extract_file}"
-    fi
-    if [[ ! -f ${extract_file} ]]; then
-        LOG_ERROR_WAIT_EXIT "解压文件错误: 不存在 - ${extract_file}"
-    fi
-    extract_filename=${extract_file##*/}
-    extract_filename_suffix=${extract_filename##*_}
-    extract_filename_suffix=${extract_filename_suffix#*.}
-    if [[ -z "${extract_path}" ]]; then
-        extract_path=${extract_file%.${extract_filename_suffix}}
-    fi
-    LOG_INFO "解压文件 ${extract_file} - ${extract_path}"
-    if [[ ! -d "${extract_path}" ]]; then
-        mkdir -p "${extract_path}"
-    fi
-    for fn_suffix in 'tar' 'tar.gz' 'zip' 'rar'; do
-        case "${fn_suffix}" in
-        tar.gz)
-            tar -zxvf $extract_file -C ${extract_path}
-            ;;
-        tar)
-            tar -xvf $extract_file -C ${extract_path}
-            ;;
-        zip)
-            unzip -o $extract_file -d ${extract_path}
-            ;;
-        rar)
-            unrar x $extract_file ${extract_path}
-            ;;
-        *)
-            LOG_ERROR "不支持文件类型 - ${extract_filename_suffix}"
-            ;;
-        esac
-        if [[ ! -z "$(ls ${extract_path})" ]]; then
-            LOG_WARNING "${fn_suffix} - ${extract_file}"
-            break
-        fi
-
-    done
-}

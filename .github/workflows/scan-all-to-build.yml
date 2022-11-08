@@ -34,21 +34,8 @@ jobs:
           . scan_all_save.sh
           LOG_INFO 'scan_all_save Successful'
           version_b_s_rcs=''
-          for version_filename in $(ls ${RESULT_DIR}); do
-            version_file=${RESULT_DIR}/${version_filename}
-
-            if [[ -d ${version_file} ]]; then
-                LOG_WARNING "跳过: 是文件夹 - ${version_file}"
-                continue
-            fi
-            if [[ ${version_filename} == 'all.txt' ]]; then
-                LOG_WARNING "跳过: 汇总文件 - ${version_file}"
-                continue
-            fi
-            LOG_INFO "version_file: ${version_file}"
-            # e.g. v3_3.1.0-54_1127
-            version_b_s_rc=${version_file##*/}
-            version_b_s_rc=${version_b_s_rc%%.txt}
+          l_build_version_b_s_rcs=(${build_version_b_s_rcs//,/ })
+          for version_b_s_rc in ${l_build_version_b_s_rcs[@]}; do
             LOG_INFO "version_b_s_rc: ${version_b_s_rc}"
             version_b_s_rcs="${version_b_s_rcs}, {\"version_b_s_rc\": \"${version_b_s_rc}\"}"
           done

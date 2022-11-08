@@ -62,46 +62,46 @@ mycpu=""
 sel_os
 sel_cpu
 
-if [[ -z ${KERNEL} ]]; then
+if [[ -z ${MY_KERNEL} ]]; then
     case ${myos} in
     linux)
-        KERNEL="linux"
+        MY_KERNEL="linux"
         ;;
     macosx)
-        KERNEL="darwin"
+        MY_KERNEL="darwin"
         ;;
     windows)
-        KERNEL="windows"
+        MY_KERNEL="windows"
         ;;
     *)
         LOG_ERROR_WAIT_EXIT "不支持的系统 - ${myos}"
         ;;
     esac
-    LOG_INFO "受支持的系统 - ${myos} -> ${KERNEL}"
+    LOG_INFO "受支持的系统 - ${myos} -> ${MY_KERNEL}"
 fi
 
-if [[ -z ${MACHINE} ]]; then
+if [[ -z ${MY_MACHINE} ]]; then
     case ${mycpu} in
     i386)
-        MACHINE="x86"
+        MY_MACHINE="x86"
         ;;
     amd64)
-        MACHINE="x64"
+        MY_MACHINE="x64"
         ;;
     arm)
-        MACHINE="arm"
+        MY_MACHINE="arm"
         ;;
     arm64 | aarch64)
-        MACHINE="arm64"
+        MY_MACHINE="arm64"
         ;;
     armeb | mips | mips64 | mips64el | mipsel)
-        MACHINE=$mycpu
+        MY_MACHINE=$mycpu
         ;;
     *)
         LOG_ERROR_WAIT_EXIT "不支持的CPU架构类型 - ${mycpu}"
         ;;
     esac
-    LOG_INFO "受支持的CPU架构类型 - ${mycpu} -> ${MACHINE}"
+    LOG_INFO "受支持的CPU架构类型 - ${mycpu} -> ${MY_MACHINE}"
 fi
 
-SEL_PLATFORM $MACHINE
+SEL_PLATFORM $MY_MACHINE

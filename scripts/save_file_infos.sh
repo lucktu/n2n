@@ -4,14 +4,21 @@
 . get_file_infos.sh
 
 SAVE_FILE_INFOS() {
-    result_version=${src_big_version}${src_small_version:+_}${src_small_version}${src_commit:+_r}${src_commit}
+    result_version=${src_version_b_s_rc}
+
+    # result_str="${src_machine} - ${result_version}"
+
+    # e.g. arm64\naarch64 | mips64
+    # arm64
+    # aarch64
+    # result_str="${src_machine}${src_machine_alias:+\n}${src_machine_alias}"
+
+    result_str="${src_machine}"
+    LOG_INFO result_str: ${result_str}
+
     result_file=${RESULT_DIR}/${result_version}.txt
     LOG_INFO result_file: ${result_file}
 
-    # result_str="${src_machine} - ${result_version}"
-    # result_str="${src_machine}${src_machine_alias:+\n}${src_machine_alias}"
-    result_str="${src_machine}"
-    LOG_INFO result_str: ${result_str}
     echo -e ${result_str} >>${result_file}
     echo -e ${result_str} >>${RESULT_DIR}/all.txt
 
