@@ -69,7 +69,7 @@ COPY --from=downloader \
   /tmp/desc/supernode \
   /tmp/desc/edge \
   /usr/local/sbin/
-
+RUN ls
 # COPY ./scripts/*.sh /usr/local/sbin/
 
 # CMD [ "/bin/bash" , "-c" , "/usr/local/sbin/run_n2n.sh" ]
