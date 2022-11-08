@@ -44,4 +44,4 @@ if [[ ! -f "${n2n_desc_dir}/supernode" ]]; then
     LOG_WARNING "使用${supernode_file_src}"
     cp "${supernode_file_src}" "${n2n_desc_dir}/supernode"
 fi
-LOG_INFO ls ${n2n_desc_dir}
+LOG_RUN ls ${n2n_desc_dir}
