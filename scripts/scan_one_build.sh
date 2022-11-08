@@ -36,7 +36,6 @@ SCAN_ONE_BUILD() {
     build_commit=${build_commit#r}
     if [[ -z "${build_commit}" ]]; then
         LOG_ERROR "请注意: GET_FILE_INFOS: build_commit - 为空 - ${version_file}"
-        sleep 3
     fi
     LOG_INFO "build_commit: ${build_commit}"
     build_platforms=''
@@ -55,14 +54,16 @@ SCAN_ONE_BUILD() {
             LOG_WARNING 不支持的CPU架构类型 - ${src_machine}
             continue
         fi
-        cp $src_file $BUILD_SRC/
+        if [[ ! -z "${VERSION_B_S_rC}" ]]; then
+            cp $src_file ${BUILD_SRC}/
+        fi
         need_files="$src_file $need_files"
         SEL_PLATFORM ${src_machine}
         if [[ ! ${build_platforms} =~ ${platform} ]]; then
             build_platforms="${build_platforms}, ${platform}"
         fi
     done
-    LOG_WARNING cp $need_files $BUILD_SRC/
+    LOG_WARNING need_files: $need_files
     LOG_INFO $BUILD_SRC: $(ls $BUILD_SRC)
     export REGISTRY='registry.aour.zctmdc.cn'
     export BUILD_PLATFORMS="${build_platforms:1}"

@@ -71,7 +71,6 @@ GET_FILE_INFOS() {
     src_commit=${src_commit%%_*}
     if [[ -z "${src_commit}" ]]; then
         LOG_ERROR "请注意: GET_FILE_INFOS: src_commit - 为空 - ${s_file}"
-        sleep 3
     fi
     LOG_INFO "src_commit: ${src_commit}"
     # e.g. aarch64

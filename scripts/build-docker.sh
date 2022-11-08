@@ -23,5 +23,5 @@ if [[ "${version_b_s_rc}" == "v2s" || "${version_b_s_rc}" == "v2" || "${version_
     cp ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/* $BUILD_SRC
     exit 0
 fi
-
+export VERSION_B_S_rC=${version_b_s_rc}
 SCAN_ONE_BUILD ${version_b_s_rc}
