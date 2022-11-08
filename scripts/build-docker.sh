@@ -10,13 +10,13 @@ if [[ ! -z "${VERSION_B_S_rC}" ]]; then
 fi
 
 if [[ -z "${version_b_s_rc}" && ! -z "${BIG_VERSION}" ]]; then
-    LOG_WARNING use Define VERSION
+    LOG_WARNING use BIG_VERSION
     version_b_s_rc="${BIG_VERSION}${SMALL_VERSION:+_}${SMALL_VERSION}${COMMIT:+_r}${COMMIT}"
 fi
 LOG_WARNING "Try Build: version_b_s_rc - ${version_b_s_rc}"
 
 if [[ "${version_b_s_rc}" == "v2s" || "${version_b_s_rc}" == "v2" || "${version_b_s_rc}" == "v1" ]]; then
-    LOG_WARNING "BUILD BIG VERSION"
+    LOG_WARNING "BUILD releases VERSION"
     . init_path.sh
     LOG_WARNING $(ls ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/)
     LOG_WARNING cp ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/* $BUILD_SRC

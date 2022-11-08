@@ -129,14 +129,14 @@ jobs:
             BUILD_COMMIT=${src_commit}
             echo "LATEST_VERSION=true" >> $GITHUB_OUTPUT
           fi
-          version_b_s_rc=${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_r}${COMMIT}
+          version_b_s_rc=${BUILD_BIG_VERSION}_${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT}
           LOG_WARNING version_b_s_rc: ${version_b_s_rc}
           SCAN_ONE_BUILD ${version_b_s_rc}
-          echo "BIG_VERSION=${BIG_VERSION}" >> $GITHUB_OUTPUT
-          echo "SMALL_VERSION=${SMALL_VERSION}" >> $GITHUB_OUTPUT
-          echo "COMMIT=${COMMIT}" >> $GITHUB_OUTPUT
+          echo "BUILD_BIG_VERSION=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
+          echo "BUILD_SMALL_VERSION=${BUILD_SMALL_VERSION}" >> $GITHUB_OUTPUT
+          echo "BUILD_COMMIT=${BUILD_COMMIT}" >> $GITHUB_OUTPUT
           echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
-          echo "VERSION_B_S_rC=${version_b_s_rc}" >> $GITHUB_OUTPUT
+          echo "BUILD_VERSION_B_S_rC=${BUILD_VERSION_B_S_rC}" >> $GITHUB_OUTPUT
 
   check-push:
     needs: [init-version]
@@ -153,7 +153,7 @@ jobs:
         id: get_tag_last_pushed
         uses: sergeysova/jq-action@v2
         with:
-          cmd: curl -k -sS https://hub.docker.com/v2/repositories/${{ secrets.REGISTRY_USERNAME }}/n2n_lucktu/tags/${{ needs.init-version.outputs.VERSION_B_S_rC }} | jq '.tag_last_pushed'
+          cmd: curl -k -sS https://hub.docker.com/v2/repositories/${{ secrets.REGISTRY_USERNAME }}/n2n_lucktu/tags/${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} | jq '.tag_last_pushed'
 
       - name: Check tag_last_pushed
         id: tag_last_pushed
@@ -170,7 +170,7 @@ jobs:
           # e.g. "2022-10-30T19:29:49.877019Z"
           last_pulled_date=${{ steps.get_tag_last_pushed.outputs.value }}
           echo "last_pulled_date=${last_pulled_date}" >> $GITHUB_OUTPUT
-          LOG_INFO "check tag - ${{ needs.init-version.outputs.VERSION_B_S_rC }}"
+          LOG_INFO "check tag - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
           LOG_INFO "last_pulled_date - ${last_pulled_date}"
           if [[ true == "${{ env.FORCE_PUSH }}" ]]; then
               LOG_WARNING "强制 编译/推送"
@@ -233,21 +233,21 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}
           tags: |
             type=raw,value=latest,${{ needs.init-version.outputs.LATEST_VERSION }}
-            type=raw,value=v3,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v3' }}
-            type=raw,value=releases-v3,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v3' }}
-            type=raw,value=v2s,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2s' && needs.init-version.outputs.SMALL_VERSION == '' && needs.init-version.outputs.COMMIT == '' }}
-            type=raw,value=releases-v2s,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2s' && needs.init-version.outputs.SMALL_VERSION == '2.1.0' && needs.init-version.outputs.COMMIT == '' }}
-            type=raw,value=v2,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2' && needs.init-version.outputs.SMALL_VERSION == '' && needs.init-version.outputs.COMMIT == '' }}
-            type=raw,value=releases-v2,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v2' && needs.init-version.outputs.SMALL_VERSION == '' && needs.init-version.outputs.COMMIT == '' }}
-            type=raw,value=v1,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v1' && needs.init-version.outputs.SMALL_VERSION == '' && needs.init-version.outputs.COMMIT == '' }}
-            type=raw,value=releases-v1,enable=${{ needs.init-version.outputs.BIG_VERSION == 'v1' && needs.init-version.outputs.SMALL_VERSION == '' && needs.init-version.outputs.COMMIT == '' }}
-            type=raw,value=${{ format( '{0}_{1}_r{2}', needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.BIG_VERSION != '' && needs.init-version.outputs.SMALL_VERSION != '' && needs.init-version.outputs.COMMIT != '' }}
-            type=raw,value=${{ format( '{0}_{1}', needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.BIG_VERSION != '' && needs.init-version.outputs.SMALL_VERSION != '' && needs.init-version.outputs.COMMIT == '' }}
-            type=raw,value=${{ format( 'v.{1}_r{2}',  needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.SMALL_VERSION != '' && needs.init-version.outputs.COMMIT != '' }}
-            type=raw,value=${{ format( 'v.{1}',  needs.init-version.outputs.BIG_VERSION, needs.init-version.outputs.SMALL_VERSION, needs.init-version.outputs.COMMIT ) }}, enable=${{ needs.init-version.outputs.SMALL_VERSION != '' }}
-            type=raw,value=${{ needs.init-version.outputs.VERSION_B_S_rC }}
+            type=raw,value=v3,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v3' }}
+            type=raw,value=releases-v3,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v3' }}
+            type=raw,value=v2s,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2s' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+            type=raw,value=releases-v2s,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2s' && needs.init-version.outputs.BUILD_SMALL_VERSION == '2.1.0' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+            type=raw,value=v2,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+            type=raw,value=releases-v2,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+            type=raw,value=v1,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v1' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+            type=raw,value=releases-v1,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v1' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+            type=raw,value=${{ format( '{0}_{1}_r{2}', needs.init-version.outputs.BUILD_BIG_VERSION, needs.init-version.outputs.BUILD_SMALL_VERSION, needs.init-version.outputs.BUILD_COMMIT ) }}, enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION != '' && needs.init-version.outputs.BUILD_SMALL_VERSION != '' && needs.init-version.outputs.BUILD_COMMIT != '' }}
+            type=raw,value=${{ format( '{0}_{1}', needs.init-version.outputs.BUILD_BIG_VERSION, needs.init-version.outputs.BUILD_SMALL_VERSION, needs.init-version.outputs.BUILD_COMMIT ) }}, enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION != '' && needs.init-version.outputs.BUILD_SMALL_VERSION != '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+            type=raw,value=${{ format( 'v.{1}_r{2}',  needs.init-version.outputs.BUILD_BIG_VERSION, needs.init-version.outputs.BUILD_SMALL_VERSION, needs.init-version.outputs.BUILD_COMMIT ) }}, enable=${{ needs.init-version.outputs.BUILD_SMALL_VERSION != '' && needs.init-version.outputs.BUILD_COMMIT != '' }}
+            type=raw,value=${{ format( 'v.{1}',  needs.init-version.outputs.BUILD_BIG_VERSION, needs.init-version.outputs.BUILD_SMALL_VERSION, needs.init-version.outputs.BUILD_COMMIT ) }}, enable=${{ needs.init-version.outputs.BUILD_SMALL_VERSION != '' }}
+            type=raw,value=${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
           labels: |
-            org.opencontainers.image.version=${{ needs.init-version.outputs.VERSION_B_S_rC }}
+            org.opencontainers.image.version=${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
 
       - name: Build and export to Docker
         uses: docker/build-push-action@v3
@@ -259,9 +259,9 @@ jobs:
           cache-to: type=inline
           build-args: |
             VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-            BIG_VERSION=${{ needs.init-version.outputs.BIG_VERSION }}
-            SMALL_VERSION=${{ needs.init-version.outputs.SMALL_VERSION }}
-            COMMIT=${{ needs.init-version.outputs.COMMIT }}
+            BIG_VERSION=${{ needs.init-version.outputs.BUILD_BIG_VERSION }}
+            SMALL_VERSION=${{ needs.init-version.outputs.BUILD_SMALL_VERSION }}
+            COMMIT=${{ needs.init-version.outputs.BUILD_COMMIT }}
 
       - name: Test
         run: |
@@ -299,9 +299,9 @@ jobs:
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
           build-args: |
             VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-            BIG_VERSION=${{ needs.init-version.outputs.BIG_VERSION }}
-            SMALL_VERSION=${{ needs.init-version.outputs.SMALL_VERSION }}
-            COMMIT=${{ needs.init-version.outputs.COMMIT }}
+            BIG_VERSION=${{ needs.init-version.outputs.BUILD_BIG_VERSION }}
+            SMALL_VERSION=${{ needs.init-version.outputs.BUILD_SMALL_VERSION }}
+            COMMIT=${{ needs.init-version.outputs.BUILD_COMMIT }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker

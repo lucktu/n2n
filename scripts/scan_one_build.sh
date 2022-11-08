@@ -44,7 +44,10 @@ SCAN_ONE_BUILD() {
         LOG_ERROR "请注意: SCAN_ONE_BUILD: build_commit - 为空 - ${version_file}"
     fi
     LOG_INFO "build_commit: ${build_commit}"
-
+    build_version_b_s_rc=${build_big_version}${build_small_version:+_}${build_small_version}${build_commit:+_r}${build_commit}
+    if [[ ${build_version_b_s_rc} != ${version_b_s_rc} ]]; then
+        LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD: build_version_b_s_rc  ${build_version_b_s_rc} != ${version_file}"
+    fi
     build_platforms=''
     if [[ -d $BUILD_SRC ]]; then
         rm -r $BUILD_SRC
@@ -77,7 +80,7 @@ SCAN_ONE_BUILD() {
     export BUILD_BIG_VERSION=${build_big_version}
     export BUILD_SMALL_VERSION=${build_small_version}
     export BUILD_COMMIT=${build_commit}
-    export BUILD_VERSION_B_S_rC=${version_b_s_rc}
+    export BUILD_VERSION_B_S_rC=${build_version_b_s_rc}
 
     LOG_INFO REGISTRY: ${REGISTRY}
     LOG_INFO BUILD_PLATFORMS: ${BUILD_PLATFORMS}
