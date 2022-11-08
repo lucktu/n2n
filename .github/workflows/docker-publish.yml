@@ -97,6 +97,7 @@ jobs:
             echo BBUILD_IG_VERSION: ${BUILD_BIG_VERSION}
             echo "BUILD_BIG_VERSION=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
             echo "BUILD_VERSION_B_S_rC=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
+            echo "BUILD_PLATFORMS=linux/amd64,linux/386,linux/arm64/v8,linux/arm/v7"" >> $GITHUB_OUTPUT
             exit 0
           fi
           PROJECT_ROOT_DIR=$(pwd)
