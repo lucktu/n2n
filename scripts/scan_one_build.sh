@@ -65,7 +65,7 @@ SCAN_ONE_BUILD() {
             continue
         fi
         if [[ ! -z "${VERSION_B_S_rC}" ]]; then
-            cp $src_file ${BUILD_SRC}/
+            LOG_RUN cp $src_file ${BUILD_SRC}/
         fi
         LOG_INFO "匹配成功: ${version_filename} - ${src_file}"
         need_files="${need_files} ${src_file}"
@@ -89,7 +89,7 @@ SCAN_ONE_BUILD() {
     LOG_INFO BUILD_SMALL_VERSION: ${BUILD_SMALL_VERSION}
     LOG_INFO BUILD_COMMIT: ${BUILD_COMMIT}
     LOG_INFO BUILD_VERSION_B_S_rC: ${BUILD_VERSION_B_S_rC}
-    # docker compose -f docker-compose.build.evn.yaml build --no-cache --progress plain 
+    # docker compose -f docker-compose.build.evn.yaml build --no-cache --progress plain
 
     # docker compose -f docker-compose.build.evn.yaml push
     # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${BUILD_VERSION_B_S_rC}_edge_help.txt
