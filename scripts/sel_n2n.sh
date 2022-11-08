@@ -28,15 +28,6 @@ chmod +x ${n2n_desc_dir}/*
 
 ls -l ${n2n_desc_dir}
 
-if [[ ! -f "${n2n_desc_dir}/edge" && -f "${n2n_desc_dir}/edge2s" ]]; then
-    LOG_WARNING "使用${n2n_desc_dir}/edge2s"
-    cp "${n2n_desc_dir}/edge2s" "${n2n_desc_dir}/edge"
-fi
-if [[ ! -f "${n2n_desc_dir}/supernode" && -f "${n2n_desc_dir}/supernode2s" ]]; then
-    LOG_WARNING "使用${n2n_desc_dir}/supernode2s"
-    cp "${n2n_desc_dir}/supernode2s" "${n2n_desc_dir}/supernode"
-fi
-
 if [[ ! -f "${n2n_desc_dir}/edge" ]]; then
     edge_file_src="$(ls ${n2n_desc_dir}/edge* | grep -v upx)"
     if [[ -z "${edge_file_src}" ]]; then
@@ -53,3 +44,4 @@ if [[ ! -f "${n2n_desc_dir}/supernode" ]]; then
     LOG_WARNING "使用${supernode_file_src}"
     cp "${supernode_file_src}" "${n2n_desc_dir}/supernode"
 fi
+LOG_INFO ls ${n2n_desc_dir}
