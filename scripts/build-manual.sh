@@ -1,5 +1,5 @@
 #!/bin/bash
-
+rm -r ../result/
 . init_logger.sh
 
 docker buildx create --use

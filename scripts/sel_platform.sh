@@ -5,7 +5,7 @@ SEL_PLATFORM() {
     machine=$1
     platform=''
     if [[ -z "${machine}" ]]; then
-        LOG_ERROR_WAIT_EXIT "错误: SAVE_FILE_INFOS - machine - 为空"
+        LOG_ERROR_WAIT_EXIT "错误: SEL_PLATFORM - machine - 为空"
     fi
 
     case ${machine} in

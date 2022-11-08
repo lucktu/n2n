@@ -9,7 +9,7 @@ if [[ ! -z "${VERSION_B_S_rC}" ]]; then
     version_b_s_rc="${VERSION_B_S_rC}"
 fi
 
-if [[ -z "${version_b_s_rc}" ]]; then
+if [[ -z "${version_b_s_rc}" && ! -z "${BIG_VERSION}" ]]; then
     LOG_WARNING use Define VERSION
     version_b_s_rc="${BIG_VERSION}${SMALL_VERSION:+_}${SMALL_VERSION}${COMMIT:+_r}${COMMIT}"
 fi

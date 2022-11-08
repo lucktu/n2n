@@ -6,33 +6,36 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        BIG_VERSION: ${BIG_VERSION}
-        SMALL_VERSION: ${SMALL_VERSION}
-        COMMIT: ${COMMIT}
+        BIG_VERSION: ${BUILD_BIG_VERSION}
+        SMALL_VERSION: ${BUILD_SMALL_VERSION}
+        COMMIT: ${BUILD_COMMIT}
+        VERSION_B_S_rC: ${BUILD_VERSION_B_S_rC}
       labels:
-        org.opencontainers.image.version: ${BIG_VERSION}_${SMALL_VERSION}_r${COMMIT}
-    image: ${REGISTRY}/zctmdc/n2n_lucktu:${BIG_VERSION}_${SMALL_VERSION}_r${COMMIT}
+        org.opencontainers.image.version: ${BUILD_BIG_VERSION}_${BUILD_SMALL_VERSION}_r${BUILD_COMMIT}
+    image: ${REGISTRY}/zctmdc/n2n_lucktu:${BUILD_BIG_VERSION}_${BUILD_SMALL_VERSION}_r${BUILD_COMMIT}
 
   n2n_evn_v_SMALL_VERSION_rCOMMIT:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        BIG_VERSION: ${BIG_VERSION}
-        SMALL_VERSION: ${SMALL_VERSION}
-        COMMIT: ${COMMIT}
+        BIG_VERSION: ${BUILD_BIG_VERSION}
+        SMALL_VERSION: ${BUILD_SMALL_VERSION}
+        COMMIT: ${BUILD_COMMIT}
+        VERSION_B_S_rC: ${BUILD_VERSION_B_S_rC}
       labels:
-        org.opencontainers.image.version: ${BIG_VERSION}_${SMALL_VERSION}_r${COMMIT}
-    image: ${REGISTRY}/zctmdc/n2n_lucktu:v.${SMALL_VERSION}_r${COMMIT}
+        org.opencontainers.image.version: ${BUILD_BIG_VERSION}_${BUILD_SMALL_VERSION}_r${BUILD_COMMIT}
+    image: ${REGISTRY}/zctmdc/n2n_lucktu:v.${BUILD_SMALL_VERSION}_r${BUILD_COMMIT}
 
   n2n_evn_v_SMALL_VERSION:
     build:
       context: .
       dockerfile: Dockerfile
       labels:
-        org.opencontainers.image.version: v.${SMALL_VERSION}
+        org.opencontainers.image.version: v.${BUILD_SMALL_VERSION}
       args:
-        BIG_VERSION: ${BIG_VERSION}
-        SMALL_VERSION: ${SMALL_VERSION}
-        COMMIT: ${COMMIT}
-    image: ${REGISTRY}/zctmdc/n2n_lucktu:v.${SMALL_VERSION}
+        BIG_VERSION: ${BUILD_BIG_VERSION}
+        SMALL_VERSION: ${BUILD_SMALL_VERSION}
+        COMMIT: ${BUILD_COMMIT}
+        VERSION_B_S_rC: ${BUILD_VERSION_B_S_rC}
+    image: ${REGISTRY}/zctmdc/n2n_lucktu:v.${BUILD_SMALL_VERSION}
