@@ -31,6 +31,8 @@ jobs:
           chmod +x *.sh
           . init_logger.sh
           . init_path.sh
+          . scan_all_save.sh
+          LOG_INFO 'scan_all_save Successful'
           . scan_all_build.sh
           LOG_INFO 'scan_all_build Successful'
           version_b_s_rcs=''
