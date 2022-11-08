@@ -61,7 +61,7 @@ SCAN_ONE_BUILD() {
         need_files="${need_files} ${src_file}"
         SEL_PLATFORM ${src_machine}
         if [[ ! ${build_platforms} =~ ${platform} ]]; then
-            build_platforms="${build_platforms}, ${platform}"
+            build_platforms="${build_platforms},${platform}"
         fi
     done
     LOG_WARNING need_files: $need_files
@@ -84,10 +84,10 @@ SCAN_ONE_BUILD() {
     # docker compose -f docker-compose.build.evn.yaml push
     # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${BUILD_VERSION_B_S_rC}_edge_help.txt
     # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT supernode -h >$BUILD_DESC/${BUILD_VERSION_B_S_rC}_supernode_help.txt
-    if [[ ! -z ${MANUAL_BUILD} && ! -z ${BUILD_PLATFORMS} ]]; then
-        LOG_RUN docker buildx build --platform ${BUILD_PLATFORMS} -t ${REGISTRY}/zctmdc/n2n-lucktu:${BUILD_VERSION_B_S_rC} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push
-        LOG_RUN docker buildx build --platform ${BUILD_PLATFORMS} -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push
-        LOG_RUN docker buildx build --platform ${BUILD_PLATFORMS} -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${BUILD_SMALL_VERSION} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push
+    if [[ ! -z "${MANUAL_BUILD}" && ! -z "${BUILD_PLATFORMS}" ]]; then
+        LOG_RUN docker buildx build --platform "\'${BUILD_PLATFORMS}\'" -t ${REGISTRY}/zctmdc/n2n-lucktu:${BUILD_VERSION_B_S_rC} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push
+        LOG_RUN docker buildx build --platform "\'${BUILD_PLATFORMS}\'" -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push
+        LOG_RUN docker buildx build --platform "\'${BUILD_PLATFORMS}\'" -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${BUILD_SMALL_VERSION} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push
     fi
 
 }
