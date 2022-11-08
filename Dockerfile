@@ -64,6 +64,7 @@ LABEL description="${summary}" \
   org.opencontainers.image.description="${summary}" \
   org.opencontainers.image.licenses="MIT"
 
+WORKDIR /usr/local/sbin/
 COPY --from=downloader \
   /tmp/desc/supernode \
   /tmp/desc/edge \
