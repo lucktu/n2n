@@ -31,7 +31,7 @@ EXTRACT() {
     fi
     l_fn_suffixs=(${fn_suffixs//,/ })
     for fn_suffix in ${l_fn_suffixs[@]}; do
-        case "${extract_filename_suffix}" in
+        case "${fn_suffix}" in
         tar)
             LOG_INFO 'try use tar'
             tar -xvf $extract_file -C ${extract_path}
