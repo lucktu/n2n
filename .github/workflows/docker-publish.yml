@@ -115,7 +115,7 @@ jobs:
             BUILD_SMALL_VERSION=${build_small_version}
             BUILD_COMMIT=${build_commit}
           elif [[ "true" == "${{ env.BIG_VERSION != '' }}" || "true" == "${{ env.SMALL_VERSION != '' }}"   ]];then
-            BUILD_LOG_WARNING "use env version"
+            LOG_WARNING "use env version"
             BUILD_BIG_VERSION=${{env.BIG_VERSION}}
             BUILD_SMALL_VERSION=${{env.SMALL_VERSION}}
             BUILD_COMMIT=${{env.COMMIT}}
