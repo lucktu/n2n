@@ -11,6 +11,7 @@ LOG_ERROR() {
 }
 
 LOG_ERROR_WAIT_EXIT() {
+  LOG_ALL
   echo -e $(caller) "\033[0;31m[ERROR] $* \033[0m"
   t=60
   while test $t -gt 0; do
