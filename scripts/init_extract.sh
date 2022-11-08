@@ -33,15 +33,19 @@ EXTRACT() {
     for fn_suffix in ${l_fn_suffixs[@]}; do
         case "${extract_filename_suffix}" in
         tar)
+            LOG_INFO 'try use tar'
             tar -xvf $extract_file -C ${extract_path}
             ;;
         tar.gz)
+            LOG_INFO 'try use tar.gz'
             tar -zxvf $extract_file -C ${extract_path}
             ;;
         zip)
+            LOG_INFO 'try use zip'
             unzip -o $extract_file -d ${extract_path}
             ;;
         rar)
+            LOG_INFO 'try use rar'
             unrar x $extract_file ${extract_path}
             ;;
         *)
@@ -51,7 +55,7 @@ EXTRACT() {
         if [[ -z "$(ls ${extract_path})" && -z "${extract_every}" ]]; then
             LOG_ERROR "解压失败 - ${extract_file}"
             # EXTRACT_EVERY
-            EXTRACT ${extract_file} ${extract_path} true
+            EXTRACT ${extract_file} ${extract_path} 'true'
         fi
         if [[ ! -z "$(ls ${extract_path})" ]]; then
             LOG_WARNING "The real: ${fn_suffix} - ${extract_file}"
