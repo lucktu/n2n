@@ -88,8 +88,8 @@ jobs:
           }
           if [[ "true" == "${{ ('v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc) || (('v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION) && env.SMALL_VERSION == '') }}" ]];then
             if [[ "true" == "${{ 'v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc }}" ]];then
-              BIG_VERSION=${{ inputs.version_b_s_rc }}
               LOG_WARNING USE inputs.version_b_s_rc
+              BIG_VERSION=${{ inputs.version_b_s_rc }}
             elif [[ "true" == "${{ 'v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION }}" ]];then
               LOG_WARNING USE env.BIG_VERSION
               BIG_VERSION=${{ env.BIG_VERSION }}
@@ -110,7 +110,7 @@ jobs:
 
           if [[  "true" == "${{ inputs.version_b_s_rc != '' }}" ]];then
             LOG_WARNING "use version_b_s_rc version"
-            SCAN_ONE_BUILD ${{inputs.version_b_s_rc}}
+            SCAN_ONE_BUILD ${{ inputs.version_b_s_rc }}
           elif [[ "true" == "${{ env.BIG_VERSION != '' }}" || "true" == "${{ env.SMALL_VERSION != '' }}"   ]];then
             LOG_WARNING "use env version"
             BIG_VERSION=${{env.BIG_VERSION}}
@@ -195,10 +195,10 @@ jobs:
     steps:
       - name: Checkout repository on build-psuh
         uses: actions/checkout@v3
-        
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-        
+
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign

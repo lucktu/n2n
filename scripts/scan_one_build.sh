@@ -7,9 +7,15 @@
 
 SCAN_ONE_BUILD() {
     # 一个版本
-    version_b_s_rc=$1
-    if [[ -z "${version_b_s_rc}" || ! -z "${BIG_VERSION}" || ! -z "${SMALL_VERSION}" ]]; then
-        LOG_WARNING "use env version"
+    if [[ ! -z "$1" ]]; then
+        LOG_WARNING "use arg version"
+        version_b_s_rc=$1
+    fi
+    if [[ ! -z "${version_b_s_rc}" ]]; then
+        LOG_WARNING "use version_b_s_rc version_b_s_rc version"
+    fi
+    if [[ -z "${version_b_s_rc}" && ! -z "${BIG_VERSION}" && ! -z "${SMALL_VERSION}" ]]; then
+        LOG_WARNING "use env BIG_VERSION... version"
         version_b_s_rc="${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_r}${COMMIT}"
     fi
     if [[ -z "${version_b_s_rc}" ]]; then
