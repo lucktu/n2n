@@ -174,7 +174,7 @@ jobs:
           LOG_INFO "last_pulled_date - ${last_pulled_date}"
           if [[ true == "${{ env.FORCE_PUSH }}" ]]; then
               LOG_WARNING "强制 编译/推送"
-          elif [[ "${last_pulled_date,,}" != "null" ]]; then
+          elif [[ "${last_pulled_date,,}" != "null" || "${{ needs.init-version.outputs.BUILD_PLATFORMS }}" == "" ]]; then
               echo 'skip_build_push=true' >> $GITHUB_OUTPUT
               LOG_INFO "跳过 编译/推送"
               exit 0
