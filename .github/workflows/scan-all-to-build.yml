@@ -51,7 +51,7 @@ jobs:
       packages: write
       id-token: write
     strategy:
-      # max-parallel: 2
+      max-parallel: 1
       matrix: ${{ fromJSON(needs.scan-all.outputs.version_b_s_rcs) }}
 
     uses: ./.github/workflows/docker-publish.yml

@@ -254,9 +254,10 @@ jobs:
         with:
           context: ${{ env.DOCKER_CONTEXT_PATH }}
           load: true
+          no-cache: true
           tags: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache
-          cache-to: type=inline
+          # cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache
+          # cache-to: type=inline
           build-args: |
             VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             BIG_VERSION=${{ needs.init-version.outputs.BUILD_BIG_VERSION }}
@@ -295,8 +296,9 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=inline
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
+          no-cache: true
+          # cache-from: type=inline
+          # cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
           build-args: |
             VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             BIG_VERSION=${{ needs.init-version.outputs.BUILD_BIG_VERSION }}
