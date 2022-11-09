@@ -236,7 +236,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}
           tags: |
-            type=raw,value=latest,enable=${{ needs.init-version.outputs.LATEST_VERSION }}
+            type=raw,value=latest,enable=${{ needs.init-version.outputs.LATEST_VERSION == true }}
             type=raw,value=v3,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v3' }}
             type=raw,value=releases-v3,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v3' }}
             type=raw,value=v2s,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2s' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
