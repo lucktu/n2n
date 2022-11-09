@@ -2,7 +2,9 @@
 rm -r ../result/
 . init_logger.sh
 
-docker buildx create --use
+# docker buildx create --use
+docker run --privileged --rm tonistiigi/binfmt --install all
+
 MANUAL_BUILD=true
 . scan_all_save.sh
 . scan_all_build.sh
