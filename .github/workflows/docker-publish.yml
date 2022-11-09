@@ -283,11 +283,11 @@ jobs:
           set -e
           LOG_WARNING 'Test start'
           docker run --rm --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test ls /usr/local/sbin/edge
-          docker run --rm --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test edge -h || echo 
+          docker run --rm --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test edge -h
           LOG_WARNING 'Test pass - edge'
           docker run --rm --platform ${{ needs.init-version.outputs.TEST_PLATFORM }}  ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test ls /usr/local/sbin/supernode
           # check will not pass
-          docker run --rm --platform ${{ needs.init-version.outputs.TEST_PLATFORM }}  ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test supernode -h  || echo 
+          docker run --rm --platform ${{ needs.init-version.outputs.TEST_PLATFORM }}  ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test supernode -h
           # LOG_WARNING 'Test pass - supernode'
           LOG_WARNING 'Test end'
           exit 0
