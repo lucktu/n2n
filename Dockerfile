@@ -49,10 +49,10 @@ RUN mkdir -p /tmp/down/ && cp /tmp/n2n-lucktu/result/build_src/* /tmp/down/ && l
 RUN /tmp/n2n-lucktu/scripts/extract_n2n.sh
 RUN /tmp/n2n-lucktu/scripts/sel_n2n.sh
 
-FROM busybox
+FROM debian:stable-slim
 
 ARG name="n2n-lucktu"
-ARG summary="n2n-lucktu built on-top of busybox"
+ARG summary="n2n-lucktu built on-top of debian:stable-slim"
 LABEL description="${summary}" \
   maintainer="<zctmdc@outlook.com>" \
   app.kubernetes.io/name="${name}" \
