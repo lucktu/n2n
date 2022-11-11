@@ -70,11 +70,13 @@ jobs:
       TEST_PLATFORM: ${{ steps.init-build-version.outputs.TEST_PLATFORM }}
       BUILD_VERSION_B_S_rC: ${{ steps.init-build-version.outputs.BUILD_VERSION_B_S_rC }}
       LATEST_VERSION: ${{ steps.init-build-version.outputs.LATEST_VERSION }}
+
     steps:
       - name: Checkout repository
         # depends on this library
         if: ${{ ! (('v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc) || (('v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION) && env.SMALL_VERSION == '')) }}
         uses: actions/checkout@v3
+
       - name: Check init-build-version
         id: init-build-version
         run: |
@@ -135,6 +137,7 @@ jobs:
           version_b_s_rc=${BUILD_BIG_VERSION}_${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT}
           LOG_WARNING version_b_s_rc: ${version_b_s_rc}
           SCAN_ONE_BUILD ${version_b_s_rc}
+
           echo "BUILD_BIG_VERSION=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
           echo "BUILD_SMALL_VERSION=${BUILD_SMALL_VERSION}" >> $GITHUB_OUTPUT
           echo "BUILD_COMMIT=${BUILD_COMMIT}" >> $GITHUB_OUTPUT
@@ -172,7 +175,6 @@ jobs:
           LOG_ERROR() {
               echo -e "\033[0;31m[ERROR] $* \033[0m"
           }
-          LOG_WARNING $(ls ${GITHUB_WORKSPACE}/result)
           # e.g. "2022-10-30T19:29:49.877019Z"
           last_pulled_date=${{ steps.get_tag_last_pushed.outputs.value }}
           echo "last_pulled_date=${last_pulled_date}" >> $GITHUB_OUTPUT
@@ -229,6 +231,19 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
+
+      - name: Copy Build Files
+        id: copy-build-files
+        run: |
+          export VERSION_B_S_rC=${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
+          PROJECT_ROOT_DIR=$(pwd)
+          echo "copy-build-files - PROJECT_ROOT_DIR: ${PROJECT_ROOT_DIR}"
+          cd ./scripts
+          chmod +x *.sh
+          . init_logger.sh
+          . init_path.sh
+          . scan_one_build.sh
+          SCAN_ONE_BUILD ${VERSION_B_S_rC}
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action

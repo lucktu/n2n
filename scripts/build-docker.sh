@@ -18,8 +18,7 @@ LOG_WARNING "Try Build: version_b_s_rc - ${version_b_s_rc}"
 if [[ "${version_b_s_rc}" == "v2s" || "${version_b_s_rc}" == "v2" || "${version_b_s_rc}" == "v1" ]]; then
     LOG_WARNING "BUILD releases VERSION"
     . init_path.sh
-    LOG_WARNING $(ls ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/)
-    LOG_WARNING cp ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/* $BUILD_SRC
+    LOG_WARNING "复制 ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}\n  [\n$(ls ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/)\n  ]\n  $BUILD_SRC"
     cp ${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/* $BUILD_SRC
     exit 0
 fi

@@ -11,8 +11,12 @@ SCAN_ONE_BUILD() {
         LOG_WARNING "use arg version"
         version_b_s_rc=$1
     fi
+    if [[ -n "${VERSION_B_S_rC}" ]]; then
+        LOG_WARNING "use VERSION_B_S_rC version"
+        version_b_s_rc=${VERSION_B_S_rC}
+    fi
     if [[ -n "${version_b_s_rc}" ]]; then
-        LOG_WARNING "use version_b_s_rc version_b_s_rc version"
+        LOG_WARNING "use version_b_s_rc version"
     fi
     if [[ -z "${version_b_s_rc}" && -n "${BIG_VERSION}" && -n "${SMALL_VERSION}" ]]; then
         LOG_WARNING "use env BIG_VERSION... version"
@@ -21,32 +25,37 @@ SCAN_ONE_BUILD() {
     if [[ -z "${version_b_s_rc}" ]]; then
         LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD - version_b_s_rc - 为空"
     fi
-
+    # e.g. v3_3.1.0-54_r1277
     LOG_INFO "version_b_s_rc: ${version_b_s_rc}"
     # e.g. v3
     build_big_version=${version_b_s_rc%%_*}
     if [[ -z "${build_big_version}" ]]; then
-        LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD: build_big_version - 为空 - ${version_file}"
+        LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD: build_big_version - 为空 - ${version_b_s_rc}"
     fi
     LOG_INFO "build_big_version: ${build_big_version}"
+    # e.g. 3.1.0-54_r1277
+    build_sc_version=${version_b_s_rc##*${build_big_version}}
+    build_sc_version=${build_sc_version#*_}
+
     # e.g. 3.1.0-54
-    build_small_version=${version_b_s_rc##*${build_big_version}_}
-    build_small_version=${build_small_version%%_*}
+    build_small_version=${build_sc_version%%_*}
     if [[ -z "${build_small_version}" ]]; then
-        LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD: build_small_version - 为空 - ${version_file}"
+        LOG_ERROR "错误: SCAN_ONE_BUILD: build_small_version - 为空 - ${version_b_s_rc}"
     fi
     LOG_INFO "build_small_version: ${build_small_version}"
     # e.g. 1127
-    build_commit=${version_b_s_rc##*${build_small_version}}
-    build_commit=${build_commit#_}
+    build_commit=${build_sc_version##*${build_small_version}}
+    build_commit=${build_commit#*_}
     build_commit=${build_commit#r}
     if [[ -z "${build_commit}" ]]; then
-        LOG_ERROR "请注意: SCAN_ONE_BUILD: build_commit - 为空 - ${version_file}"
+        LOG_ERROR "请注意: SCAN_ONE_BUILD: build_commit - 为空 - ${version_b_s_rc}"
     fi
     LOG_INFO "build_commit: ${build_commit}"
     build_version_b_s_rc=${build_big_version}${build_small_version:+_}${build_small_version}${build_commit:+_r}${build_commit}
+    LOG_INFO "build_version_b_s_rc: ${build_version_b_s_rc}"
+
     if [[ ${build_version_b_s_rc} != ${version_b_s_rc} ]]; then
-        LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD: build_version_b_s_rc  ${build_version_b_s_rc} != ${version_file}"
+        LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD: build_version_b_s_rc  ${build_version_b_s_rc} != ${version_b_s_rc}"
     fi
     build_platforms=''
     if [[ -d $BUILD_SRC ]]; then
@@ -54,22 +63,33 @@ SCAN_ONE_BUILD() {
     fi
     mkdir -p $BUILD_SRC
     need_files=""
-    for src_file in $(find ${PROJECT_ROOT_DIR}/Linux -name "*${build_big_version}*${build_small_version}*${build_commit}*" | grep -v Professional); do
+    find_path="${PROJECT_ROOT_DIR}/Linux/"
+    if [[ "v2s" == "${version_b_s_rc}" || "v2" == "${version_b_s_rc}" || "v1" == "${version_b_s_rc}" ]]; then
+        find_path="${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/"
+    fi
+    find_files="$(find ${find_path} -name "*${build_big_version}*${build_small_version}*${build_commit}*" | grep -v Professional)"
+    for src_file in ${find_files[@]}; do
         GET_FILE_INFOS ${src_file}
-        if [[ ${build_big_version} != ${src_big_version} || ${build_small_version} != ${src_small_version} || ${build_commit} != ${src_commit} ]]; then
-            LOG_WARNING "版本未匹配: ${version_filename} - ${src_file}"
+        if [[ -d "${src_file}" ]]; then
+            LOG_WARNING "跳过: 是文件夹 - ${src_file}"
+            continue
+        fi
+        if [[ "v2s" == "${version_b_s_rc}" || "v2" == "${version_b_s_rc}" || "v1" == "${version_b_s_rc}" ]]; then
+            LOG_INFO "匹配文件 releases: ${version_b_s_rc} - ${src_file}"
+        elif [[ ${build_big_version} != ${src_big_version} || ${build_small_version} != ${src_small_version} || ${build_commit} != ${src_commit} ]]; then
+            LOG_WARNING "版本未匹配: ${version_b_s_rc} - ${src_file}"
             continue
         fi
         if [[ -z $(echo "${src_machine}" | grep -vE '(eb)|(mips)') ]]; then
             LOG_WARNING 不支持的CPU架构类型 - ${src_machine}
             continue
         fi
-        if [[ -n "${VERSION_B_S_rC}" || -n "${GITHUB_WORKSPACE}" ]]; then
+        if [[ -n "${VERSION_B_S_rC}" ]]; then
             # LOG_RUN cp "$src_file" "${BUILD_SRC}/"
             LOG_WARNING 复制文件 "$src_file" "${BUILD_SRC}/"
             cp "$src_file" "${BUILD_SRC}/"
         fi
-        LOG_INFO "匹配成功: ${version_filename} - ${src_file}"
+        LOG_INFO "匹配成功: ${version_b_s_rc} - ${src_file}"
         need_files="${need_files} ${src_file}"
         SEL_PLATFORM ${src_machine}
         if [[ ! ${build_platforms} =~ ${platform} ]]; then
@@ -84,13 +104,14 @@ SCAN_ONE_BUILD() {
     export BUILD_SMALL_VERSION=${build_small_version}
     export BUILD_COMMIT=${build_commit}
     export BUILD_VERSION_B_S_rC=${build_version_b_s_rc}
-
+    export BUILD_NEED_FILES=${need_files}
     LOG_INFO REGISTRY: ${REGISTRY}
     LOG_INFO BUILD_PLATFORMS: ${BUILD_PLATFORMS}
     LOG_INFO BUILD_BIG_VERSION: ${BUILD_BIG_VERSION}
     LOG_INFO BUILD_SMALL_VERSION: ${BUILD_SMALL_VERSION}
     LOG_INFO BUILD_COMMIT: ${BUILD_COMMIT}
     LOG_INFO BUILD_VERSION_B_S_rC: ${BUILD_VERSION_B_S_rC}
+    LOG_INFO BUILD_NEED_FILES: ${BUILD_NEED_FILES}
     # docker compose -f docker-compose.build.evn.yaml build --no-cache --progress plain
 
     # docker compose -f docker-compose.build.evn.yaml push
