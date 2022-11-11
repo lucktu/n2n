@@ -65,6 +65,8 @@ LABEL description="${summary}" \
   org.opencontainers.image.description="${summary}" \
   org.opencontainers.image.licenses="MIT"
 
+RUN apk add --no-cache --upgrade bash
+
 WORKDIR /usr/local/sbin/
 
 COPY --from=downloader \
