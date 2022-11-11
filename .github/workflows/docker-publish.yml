@@ -276,10 +276,10 @@ jobs:
           context: ${{ env.DOCKER_CONTEXT_PATH }}
           platforms: ${{ needs.init-version.outputs.TEST_PLATFORM }}
           load: true
-          no-cache: true
+          # no-cache: true
           tags: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test
-          # cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache
-          # cache-to: type=inline
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache
+          cache-to: type=inline
           build-args: |
             VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             BIG_VERSION=${{ needs.init-version.outputs.BUILD_BIG_VERSION }}
@@ -308,11 +308,15 @@ jobs:
             --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
             ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
             edge -h 2>&1 | xargs -I {} echo {})
-          if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" || -z "$(echo ${edge_result,,} | grep wellcome)" ]];then
+          if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" ]];then
             LOG_ERROR 出错了: ${edge_result}
             LOG_WARNING 使用 Dockerfile.ubuntu-18.04
             echo 'build_dockerfile=Dockerfile.ubuntu-18.04'>> $GITHUB_OUTPUT
             exit 0
+          fi
+          if [[ -z "$(echo ${edge_result,,} | grep wellcome)" ]];then
+            LOG_ERROR 出错了: ${edge_result}
+            exit 1
           fi
           echo ${edge_result}
           LOG_WARNING 'Test pass - edge'
@@ -343,8 +347,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           no-cache: true
-          # cache-from: type=inline
-          # cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
+          cache-from: type=inline
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
           build-args: |
             VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             BIG_VERSION=${{ needs.init-version.outputs.BUILD_BIG_VERSION }}

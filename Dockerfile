@@ -50,10 +50,10 @@ COPY ./scripts/ /tmp/n2n-lucktu/scripts/
 RUN /tmp/n2n-lucktu/scripts/extract_n2n.sh
 RUN /tmp/n2n-lucktu/scripts/sel_n2n.sh
 
-FROM busybox
+FROM ubuntu
 
 ARG name="n2n-lucktu"
-ARG summary="n2n-lucktu built on-top of busybox"
+ARG summary="n2n-lucktu built on-top of ubuntu"
 LABEL description="${summary}" \
   maintainer="<zctmdc@outlook.com>" \
   app.kubernetes.io/name="${name}" \
