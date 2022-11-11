@@ -162,6 +162,7 @@ jobs:
       - name: Check tag_last_pushed
         id: tag_last_pushed
         run: |
+
           LOG_INFO() {
           echo -e "\033[0;32m[INFO] $* \033[0m"
           }
@@ -171,6 +172,7 @@ jobs:
           LOG_ERROR() {
               echo -e "\033[0;31m[ERROR] $* \033[0m"
           }
+          LOG_WARNING $(ls ${GITHUB_WORKSPACE}/result)
           # e.g. "2022-10-30T19:29:49.877019Z"
           last_pulled_date=${{ steps.get_tag_last_pushed.outputs.value }}
           echo "last_pulled_date=${last_pulled_date}" >> $GITHUB_OUTPUT
@@ -269,7 +271,8 @@ jobs:
             SMALL_VERSION=${{ needs.init-version.outputs.BUILD_SMALL_VERSION }}
             COMMIT=${{ needs.init-version.outputs.BUILD_COMMIT }}
 
-      - name: Test
+      - name: Test n2n
+        id: n2n_test
         run: |
           LOG_INFO() {
               echo -e "\033[0;32m[INFO] $* \033[0m"
@@ -282,14 +285,34 @@ jobs:
           }
           set -e
           LOG_WARNING 'Test start'
-          docker run --rm --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test ls /usr/local/sbin/edge
-          docker run --rm --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test edge -h
+          docker run --rm \
+            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
+            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+            ls /usr/local/sbin/edge
+          edge_result=$(docker run --rm \
+            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
+            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+            edge -h 2>&1)
+          if [[ -n "$(echo ${edge_result}  | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" ]];then
+            LOG_ERROR 出错了: ${edge_result}
+            LOG_WARNING 使用 Dockerfile.ubuntu-18.04
+
+            echo 'build_dockerfile=Dockerfile.ubuntu-18.04'>> $GITHUB_OUTPUT
+            exit 0
+          fi
           LOG_WARNING 'Test pass - edge'
-          docker run --rm --platform ${{ needs.init-version.outputs.TEST_PLATFORM }}  ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test ls /usr/local/sbin/supernode
+          docker run --rm \
+            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
+            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+            ls /usr/local/sbin/supernode
           # check will not pass
-          docker run --rm --platform ${{ needs.init-version.outputs.TEST_PLATFORM }}  ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test supernode -h  || echo 
+          docker run --rm \
+            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
+            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+            supernode -h  || echo 
           # LOG_WARNING 'Test pass - supernode'
           LOG_WARNING 'Test end'
+          echo 'build_dockerfile=Dockerfile'>> $GITHUB_OUTPUT
           exit 0
 
       # Build and push Docker image with Buildx (don't push on PR)
@@ -299,6 +322,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ${{ env.DOCKER_CONTEXT_PATH }}
+          file: ${{ env.DOCKER_CONTEXT_PATH }}/${{steps.n2n_test.outputs.build_dockerfile}}
           platforms: ${{ needs.init-version.outputs.BUILD_PLATFORMS }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
