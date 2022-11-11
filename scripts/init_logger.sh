@@ -39,7 +39,7 @@ LOG_WARNING() {
 
 LOG_RUN() {
   echo -e $(caller) "\033[43;34m$@\033[0m"
-  eval $@
+  eval "$@"
 }
 
 LOG_INPTU() {
