@@ -102,6 +102,8 @@ apk add --no-cache wget unzip
   - `debian:jessie`
   - `ubuntu:18.04`
   - `ubuntu:bionic`
+  - `alpine:3.8` **可能不起作用*
+
 - 或手动安装
 
   - ubuntu
