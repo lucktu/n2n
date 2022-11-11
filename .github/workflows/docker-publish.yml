@@ -375,7 +375,7 @@ jobs:
           platforms=${{ needs.init-version.outputs.BUILD_PLATFORMS }}
           l_platforms=(${platforms//,/ })
           for test_platform in ${l_platforms[@]};do
-            LOG_WARNING "Test  ${test_platform}"
+            LOG_WARNING "Test for platform: ${test_platform}"
             docker run --rm \
               --platform ${test_platform} \
               ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
