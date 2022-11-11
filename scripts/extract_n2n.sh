@@ -5,7 +5,7 @@
 . init_kernel_name_and_machine_name.sh
 . init_extract.sh
 
-for src_file in $(find ${DOWN_DIR} -name *${fn_machine}*); do
+for src_file in $(find ${DOWN_DIR} -name "*${fn_machine}*" | grep -vE '(eb)|(mips)'); do
     LOG_INFO "Try: 解压 - ${src_file}"
     EXTRACT_ALL "${src_file}"
 done

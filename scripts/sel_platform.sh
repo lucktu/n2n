@@ -21,12 +21,12 @@ SEL_PLATFORM() {
         ;;
     arm64 | aarch64)
         dn_machine="arm64"
-        fn_machine="arm64(aarch64)"
+        fn_machine="arm64"
         platform="linux/arm64/v8"
         ;;
     arm64eb | aarch64eb)
         dn_machine="arm64eb"
-        fn_machine="arm64eb(aarch64eb)"
+        fn_machine="arm64eb"
         platform=
         ;;
     arm)
