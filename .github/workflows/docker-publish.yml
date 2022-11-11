@@ -270,7 +270,7 @@ jobs:
           labels: |
             org.opencontainers.image.version=${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
 
-      - name: Build and export to Docker
+      - name: Build and load to Docker
         uses: docker/build-push-action@v3
         with:
           context: ${{ env.DOCKER_CONTEXT_PATH }}
