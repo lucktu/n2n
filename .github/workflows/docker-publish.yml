@@ -333,7 +333,7 @@ jobs:
             ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
             supernode -h  || echo 
           # LOG_WARNING "Test done - supernode"
-          LOG_WARNING "Test done: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}""
+          LOG_WARNING "Test done: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
           echo 'build_dockerfile=Dockerfile'>> $GITHUB_OUTPUT
           exit 0
 
