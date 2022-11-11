@@ -299,7 +299,7 @@ jobs:
               echo -e "\033[0;31m[ERROR] $* \033[0m"
           }
           set -e
-          LOG_WARNING 'Test start'
+          LOG_WARNING "Test start: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
           docker run --rm \
             --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
             ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
@@ -322,7 +322,7 @@ jobs:
             --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
             ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
             edge -h
-          LOG_WARNING 'Test pass - edge'
+          LOG_WARNING "Test pass - edge"
           docker run --rm \
             --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
             ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
@@ -332,8 +332,8 @@ jobs:
             --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
             ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
             supernode -h  || echo 
-          # LOG_WARNING 'Test pass - supernode'
-          LOG_WARNING 'Test end'
+          # LOG_WARNING "Test done - supernode"
+          LOG_WARNING "Test done: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}""
           echo 'build_dockerfile=Dockerfile'>> $GITHUB_OUTPUT
           exit 0
 
@@ -371,7 +371,7 @@ jobs:
               echo -e "\033[0;31m[ERROR] $* \033[0m"
           }
           set -e
-          LOG_WARNING 'Test start'
+          LOG_WARNING "Test start: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
           platforms=${{ needs.init-version.outputs.BUILD_PLATFORMS }}
           l_platforms=(${platforms//,/ })
           for test_platform in ${l_platforms[@]};do
@@ -380,7 +380,7 @@ jobs:
               --platform ${test_platform} \
               ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
               edge -h
-            LOG_WARNING 'Test pass - edge'
+            LOG_WARNING "Test pass - edge"
             docker run --rm \
               --platform ${test_platform} \
               ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
@@ -390,9 +390,9 @@ jobs:
               --platform ${test_platform} \
               ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
               supernode -h  || echo 
-            # LOG_WARNING 'Test done - supernode'
+            # LOG_WARNING "Test done - supernode"
           done
-          LOG_WARNING 'Test done'
+          LOG_WARNING "Test done: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
           echo 'build_dockerfile=Dockerfile'>> $GITHUB_OUTPUT
           exit 0
 
