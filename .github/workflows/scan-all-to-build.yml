@@ -54,7 +54,7 @@ jobs:
       id-token: write
     strategy:
       fail-fast: false
-      max-parallel: 8
+      max-parallel: 1
       matrix: ${{ fromJSON(needs.scan-all.outputs.version_b_s_rcs) }}
 
     uses: ./.github/workflows/docker-publish.yml
@@ -68,6 +68,8 @@ jobs:
       id-token: write
     if: ${{ inputs.build-releases-version }}
     strategy:
+      fail-fast: false
+      max-parallel: 1
       matrix:
         version_b_s_rc: [v1, v2, v2s]
     uses: ./.github/workflows/docker-publish.yml
