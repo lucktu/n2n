@@ -74,9 +74,7 @@ COPY --from=downloader \
 
 RUN ls
 
-
-# COPY ./scripts/*.sh /usr/local/sbin/
-
-# CMD [ "/bin/bash" , "-c" , "/usr/local/sbin/run_n2n.sh" ]
-
-# HEALTHCHECK --interval=20s --timeout=10s CMD /usr/local/sbin/n2n_healthcheck.sh
+WORKDIR /tmp/n2n-lucktu/scripts/
+COPY ./scripts/*.sh /tmp/n2n-lucktu/scripts/
+RUN chmod +x /tmp/n2n-lucktu/scripts/*
+RUN /tmp/n2n-lucktu/scripts/fixlib.sh
