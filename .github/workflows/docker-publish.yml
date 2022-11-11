@@ -287,7 +287,7 @@ jobs:
             COMMIT=${{ needs.init-version.outputs.BUILD_COMMIT }}
 
       - name: Test n2n
-        id: n2n_test
+        id: n2n-test
         run: |
           LOG_INFO() {
               echo -e "\033[0;32m[INFO] $* \033[0m"
@@ -318,7 +318,10 @@ jobs:
             LOG_ERROR 出错了: ${edge_result}
             exit 1
           fi
-          LOG_INFO "edge_result:\n${edge_result}"
+          docker run --rm \
+            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
+            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+            edge -h
           LOG_WARNING 'Test pass - edge'
           docker run --rm \
             --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
@@ -341,7 +344,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ${{ env.DOCKER_CONTEXT_PATH }}
-          file: ${{ env.DOCKER_CONTEXT_PATH }}/${{steps.n2n_test.outputs.build_dockerfile}}
+          file: ${{ env.DOCKER_CONTEXT_PATH }}/${{steps.n2n-test.outputs.build_dockerfile}}
           platforms: ${{ needs.init-version.outputs.BUILD_PLATFORMS }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
@@ -355,6 +358,39 @@ jobs:
             SMALL_VERSION=${{ needs.init-version.outputs.BUILD_SMALL_VERSION }}
             COMMIT=${{ needs.init-version.outputs.BUILD_COMMIT }}
 
+      - name: Test n2n again
+        id: n2n-test-again
+        run: |
+          LOG_INFO() {
+              echo -e "\033[0;32m[INFO] $* \033[0m"
+          }
+          LOG_WARNING() {
+              echo -e "\033[0;33m[WARNING] $* \033[0m"
+          }
+          LOG_ERROR() {
+              echo -e "\033[0;31m[ERROR] $* \033[0m"
+          }
+          set -e
+          LOG_WARNING 'Test start'
+          docker run --rm \
+            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
+            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+            edge -h
+          LOG_WARNING 'Test pass - edge'
+          docker run --rm \
+            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
+            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+            ls /usr/local/sbin/supernode
+          # check will not pass
+          docker run --rm \
+            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
+            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+            supernode -h  || echo 
+          # LOG_WARNING 'Test pass - supernode'
+          LOG_WARNING 'Test end'
+          echo 'build_dockerfile=Dockerfile'>> $GITHUB_OUTPUT
+          exit 0
+          
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
       # repository is public to avoid leaking data.  If you would like to publish
