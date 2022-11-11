@@ -314,11 +314,11 @@ jobs:
             echo 'build_dockerfile=Dockerfile.ubuntu-18.04'>> $GITHUB_OUTPUT
             exit 0
           fi
-          if [[ -z "$(echo ${edge_result,,} | grep wellcome)" ]];then
+          if [[ -z "$(echo ${edge_result,,} | grep welcome)" ]];then
             LOG_ERROR 出错了: ${edge_result}
             exit 1
           fi
-          echo ${edge_result}
+          LOG_INFO "edge_result:\n${edge_result}"
           LOG_WARNING 'Test pass - edge'
           docker run --rm \
             --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
