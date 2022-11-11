@@ -65,7 +65,8 @@ SCAN_ONE_BUILD() {
             continue
         fi
         if [[ -n "${VERSION_B_S_rC}" || -n "${GITHUB_WORKSPACE}" ]]; then
-            LOG_RUN cp "$src_file" "${BUILD_SRC}/"
+            LOG_WARNING 复制文件 "$src_file" "${BUILD_SRC}/"
+            cp "$src_file" "${BUILD_SRC}/"
         fi
         LOG_INFO "匹配成功: ${version_filename} - ${src_file}"
         need_files="${need_files} ${src_file}"
