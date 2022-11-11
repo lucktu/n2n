@@ -308,7 +308,7 @@ jobs:
             --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
             ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
             edge -h 2>&1 | xargs -I {} echo {})
-          if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" || -z "$(echo ${edge_result,,} | grep wellcome ]];then
+          if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" || -z "$(echo ${edge_result,,} | grep wellcome)" ]];then
             LOG_ERROR 出错了: ${edge_result}
             LOG_WARNING 使用 Dockerfile.ubuntu-18.04
             echo 'build_dockerfile=Dockerfile.ubuntu-18.04'>> $GITHUB_OUTPUT
