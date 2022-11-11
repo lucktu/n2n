@@ -25,7 +25,7 @@ for version_filename in $(ls ${RESULT_DIR}); do
     version_b_s_rc=${version_b_s_rc%%.txt}
     LOG_INFO "version_b_s_rc: ${version_b_s_rc}"
     SCAN_ONE_BUILD ${version_b_s_rc}
-    if [[ ! -z "${BUILD_PLATFORMS}" ]]; then
+    if [[ -n "${BUILD_PLATFORMS}" ]]; then
         build_version_b_s_rcs="${build_version_b_s_rcs},${BUILD_VERSION_B_S_rC}"
     fi
 done

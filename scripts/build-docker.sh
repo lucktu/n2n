@@ -4,12 +4,12 @@
 
 . scan_one_build.sh
 
-if [[ ! -z "${VERSION_B_S_rC}" ]]; then
+if [[ -n "${VERSION_B_S_rC}" ]]; then
     LOG_WARNING use VERSION_B_S_rC
     version_b_s_rc="${VERSION_B_S_rC}"
 fi
 
-if [[ -z "${version_b_s_rc}" && ! -z "${BIG_VERSION}" ]]; then
+if [[ -z "${version_b_s_rc}" && -n "${BIG_VERSION}" ]]; then
     LOG_WARNING use BIG_VERSION
     version_b_s_rc="${BIG_VERSION}${SMALL_VERSION:+_}${SMALL_VERSION}${COMMIT:+_r}${COMMIT}"
 fi

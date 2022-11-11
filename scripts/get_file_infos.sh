@@ -83,7 +83,7 @@ GET_FILE_INFOS() {
     src_machine_alias=${src_machine_alias%%_v${src_small_version}*}
     src_machine_alias=${src_machine_alias##*(}
     src_machine_alias=${src_machine_alias%%)*}
-    if [[ ! -z "$src_machine_alias" ]]; then
+    if [[ -n "$src_machine_alias" ]]; then
         LOG_ERROR src_machine_alias: $src_machine_alias
     fi
 

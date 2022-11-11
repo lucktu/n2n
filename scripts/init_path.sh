@@ -17,7 +17,11 @@ SCRIPTS_DIR=$(
 
 DOWN_DIR="/tmp/down"
 
-RESULT_DIR=${PROJECT_ROOT_DIR}/result
+if [[ -n "${GITHUB_WORKSPACE}" ]]; then
+    RESULT_DIR=${GITHUB_WORKSPACE}/result
+else
+    RESULT_DIR=${PROJECT_ROOT_DIR}/result
+fi
 
 BUILD_SRC=${RESULT_DIR}/build_src
 BUILD_DESC=${RESULT_DIR}/build_desc

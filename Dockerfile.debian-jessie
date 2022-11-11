@@ -45,15 +45,14 @@ WORKDIR /tmp/n2n-lucktu/scripts/
 
 COPY ./result/build_src/ /tmp/down/
 COPY ./scripts/ /tmp/n2n-lucktu/scripts/
-
 # 解压，选择最大的edge文件
 RUN /tmp/n2n-lucktu/scripts/extract_n2n.sh
 RUN /tmp/n2n-lucktu/scripts/sel_n2n.sh
 
-FROM busybox
+FROM debain:8
 
 ARG name="n2n-lucktu"
-ARG summary="n2n-lucktu built on-top of busybox"
+ARG summary="n2n-lucktu built on-top of debain:8"
 LABEL description="${summary}" \
   maintainer="<zctmdc@outlook.com>" \
   app.kubernetes.io/name="${name}" \
@@ -71,3 +70,8 @@ COPY --from=downloader \
   /tmp/desc/edge \
   /usr/local/sbin/
 RUN ls
+
+WORKDIR /tmp/n2n-lucktu/scripts/
+COPY ./scripts/*.sh /tmp/n2n-lucktu/scripts/
+RUN chmod +x /tmp/n2n-lucktu/scripts/*
+RUN /tmp/n2n-lucktu/scripts/fixlib.sh

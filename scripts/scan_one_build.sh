@@ -7,14 +7,14 @@
 
 SCAN_ONE_BUILD() {
     # 一个版本
-    if [[ ! -z "$1" ]]; then
+    if [[ -n "$1" ]]; then
         LOG_WARNING "use arg version"
         version_b_s_rc=$1
     fi
-    if [[ ! -z "${version_b_s_rc}" ]]; then
+    if [[ -n "${version_b_s_rc}" ]]; then
         LOG_WARNING "use version_b_s_rc version_b_s_rc version"
     fi
-    if [[ -z "${version_b_s_rc}" && ! -z "${BIG_VERSION}" && ! -z "${SMALL_VERSION}" ]]; then
+    if [[ -z "${version_b_s_rc}" && -n "${BIG_VERSION}" && -n "${SMALL_VERSION}" ]]; then
         LOG_WARNING "use env BIG_VERSION... version"
         version_b_s_rc="${BIG_VERSION}_${SMALL_VERSION}${COMMIT:+_r}${COMMIT}"
     fi
@@ -64,7 +64,7 @@ SCAN_ONE_BUILD() {
             LOG_WARNING 不支持的CPU架构类型 - ${src_machine}
             continue
         fi
-        if [[ ! -z "${VERSION_B_S_rC}" ]]; then
+        if [[ -n "${VERSION_B_S_rC}" || -n "${GITHUB_WORKSPACE}" ]]; then
             LOG_RUN cp $src_file ${BUILD_SRC}/
         fi
         LOG_INFO "匹配成功: ${version_filename} - ${src_file}"
@@ -94,7 +94,7 @@ SCAN_ONE_BUILD() {
     # docker compose -f docker-compose.build.evn.yaml push
     # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${BUILD_VERSION_B_S_rC}_edge_help.txt
     # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT supernode -h >$BUILD_DESC/${BUILD_VERSION_B_S_rC}_supernode_help.txt
-    if [[ ! -z "${MANUAL_BUILD}" && ! -z "${BUILD_PLATFORMS}" ]]; then
+    if [[ -n "${MANUAL_BUILD}" && -n "${BUILD_PLATFORMS}" ]]; then
         LOG_RUN docker buildx build --no-cache --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/zctmdc/n2n-lucktu:${BUILD_VERSION_B_S_rC} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push
         LOG_RUN docker buildx build --no-cache --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push
         LOG_RUN docker buildx build --no-cache --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${BUILD_SMALL_VERSION} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push

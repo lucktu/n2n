@@ -50,10 +50,10 @@ COPY ./scripts/ /tmp/n2n-lucktu/scripts/
 RUN /tmp/n2n-lucktu/scripts/extract_n2n.sh
 RUN /tmp/n2n-lucktu/scripts/sel_n2n.sh
 
-FROM busybox
+FROM alpine
 
 ARG name="n2n-lucktu"
-ARG summary="n2n-lucktu built on-top of busybox"
+ARG summary="n2n-lucktu built on-top of alpine"
 LABEL description="${summary}" \
   maintainer="<zctmdc@outlook.com>" \
   app.kubernetes.io/name="${name}" \
@@ -66,8 +66,17 @@ LABEL description="${summary}" \
   org.opencontainers.image.licenses="MIT"
 
 WORKDIR /usr/local/sbin/
+
 COPY --from=downloader \
   /tmp/desc/supernode \
   /tmp/desc/edge \
   /usr/local/sbin/
+
 RUN ls
+
+
+# COPY ./scripts/*.sh /usr/local/sbin/
+
+# CMD [ "/bin/bash" , "-c" , "/usr/local/sbin/run_n2n.sh" ]
+
+# HEALTHCHECK --interval=20s --timeout=10s CMD /usr/local/sbin/n2n_healthcheck.sh

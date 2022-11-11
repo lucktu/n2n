@@ -26,7 +26,7 @@ EXTRACT() {
         mkdir -p "${extract_path}"
     fi
     fn_suffixs=${extract_filename_suffix}
-    if [[ ! -z "${extract_every}" ]]; then
+    if [[ -n "${extract_every}" ]]; then
         fn_suffixs="tar,ar.gz,zip,rar,${extract_filename_suffix}"
     fi
     l_fn_suffixs=(${fn_suffixs//,/ })
@@ -57,7 +57,7 @@ EXTRACT() {
             # EXTRACT_EVERY
             EXTRACT ${extract_file} ${extract_path} 'true'
         fi
-        if [[ ! -z "$(ls ${extract_path})" ]]; then
+        if [[ -n "$(ls ${extract_path})" ]]; then
             LOG_WARNING "The real: ${fn_suffix} - ${extract_file}"
             break
         fi

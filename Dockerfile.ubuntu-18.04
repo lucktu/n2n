@@ -50,10 +50,10 @@ COPY ./scripts/ /tmp/n2n-lucktu/scripts/
 RUN /tmp/n2n-lucktu/scripts/extract_n2n.sh
 RUN /tmp/n2n-lucktu/scripts/sel_n2n.sh
 
-FROM busybox
+FROM ubuntu:18.04
 
 ARG name="n2n-lucktu"
-ARG summary="n2n-lucktu built on-top of busybox"
+ARG summary="n2n-lucktu built on-top of ubuntu:18.04"
 LABEL description="${summary}" \
   maintainer="<zctmdc@outlook.com>" \
   app.kubernetes.io/name="${name}" \
@@ -71,3 +71,8 @@ COPY --from=downloader \
   /tmp/desc/edge \
   /usr/local/sbin/
 RUN ls
+
+WORKDIR /tmp/n2n-lucktu/scripts/
+COPY ./scripts/*.sh /tmp/n2n-lucktu/scripts/
+RUN chmod +x /tmp/n2n-lucktu/scripts/*
+RUN /tmp/n2n-lucktu/scripts/fixlib.sh
