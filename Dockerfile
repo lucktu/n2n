@@ -50,7 +50,7 @@ COPY ./scripts/ /tmp/n2n-lucktu/scripts/
 RUN /tmp/n2n-lucktu/scripts/extract_n2n.sh
 RUN /tmp/n2n-lucktu/scripts/sel_n2n.sh
 
-FROM ubuntu
+FROM debian:stable
 
 ARG name="n2n-lucktu"
 ARG summary="n2n-lucktu built on-top of ubuntu"
