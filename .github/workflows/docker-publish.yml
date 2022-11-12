@@ -98,7 +98,7 @@ jobs:
               LOG_WARNING USE env.BIG_VERSION
               BUILD_BIG_VERSION=${{ env.BIG_VERSION }}
             fi
-            BUILD_PLATFORMS='linux/amd64,linux/386,linux/v8,linux/arm/v7'
+            BUILD_PLATFORMS='linux/amd64,linux/386,linux/arm64/v8,linux/arm/v7'
             echo BBUILD_IG_VERSION: ${BUILD_BIG_VERSION}
             echo "BUILD_BIG_VERSION=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
             echo "BUILD_VERSION_B_S_rC=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
