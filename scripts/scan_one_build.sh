@@ -199,7 +199,7 @@ SCAN_ONE_BUILD() {
             -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:${BUILD_VERSION_B_S_rC} \
             ../. --push"
         LOG_RUN "${docker_build_command} \
-            --t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} \
+            -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} \
             ../. --push"
         LOG_RUN "${docker_build_command} \
             -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION} \
