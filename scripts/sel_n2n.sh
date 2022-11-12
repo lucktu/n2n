@@ -8,7 +8,11 @@ if [[ -z "${n2n_edge_biggest}" ]]; then
 fi
 chmod +x ${n2n_edge_biggest}
 down_version="$(${n2n_edge_biggest} -h | grep Welcome | grep -Eo 'v\.[0-9]\.[0-9]\.[0-9]' | grep -Eo '[0-9]\.[0-9]\.[0-9]')"
-define_version="$(echo ${SMALL_VERSION} | grep -Eo '[0-9]\.[0-9]\.[0-9]')"
+if [[ -n "${VERSION_B_S_rC}" ]]; then
+    define_version="$(echo ${VERSION_B_S_rC} | grep -Eo '[0-9]\.[0-9]\.[0-9]')"
+else
+    define_version="$(echo ${SMALL_VERSION} | grep -Eo '[0-9]\.[0-9]\.[0-9]')"
+fi
 if [[ "${define_version}" != "${down_version}" || -z "${down_version}" ]]; then
     LOG_ERROR "下载版本不匹配: ${define_version} != ${down_version}"
     LOG_ERROR "$(${n2n_edge_biggest} -h)"
