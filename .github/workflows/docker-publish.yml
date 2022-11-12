@@ -101,9 +101,9 @@ jobs:
             echo BBUILD_IG_VERSION: ${BUILD_BIG_VERSION}
             echo "BUILD_BIG_VERSION=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
             echo "BUILD_VERSION_B_S_rC=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
-            echo "BUILD_PLATFORMS=linux/amd64,linux/386,linux/arm64/v8,linux/arm/v7" >> $GITHUB_OUTPUT
-            # echo "TEST_PLATFORM=linux/amd64" >> $GITHUB_OUTPUT
-            echo "TEST_PLATFORM=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
+            echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
+            # echo "TEST_PLATFORM=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
+            echo "TEST_PLATFORM=linux/386" >> $GITHUB_OUTPUT
             exit 0
           fi
           PROJECT_ROOT_DIR=$(pwd)
@@ -144,8 +144,12 @@ jobs:
           echo "BUILD_SMALL_VERSION=${BUILD_SMALL_VERSION}" >> $GITHUB_OUTPUT
           echo "BUILD_COMMIT=${BUILD_COMMIT}" >> $GITHUB_OUTPUT
           echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
-          # echo "TEST_PLATFORM=${BUILD_PLATFORMS%%,*}" >> $GITHUB_OUTPUT
-          echo "TEST_PLATFORM=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
+          # echo "TEST_PLATFORM=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
+          if [[ ${BUILD_PLATFORMS} =~ 386 ]];then
+            echo "TEST_PLATFORM=linux/386" >> $GITHUB_OUTPUT
+          else
+            echo "TEST_PLATFORM=${BUILD_PLATFORMS%%,*}" >> $GITHUB_OUTPUT
+          fi
           echo "BUILD_VERSION_B_S_rC=${BUILD_VERSION_B_S_rC}" >> $GITHUB_OUTPUT
 
   check-push:
