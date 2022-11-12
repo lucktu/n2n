@@ -30,13 +30,13 @@ if [[ -n "$(/usr/local/sbin/edge -h 2>&1 | grep libcrypto.so.1.1)" ]]; then
         apt-get install -y libssl1.1
         rm -rf /var/lib/apt/lists/*
     elif command_exists apt; then
-        # 自带 
+        # 自带
         apk add --no-cache --upgrade libssl1.1
     fi
     LOG_WARNING 缺少 libssl1.1 , 修复完毕
 fi
-
-if [[ -z "$(echo ${edge_result,,} | grep welcome)" && -z "$1" ]];then
+edge_result="$(edge -h 2>&1 | xargs -I {} echo {})"
+if [[ -z "$(echo ${edge_result,,} | grep welcome)" && -z "$1" ]]; then
     LOG_ERROR 出错了: ${edge_result}
     sh -c /tmp/n2n-lucktu/scripts/fixlib.sh retry
 fi

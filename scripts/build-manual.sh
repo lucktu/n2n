@@ -8,6 +8,8 @@ docker run --privileged --rm tonistiigi/binfmt --install all
 export MANUAL_BUILD=true
 export REGISTRY='registry.aour.zctmdc.cn'
 export REGISTRY_USERNAME='zctmdc'
+export REGISTRY_CACHE='true'
+
 . scan_all_save.sh
 . scan_all_build.sh
 

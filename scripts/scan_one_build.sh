@@ -135,9 +135,9 @@ SCAN_ONE_BUILD() {
                 break
             fi
         done
-        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:${BUILD_VERSION_B_S_rC} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} -f ../${build_docker_file} ../. --push
-        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. -f ../${build_docker_file} --push
-        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. -f ../${build_docker_file} --push
+        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:${BUILD_VERSION_B_S_rC} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} -f ../${build_docker_file} ${REGISTRY_CACHE:+--cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache} ../. --push
+        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} -f ../${build_docker_file} ${REGISTRY_CACHE:+--cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache} ../. --push
+        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} -f ../${build_docker_file} ${REGISTRY_CACHE:+--cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache} ../. --push
     fi
 
 }
