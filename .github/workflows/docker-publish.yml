@@ -97,11 +97,13 @@ jobs:
               LOG_WARNING USE env.BIG_VERSION
               BUILD_BIG_VERSION=${{ env.BIG_VERSION }}
             fi
+            BUILD_PLATFORMS='linux/amd64,linux/386,linux/arm64/v8,linux/arm/v7'
             echo BBUILD_IG_VERSION: ${BUILD_BIG_VERSION}
             echo "BUILD_BIG_VERSION=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
             echo "BUILD_VERSION_B_S_rC=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
             echo "BUILD_PLATFORMS=linux/amd64,linux/386,linux/arm64/v8,linux/arm/v7" >> $GITHUB_OUTPUT
-            echo "TEST_PLATFORM=linux/amd64" >> $GITHUB_OUTPUT
+            # echo "TEST_PLATFORM=linux/amd64" >> $GITHUB_OUTPUT
+            echo "TEST_PLATFORM=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
             exit 0
           fi
           PROJECT_ROOT_DIR=$(pwd)
@@ -142,7 +144,8 @@ jobs:
           echo "BUILD_SMALL_VERSION=${BUILD_SMALL_VERSION}" >> $GITHUB_OUTPUT
           echo "BUILD_COMMIT=${BUILD_COMMIT}" >> $GITHUB_OUTPUT
           echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
-          echo "TEST_PLATFORM=${BUILD_PLATFORMS%%,*}" >> $GITHUB_OUTPUT
+          # echo "TEST_PLATFORM=${BUILD_PLATFORMS%%,*}" >> $GITHUB_OUTPUT
+          echo "TEST_PLATFORM=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
           echo "BUILD_VERSION_B_S_rC=${BUILD_VERSION_B_S_rC}" >> $GITHUB_OUTPUT
 
   check-push:
@@ -300,39 +303,40 @@ jobs:
           }
           set -e
           LOG_WARNING "Test start: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
-          docker run --rm \
-            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
-            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
-            ls /usr/local/sbin/edge
-          edge_result="$(docker run --rm \
-            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
-            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
-            edge -h 2>&1 | xargs -I {} echo {})"
-          if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" ]];then
-            LOG_ERROR 出错了: ${edge_result}
-            LOG_WARNING 使用 Dockerfile.ubuntu-18.04
-            echo 'build_dockerfile=Dockerfile.ubuntu-18.04'>> $GITHUB_OUTPUT
-            exit 0
-          fi
-          if [[ -z "$(echo ${edge_result,,} | grep welcome)" ]];then
-            LOG_ERROR 出错了: ${edge_result}
-            exit 1
-          fi
-          docker run --rm \
-            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
-            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
-            edge -h
-          LOG_WARNING "Test pass - edge"
-          docker run --rm \
-            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
-            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
-            ls /usr/local/sbin/supernode
-          # check will not pass
-          docker run --rm \
-            --platform ${{ needs.init-version.outputs.TEST_PLATFORM }} \
-            ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
-            supernode -h  || echo 
-          # LOG_WARNING "Test done - supernode"
+          platforms=${{ needs.init-version.outputs.TEST_PLATFORM }}
+          l_platforms=(${platforms//,/ })
+          for test_platform in ${l_platforms[@]};do
+            LOG_WARNING "Test for platform: ${test_platform}"
+            edge_result="$(docker run --rm \
+              --platform ${test_platform} \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+              edge -h 2>&1 | xargs -I {} echo {})"
+            if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" ]];then
+              LOG_ERROR 出错了: ${edge_result}
+              LOG_WARNING 使用 Dockerfile.ubuntu-18.04
+              echo 'build_dockerfile=Dockerfile.ubuntu-18.04'>> $GITHUB_OUTPUT
+              exit 0
+            fi
+            if [[ -z "$(echo ${edge_result,,} | grep welcome)" ]];then
+              LOG_ERROR 出错了: ${edge_result}
+              exit 1
+            fi
+            docker run --rm \
+              --platform ${test_platform} \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+              edge -h
+            LOG_WARNING "Test pass - edge"
+            docker run --rm \
+              --platform ${test_platform} \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+              ls /usr/local/sbin/supernode
+            # supernode will not pass
+            docker run --rm \
+              --platform ${test_platform} \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+              supernode -h  || echo 
+            # LOG_WARNING "Test done - supernode"
+          done
           LOG_WARNING "Test done: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
           echo 'build_dockerfile=Dockerfile'>> $GITHUB_OUTPUT
           exit 0
@@ -376,6 +380,10 @@ jobs:
           l_platforms=(${platforms//,/ })
           for test_platform in ${l_platforms[@]};do
             LOG_WARNING "Test for platform: ${test_platform}"
+            docker run --rm \
+              --platform ${test_platform} \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
+              ls /usr/local/sbin/edge
             docker run --rm \
               --platform ${test_platform} \
               ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
