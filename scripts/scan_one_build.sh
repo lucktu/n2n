@@ -117,7 +117,7 @@ SCAN_ONE_BUILD() {
     # docker compose -f docker-compose.build.evn.yaml push
     # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${BUILD_VERSION_B_S_rC}_edge_help.txt
     # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT supernode -h >$BUILD_DESC/${BUILD_VERSION_B_S_rC}_supernode_help.txt
-    if [[ -n "${MANUAL_BUILD}" && -n "${BUILD_PLATFORMS}" ]]; then
+    if [[ "${MANUAL_BUILD^^}" == "TRUE" && -n "${BUILD_PLATFORMS}" ]]; then
         build_docker_file='Dockerfile'
         platforms=${BUILD_PLATFORMS}
         l_platforms=(${platforms//,/ })
@@ -135,9 +135,52 @@ SCAN_ONE_BUILD() {
                 break
             fi
         done
-        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:${BUILD_VERSION_B_S_rC} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} -f ../${build_docker_file} ${REGISTRY_CACHE:+--cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache} ../. --push
-        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} -f ../${build_docker_file} ${REGISTRY_CACHE:+--cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache} ../. --push
-        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} -f ../${build_docker_file} ${REGISTRY_CACHE:+--cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache} ../. --push
+        # LOG_RUN docker buildx build --progress plain \
+        #     --platform "'${BUILD_PLATFORMS}'" \
+        #     -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:${BUILD_VERSION_B_S_rC} \
+        #     --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} \
+        #     --build-arg MANUAL_BUILD=${MANUAL_BUILD^^} \
+        #     -f ../${build_docker_file} \
+        #     ${REGISTRY_CACHE:+--cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache} \
+        #     ../. --push
+        # LOG_RUN docker buildx build --progress plain \
+        #     --platform "'${BUILD_PLATFORMS}'" \
+        #     -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} \
+        #     --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} \
+        #     --build-arg MANUAL_BUILD=${MANUAL_BUILD^^} \
+        #     -f ../${build_docker_file} \
+        #     ${REGISTRY_CACHE:+--cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache} \
+        #     ../. --push
+        # LOG_RUN docker buildx build --progress plain \
+        #     --platform "'${BUILD_PLATFORMS}'" \
+        #     -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION} \
+        #     --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} \
+        #     --build-arg MANUAL_BUILD=${MANUAL_BUILD^^} \
+        #     -f ../${build_docker_file} \
+        #     ${REGISTRY_CACHE:+--cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache} \
+        #     ../. --push
+        
+        docker_build_command="docker buildx build --progress plain \
+            --platform '${BUILD_PLATFORMS}' \
+            --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} \
+            --build-arg MANUAL_BUILD=${MANUAL_BUILD^^} \
+            -f ../${build_docker_file}"
+
+        if [[ "${REGISTRY_CACHE^^}"=="TRUE" ]]; then
+            docker_build_command="${docker_build_command} \
+            --cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache \
+            --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache"
+        fi
+
+        LOG_RUN "${docker_build_command} \
+            -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:${BUILD_VERSION_B_S_rC} \
+            ../. --push"
+        LOG_RUN "${docker_build_command} \
+            --t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} \
+            ../. --push"
+        LOG_RUN "${docker_build_command} \
+            -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION} \
+            ../. --push"
     fi
 
 }

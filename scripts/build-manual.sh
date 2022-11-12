@@ -5,10 +5,10 @@ rm -r ../result/
 # docker buildx create --use
 docker run --privileged --rm tonistiigi/binfmt --install all
 
-export MANUAL_BUILD=true
+export MANUAL_BUILD="True"
 export REGISTRY='registry.aour.zctmdc.cn'
 export REGISTRY_USERNAME='zctmdc'
-export REGISTRY_CACHE='true'
+export REGISTRY_CACHE='True'
 
 . scan_all_save.sh
 . scan_all_build.sh
