@@ -19,8 +19,8 @@ on:
     #       REGISTRY_TOKEN:
     #         description: 'TOKEN for REGISTRY'
     #         required: true
-  schedule:
-    - cron: "28 17 * * *"
+  # schedule:
+  #   - cron: "28 17 * * *"
   push:
     branches: ["master"]
     # Publish semver tags as releases.
