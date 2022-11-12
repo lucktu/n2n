@@ -49,7 +49,7 @@ env:
   # COMMIT: 528
 
   # github.repository as <account>/<repo>
-  NED_LIBFIX_VERSIONS_B_S_rC: "v2_2.3.0,v2s_2.1.0_r111"
+  NED_LIBFIX_VERSIONS_B_S_rC: "v2_2.3.0,v2s_2.1.0_r111,v1"
   TEST_PLATFORM: "linux/386"
 jobs:
   init-version:
@@ -310,7 +310,7 @@ jobs:
           set -e
           ned_libfix_versions_b_s_rc=${{ env.NED_LIBFIX_VERSIONS_B_S_rC }}
           l_ned_libfix_versions_b_s_rc=(${ned_libfix_versions_b_s_rc//,/ })
-          for ned_libfix_versions_b_s_rc in ${l_platforms[@]};do
+          for ned_libfix_versions_b_s_rc in ${l_ned_libfix_versions_b_s_rc[@]};do
             if [[ "${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}" == "${ned_libfix_versions_b_s_rc}" ]];then
               LOG_WARNING 需要修复 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
               LOG_WARNING 使用 Dockerfile.ubuntu-18.04 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
