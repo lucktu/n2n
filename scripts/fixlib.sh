@@ -36,7 +36,7 @@ if [[ -n "$(/usr/local/sbin/edge -h 2>&1 | grep libcrypto.so.1.1)" ]]; then
     LOG_WARNING 缺少 libssl1.1 , 修复完毕
 fi
 
-if [[ -z "$(echo ${edge_result,,} | grep welcome)" ]];then
+if [[ -z "$(echo ${edge_result,,} | grep welcome)" && -z "$1" ]];then
     LOG_ERROR 出错了: ${edge_result}
-    sh -c /tmp/n2n-lucktu/scripts/fixlib.sh 
+    sh -c /tmp/n2n-lucktu/scripts/fixlib.sh retry
 fi

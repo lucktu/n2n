@@ -84,7 +84,7 @@ SCAN_ONE_BUILD() {
             LOG_WARNING 不支持的CPU架构类型 - ${src_machine}
             continue
         fi
-        if [[ -n "${VERSION_B_S_rC}" ]]; then
+        if [[ -n "${VERSION_B_S_rC}" || -n "${MANUAL_BUILD}" ]]; then
             # LOG_RUN cp "$src_file" "${BUILD_SRC}/"
             LOG_WARNING 复制文件 "$src_file" "${BUILD_SRC}/"
             cp "$src_file" "${BUILD_SRC}/"
@@ -98,13 +98,13 @@ SCAN_ONE_BUILD() {
     done
     LOG_WARNING need_files: $need_files
     LOG_INFO $BUILD_SRC: $(ls $BUILD_SRC)
-    export REGISTRY='registry.aour.zctmdc.cn'
+    export REGISTRY="${REGISTRY}"
     export BUILD_PLATFORMS="${build_platforms:1}"
-    export BUILD_BIG_VERSION=${build_big_version}
-    export BUILD_SMALL_VERSION=${build_small_version}
-    export BUILD_COMMIT=${build_commit}
-    export BUILD_VERSION_B_S_rC=${build_version_b_s_rc}
-    export BUILD_NEED_FILES=${need_files}
+    export BUILD_BIG_VERSION="${build_big_version}"
+    export BUILD_SMALL_VERSION="${build_small_version}"
+    export BUILD_COMMIT="${build_commit}"
+    export BUILD_VERSION_B_S_rC="${build_version_b_s_rc}"
+    export BUILD_NEED_FILES="${need_files}"
     LOG_INFO REGISTRY: ${REGISTRY}
     LOG_INFO BUILD_PLATFORMS: ${BUILD_PLATFORMS}
     LOG_INFO BUILD_BIG_VERSION: ${BUILD_BIG_VERSION}
@@ -118,9 +118,26 @@ SCAN_ONE_BUILD() {
     # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT edge -h >$BUILD_DESC/${BUILD_VERSION_B_S_rC}_edge_help.txt
     # docker compose -f docker-compose.build.evn.yaml run n2n_evn_BIG_VERSION_SMALL_VERSION_rCOMMIT supernode -h >$BUILD_DESC/${BUILD_VERSION_B_S_rC}_supernode_help.txt
     if [[ -n "${MANUAL_BUILD}" && -n "${BUILD_PLATFORMS}" ]]; then
-        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/zctmdc/n2n-lucktu:${BUILD_VERSION_B_S_rC} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push
-        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push
-        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/zctmdc/n2n-lucktu:v.${BUILD_SMALL_VERSION} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. --push
+        build_docker_file='Dockerfile'
+        platforms=${BUILD_PLATFORMS}
+        l_platforms=(${platforms//,/ })
+        for test_platform in ${l_platforms[@]}; do
+            LOG_WARNING "Test for platform: ${test_platform}"
+            LOG_RUN docker buildx build --progress plain --platform "'${test_platform}'" -t ${REGISTRY_USERNAME}/n2n-lucktu:test --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} -f ../${build_docker_file} --load ../.
+            edge_result="$(docker run --rm \
+                --platform ${test_platform} \
+                ${REGISTRY_USERNAME}/n2n-lucktu:test \
+                edge -h 2>&1 | xargs -I {} echo {})"
+            if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" ]]; then
+                LOG_ERROR 出错了: ${edge_result}
+                LOG_WARNING 使用 Dockerfile.ubuntu-18.04 - ${BUILD_VERSION_B_S_rC}
+                build_docker_file='Dockerfile.ubuntu-18.04'
+                break
+            fi
+        done
+        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:${BUILD_VERSION_B_S_rC} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} -f ../${build_docker_file} ../. --push
+        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. -f ../${build_docker_file} --push
+        LOG_RUN docker buildx build --progress plain --platform "'${BUILD_PLATFORMS}'" -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION} --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} ../. -f ../${build_docker_file} --push
     fi
 
 }
