@@ -9,7 +9,7 @@ export MANUAL_BUILD="True"
 export REGISTRY='registry.aour.zctmdc.cn'
 export REGISTRY_USERNAME='zctmdc'
 export REGISTRY_CACHE='True'
-
+# export PROXY_SERVER="http://host.docker.internal:21089"
 . scan_all_save.sh
 . scan_all_build.sh
 

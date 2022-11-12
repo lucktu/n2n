@@ -29,8 +29,8 @@ bash
 
 ```shell
 proxy_server='http://host.docker.internal:21089'
-export https_proxy="${proxy_server}"
 export http_proxy="${proxy_server}"
+export https_proxy="${proxy_server}"
 export ALL_PROXY="${proxy_server}"
 ```
 

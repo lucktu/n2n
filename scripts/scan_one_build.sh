@@ -123,7 +123,24 @@ SCAN_ONE_BUILD() {
         l_platforms=(${platforms//,/ })
         for test_platform in ${l_platforms[@]}; do
             LOG_WARNING "Test for platform: ${test_platform}"
-            LOG_RUN docker buildx build --progress plain --platform "'${test_platform}'" -t ${REGISTRY_USERNAME}/n2n-lucktu:test --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} -f ../${build_docker_file} --load ../.
+            # LOG_RUN docker buildx build --progress plain --platform "'${test_platform}'" -t ${REGISTRY_USERNAME}/n2n-lucktu:test --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} -f ../${build_docker_file} --load ../.
+
+            docker_build_command="docker buildx build --progress plain \
+                --platform '${test_platform}' \
+                --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} \
+                --build-arg MANUAL_BUILD=${MANUAL_BUILD^^} \
+                -f ../${build_docker_file}"
+
+            if [[ -n "${PROXY_SERVER}" ]]; then
+                docker_build_command="${docker_build_command} \
+                --build-arg http_proxy=${PROXY_SERVER,,} \
+                --build-arg https_proxy=${PROXY_SERVER,,}"
+            fi
+            
+            LOG_RUN "${docker_build_command} \
+                -t ${REGISTRY_USERNAME}/n2n-lucktu:test \
+                --load ../. "
+
             edge_result="$(docker run --rm \
                 --platform ${test_platform} \
                 ${REGISTRY_USERNAME}/n2n-lucktu:test \
@@ -159,17 +176,23 @@ SCAN_ONE_BUILD() {
         #     -f ../${build_docker_file} \
         #     ${REGISTRY_CACHE:+--cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache} \
         #     ../. --push
-        
+
         docker_build_command="docker buildx build --progress plain \
-            --platform '${BUILD_PLATFORMS}' \
-            --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} \
-            --build-arg MANUAL_BUILD=${MANUAL_BUILD^^} \
-            -f ../${build_docker_file}"
+                --platform '${BUILD_PLATFORMS}' \
+                --build-arg VERSION_B_S_rC=${BUILD_VERSION_B_S_rC} \
+                --build-arg MANUAL_BUILD=${MANUAL_BUILD^^} \
+                -f ../${build_docker_file}"
+
+        if [[ -n "${PROXY_SERVER}" ]]; then
+            docker_build_command="${docker_build_command} \
+                --build-arg http_proxy=${PROXY_SERVER,,} \
+                --build-arg https_proxy=${PROXY_SERVER,,}"
+        fi
 
         if [[ "${REGISTRY_CACHE^^}"=="TRUE" ]]; then
             docker_build_command="${docker_build_command} \
-            --cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache \
-            --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache"
+                --cache-from=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache \
+                --cache-to=type=registry,ref=${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:buildcache"
         fi
 
         LOG_RUN "${docker_build_command} \
@@ -180,7 +203,7 @@ SCAN_ONE_BUILD() {
             ../. --push"
         LOG_RUN "${docker_build_command} \
             -t ${REGISTRY}/${REGISTRY_USERNAME}/n2n-lucktu:v.${BUILD_SMALL_VERSION} \
-            ../. --push"
+            --push ../."
     fi
 
 }
