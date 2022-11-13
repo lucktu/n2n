@@ -98,7 +98,7 @@ apk add --no-cache wget unzip
 > error while loading shared libraries: libcrypto.so.1.0.0: cannot open shared object file: No such file or directory
 
 - 使用支持的系统版本
-  - `debain:8`
+  - `debian:8`
   - `debian:jessie`
   - `ubuntu:18.04`
   - `ubuntu:bionic`
