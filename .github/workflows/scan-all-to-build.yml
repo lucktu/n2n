@@ -70,7 +70,7 @@ jobs:
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
-      force_push: ${{ fromJSON(needs.scan-all.outputs.force_push) }}
+      force_push: ${{ needs.scan-all.outputs.force_push }}
     secrets: inherit
 
   build-releases-version:
@@ -87,5 +87,5 @@ jobs:
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
-      force_push: ${{ fromJSON(needs.scan-all.outputs.force_push) }}
+      force_push: ${{ inputs.force_push }}
     secrets: inherit

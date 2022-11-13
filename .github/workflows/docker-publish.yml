@@ -39,7 +39,12 @@ on:
       version_b_s_rc:
         required: true
         type: string
-
+        
+      force_push:
+        description: "force push to registry"
+        required: true
+        type: boolean
+        default: false
 env:
   # Use docker.io for Docker Hub if empty
   # REGISTRY: ghcr.io
