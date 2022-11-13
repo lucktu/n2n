@@ -11,11 +11,12 @@ on:
       version_b_s_rc:
         description: "version_b_s_rc e.g. v2_2.7.0_r528 | v2"
         required: false
-        default: "v2"
+        
       force_push:
         description: "force push to registry"
         required: true
         type: boolean
+        default: false
     # secrets:
     #       REGISTRY_USERNAME:
     #         description: 'USERNAME for REGISTRY'
@@ -55,6 +56,7 @@ env:
   # github.repository as <account>/<repo>
   NED_LIBFIX_VERSIONS_B_S_rC: "v2_2.3.0,v2s_2.1.0_r111,v1"
   TEST_PLATFORM: "linux/386"
+  
 jobs:
   init-version:
     runs-on: ubuntu-latest

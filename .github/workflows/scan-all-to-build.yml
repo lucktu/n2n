@@ -7,10 +7,12 @@ on:
         description: "Build all releases versions? v2s|v2|v1"
         required: true
         type: boolean
+        default: false
       force_push:
         description: "force push to registry"
         required: true
         type: boolean
+        default: false
 
 jobs:
   scan-all:
