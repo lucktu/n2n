@@ -8,7 +8,7 @@ on:
         required: true
         type: boolean
         default: false
-      force_push:
+      force-push:
         description: "force push to registry"
         required: true
         type: boolean
@@ -25,6 +25,7 @@ jobs:
       packages: write
     outputs:
       version_b_s_rcs: ${{ steps.build_version.outputs.version_b_s_rcs }}
+      force_push: ${{ steps.build_version.outputs.force_push }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -50,7 +51,10 @@ jobs:
           version_b_s_rcs="${version_b_s_rcs:1} "
           version_b_s_rcs="{\"include\":[${version_b_s_rcs}]}"
           LOG_INFO  version_b_s_rcs: ${version_b_s_rcs}
+          force_push=${{ inputs.force-push }}
+          LOG_INFO  force_push: ${force_push}
           echo "version_b_s_rcs=${version_b_s_rcs}" >> $GITHUB_OUTPUT
+          echo "force_push=${force_push}" >> $GITHUB_OUTPUT
 
   build-all:
     needs: [scan-all]
@@ -66,8 +70,9 @@ jobs:
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
-      force_push: ${{ inputs.force_push }}
+      force_push: ${{ fromJSON(needs.scan-all.outputs.force_push) }}
     secrets: inherit
+
   build-releases-version:
     permissions:
       contents: read
@@ -82,5 +87,5 @@ jobs:
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
-      force_push: ${{ inputs.force_push }}
+      force_push: ${{ fromJSON(needs.scan-all.outputs.force_push) }}
     secrets: inherit
