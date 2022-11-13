@@ -11,7 +11,7 @@ on:
       version_b_s_rc:
         description: "version_b_s_rc e.g. v2_2.7.0_r528 | v2"
         required: false
-        
+
       force_push:
         description: "force push to registry"
         required: true
@@ -56,7 +56,7 @@ env:
   # github.repository as <account>/<repo>
   NED_LIBFIX_VERSIONS_B_S_rC: "v2_2.3.0,v2s_2.1.0_r111,v1"
   TEST_PLATFORM: "linux/386"
-  
+
 jobs:
   init-version:
     runs-on: ubuntu-latest
@@ -142,8 +142,14 @@ jobs:
             BUILD_BIG_VERSION=${src_big_version}
             BUILD_SMALL_VERSION=${src_small_version}
             BUILD_COMMIT=${src_commit}
-            echo "LATEST_VERSION=true" >> $GITHUB_OUTPUT
           fi
+          if [[ -n "$(ls ../Linux/ | grep -E ${BUILD_BIG_VERSION}.*${BUILD_SMALL_VERSION}.*${BUILD_COMMIT})" ]];then
+            LATEST_VERSION=true
+          else
+            LATEST_VERSION=false
+          fi
+          LOG_INFO "LATEST_VERSION: ${LATEST_VERSION}"
+          echo "LATEST_VERSION=${LATEST_VERSION}" >> $GITHUB_OUTPUT
           version_b_s_rc=${BUILD_BIG_VERSION}_${BUILD_SMALL_VERSION}${BUILD_COMMIT:+_r}${BUILD_COMMIT}
           LOG_WARNING version_b_s_rc: ${version_b_s_rc}
           SCAN_ONE_BUILD ${version_b_s_rc}
