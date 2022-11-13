@@ -326,7 +326,7 @@ jobs:
               echo -e "\033[0;31m[ERROR] $* \033[0m"
           }
           set -e
-          ned_libfix_versions_b_s_rc=${{ env.NED_LIBFIX_VERSIONS_B_S_rC }}
+          ned_libfix_versions_b_s_rc="${{ env.NED_LIBFIX_VERSIONS_B_S_rC }}"
           l_ned_libfix_versions_b_s_rc=(${ned_libfix_versions_b_s_rc//,/ })
           for ned_libfix_versions_b_s_rc in ${l_ned_libfix_versions_b_s_rc[@]};do
             if [[ "${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}" == "${ned_libfix_versions_b_s_rc}" ]];then
