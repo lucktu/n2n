@@ -7,7 +7,7 @@ LABEL description="${summary}" \
   app.kubernetes.io/name="${name}" \
   org.opencontainers.image.title="${name}" \
   org.opencontainers.artifact.description="${summary}" \
-  org.opencontainers.image.url="https://hub.docker.com/r/zctmdc/n2n_ntop" \
+  org.opencontainers.image.url="https://hub.docker.com/r/zctmdc/n2n-lucktu" \
   org.opencontainers.image.source="https://github.com/zctmdc/docker/tree/alpha/n2n-lucktu" \
   org.opencontainers.image.authors="zctmdc@outlook.com" \
   org.opencontainers.image.description="${summary}" \
@@ -15,12 +15,9 @@ LABEL description="${summary}" \
   org.opencontainers.image.licenses="MIT"
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG MANUAL_BUILD
-
 RUN apt-get -qq update
-
 RUN apt-get -qq -y install \
-  bash curl wget unzip jq git
+  bash curl wget unzip
 
 # 安装RAR
 WORKDIR /tmp/scripts/
@@ -35,6 +32,8 @@ ARG BIG_VERSION
 ARG SMALL_VERSION
 ARG COMMIT
 ARG VERSION_B_S_rC
+ARG MANUAL_BUILD
+
 # 选择对应版本文件
 WORKDIR /tmp/n2n-lucktu/scripts/
 # COPY . /tmp/n2n-lucktu/
@@ -59,11 +58,17 @@ LABEL description="${summary}" \
   app.kubernetes.io/name="${name}" \
   org.opencontainers.image.title="${name}" \
   org.opencontainers.artifact.description="${summary}" \
-  org.opencontainers.image.url="https://hub.docker.com/r/zctmdc/n2n_ntop" \
+  org.opencontainers.image.url="https://hub.docker.com/r/zctmdc/n2n-lucktu" \
   org.opencontainers.image.source="https://github.com/zctmdc/docker/tree/alpha/n2n-lucktu" \
   org.opencontainers.image.authors="zctmdc@outlook.com" \
   org.opencontainers.image.description="${summary}" \
   org.opencontainers.image.licenses="MIT"
+
+# edge need ifconfig
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get -qq update
+RUN apt-get -qq -y install \
+  net-tools inetutils-ping traceroute busybox
 
 WORKDIR /usr/local/sbin/
 COPY --from=downloader \

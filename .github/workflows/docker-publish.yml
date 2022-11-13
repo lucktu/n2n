@@ -12,6 +12,10 @@ on:
         description: "version_b_s_rc e.g. v2_2.7.0_r528 | v2"
         required: false
         default: "v2"
+      force_push:
+        description: "force push to registry"
+        required: true
+        type: boolean
     # secrets:
     #       REGISTRY_USERNAME:
     #         description: 'USERNAME for REGISTRY'
@@ -43,7 +47,7 @@ env:
   BIG_VERSION: v3
   SMALL_VERSION: 3.1.1-16
   COMMIT: 1200
-
+  FORCE_PUSH: false
   # BIG_VERSION: v2
   # SMALL_VERSION: 2.7.0
   # COMMIT: 528
@@ -189,7 +193,7 @@ jobs:
           echo "last_pulled_date=${last_pulled_date}" >> $GITHUB_OUTPUT
           LOG_INFO "check tag - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
           LOG_INFO "last_pulled_date - ${last_pulled_date}"
-          if [[ true == "${{ env.FORCE_PUSH }}" ]]; then
+          if [[ "true" == "${{ env.FORCE_PUSH }}" || "true" == "${{ inputs.force_push }}" ]]; then
               LOG_WARNING "强制 编译/推送"
           elif [[ "${last_pulled_date,,}" != "null" || "${{ needs.init-version.outputs.BUILD_PLATFORMS }}" == "" ]]; then
               echo 'skip_build_push=true' >> $GITHUB_OUTPUT
@@ -262,7 +266,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}
           tags: |
-            type=raw,value=latest,enable=${{ needs.init-version.outputs.LATEST_VERSION == true }}
+            type=raw,value=latest,enable=${{ needs.init-version.outputs.LATEST_VERSION == 'true' }}
             type=raw,value=v3,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v3' }}
             type=raw,value=releases-v3,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v3' }}
             type=raw,value=v2s,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2s' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
@@ -313,8 +317,8 @@ jobs:
           for ned_libfix_versions_b_s_rc in ${l_ned_libfix_versions_b_s_rc[@]};do
             if [[ "${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}" == "${ned_libfix_versions_b_s_rc}" ]];then
               LOG_WARNING 需要修复 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-              LOG_WARNING 使用 Dockerfile.ubuntu-18.04 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-              echo 'build_dockerfile=Dockerfile.ubuntu-18.04'>> $GITHUB_OUTPUT
+              LOG_WARNING 使用 Dockerfile.debian-jessie - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
+              echo 'build_dockerfile=Dockerfile.debian-jessie'>> $GITHUB_OUTPUT
               exit 0
             fi
           done
@@ -329,8 +333,8 @@ jobs:
               edge -h 2>&1 | xargs -I {} echo {})"
             if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" ]];then
               LOG_ERROR 出错了: ${edge_result}
-              LOG_WARNING 使用 Dockerfile.ubuntu-18.04 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-              echo 'build_dockerfile=Dockerfile.ubuntu-18.04'>> $GITHUB_OUTPUT
+              LOG_WARNING 使用 Dockerfile.debian-jessie - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
+              echo 'build_dockerfile=Dockerfile.debian-jessie'>> $GITHUB_OUTPUT
               exit 0
             fi
             if [[ -z "$(echo ${edge_result,,} | grep welcome)" ]];then

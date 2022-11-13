@@ -5,7 +5,11 @@ on:
     inputs:
       build-releases-version:
         description: "Build all releases versions? v2s|v2|v1"
-        required: false
+        required: true
+        type: boolean
+      force_push:
+        description: "force push to registry"
+        required: true
         type: boolean
 
 jobs:
@@ -60,6 +64,7 @@ jobs:
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
+      force_push: ${{ inputs.force_push }}
     secrets: inherit
   build-releases-version:
     permissions:
@@ -75,4 +80,5 @@ jobs:
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
+      force_push: ${{ inputs.force_push }}
     secrets: inherit

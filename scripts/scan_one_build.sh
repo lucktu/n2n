@@ -147,8 +147,8 @@ SCAN_ONE_BUILD() {
                 edge -h 2>&1 | xargs -I {} echo {})"
             if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" ]]; then
                 LOG_ERROR 出错了: ${edge_result}
-                LOG_WARNING 使用 Dockerfile.ubuntu-18.04 - ${BUILD_VERSION_B_S_rC}
-                build_docker_file='Dockerfile.ubuntu-18.04'
+                LOG_WARNING 使用 Dockerfile.debian-jessie - ${BUILD_VERSION_B_S_rC}
+                build_docker_file='Dockerfile.debian-jessie'
                 break
             fi
         done
