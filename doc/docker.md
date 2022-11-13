@@ -42,11 +42,11 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
 | ---------: | :----: | :---------------------------------------- |
 |       bash | **\\** | <kbd>\\</kbd> 位于<kbd>Enter</kbd> 键上方 |
 | powershell | **`**  | <kbd>\`</kbd> 位于 <kbd>TAB</kbd> 键上方  |
-|        CMD | **＾** | <kbd>Shift</kbd>+<kbd>6</kbd>               |
+|        CMD | **＾** | <kbd>Shift</kbd>+<kbd>6</kbd>             |
 
 ### 建立 _supernode_
 
-- 前台模式
+-   前台模式
 
 ```bash
 docker run \
@@ -56,7 +56,7 @@ docker run \
   supernode -l 10090 -v
 ```
 
-- 后台模式
+-   后台模式
 
 ```bash
 docker run \
@@ -69,7 +69,7 @@ docker run \
 
 ### 建立 _edge_
 
-- 前台模式
+-   前台模式
 
 ```bash
 docker run \
@@ -80,7 +80,7 @@ docker run \
   edge -d T3 -a 172.3.0.77 -c n2n -k test -l n2n.lucktu.com:10090 -Efrv -e auto
 ```
 
-- 后台模式
+-   后台模式
 
 ```bash
 docker run \
@@ -100,63 +100,63 @@ docker run \
 
     - `./config/edge.conf`
 
-      ```conf
-        # 虚拟网卡名字
-        -d T3
-        # edge ip
-        -a=172.3.0.77
-        # community 名字
-        -c=n2n
-        # community 密码
-        -k=test
-        # supernode 地址和端口
-        -l=n2n.lucktu.com:10090
-        # 
-        -e=auto
-        # 允许多播mac地址
-        -E
-        # 允许edge直接的网络转发
-        -r
-        # 详细模式
-        -v
-        # 前台运行而不是后台
-        -f
-      ```
+        ```conf
+          # 虚拟网卡名字
+          -d T3
+          # edge ip
+          -a=172.3.0.77
+          # community 名字
+          -c=n2n
+          # community 密码
+          -k=test
+          # supernode 地址和端口
+          -l=n2n.lucktu.com:10090
+          #
+          -e=auto
+          # 允许多播mac地址
+          -E
+          # 允许edge直接的网络转发
+          -r
+          # 详细模式
+          -v
+          # 前台运行而不是后台
+          -f
+        ```
 
     - `./config/supernode.conf`
 
-      ```conf
-      -p=10090
-      -f
-      -v
-      ```
+        ```conf
+        -p=10090
+        -f
+        -v
+        ```
 
 2. 挂载运行
 
     - supernode
 
-      ```bash
-      docker run \
-        -d --restart=always \
-        --name=supernode \
-        -p 10090:10090/udp \
-        -v ./config/:/etc/n2n/ \
-        zctmdc/n2n_lucktu \
-        supernode /etc/n2n/supernode.conf
-      ```
+        ```bash
+        docker run \
+          -d --restart=always \
+          --name=supernode \
+          -p 10090:10090/udp \
+          -v ./config/:/etc/n2n/ \
+          zctmdc/n2n_lucktu \
+          supernode /etc/n2n/supernode.conf
+        ```
 
     - edge
 
-      ```bash
-      docker run \
-        -d --restart=always \
-        --privileged \
-        --net=host \
-        --name=edge \
-        -v ./config/:/etc/n2n/ \
-        zctmdc/n2n_lucktu \
-        edge /etc/n2n/edge.conf
-      ```
+        ```bash
+        docker run \
+          -d --restart=always \
+          --privileged \
+          --net=host \
+          --name=edge \
+          -v ./config/:/etc/n2n/ \
+          zctmdc/n2n_lucktu \
+          edge /etc/n2n/edge.conf
+        ```
 
 > [ntop/n2n 项目配置文件示例][github_n2n_conf]
 
@@ -172,83 +172,81 @@ docker run \
 
     - `docker-compose.yaml`
 
-      ```yaml
-      version: "3"
-      services:
-        n2n_supernode:
-          # build:
-          #   context: .
-          #   dockerfile: Dockerfile
-          image: zctmdc/n2n_lucktu
-          container_name: n2n_supernode
-          restart: always
-          volumes: 
-            - ./config/:/etc/n2n/
-          command: [ 'supernode', '/etc/n2n/supernode.conf' ]
-          # privileged: true
-          # network_mode: host
-          ports:
-            - 10090:10090/udp
-          networks:
+        ```yaml
+        version: "3"
+        services:
+            n2n_supernode:
+                # build:
+                #   context: .
+                #   dockerfile: Dockerfile
+                image: zctmdc/n2n_lucktu
+                container_name: n2n_supernode
+                restart: always
+                volumes:
+                    - ./config/:/etc/n2n/
+                command: ["supernode", "/etc/n2n/supernode.conf"]
+                # privileged: true
+                # network_mode: host
+                ports:
+                    - 10090:10090/udp
+                networks:
+                    n2n:
+                        ipv4_address: 172.77.5.10
+
+            n2n_edge_1:
+                image: zctmdc/n2n_lucktu
+                container_name: n2n_edge_1
+                restart: always
+                privileged: true
+                command:
+                    [
+                        "sh",
+                        "-c",
+                        "edge -d T3 -a 10.3.0.77 -c n2n -k test -l 172.77.5.10:10090 -e auto -Efrv",
+                    ]
+                # network_mode: host
+                networks:
+                    n2n: # ipv4_address: 172.77.5.11
+                depends_on:
+                    - n2n_supernode
+                external_links:
+                    - n2n_supernode:n2n_supernode
+
+            n2n_edge_2:
+                image: zctmdc/n2n_lucktu
+                container_name: n2n_edge_2
+                restart: always
+                privileged: true
+                volumes:
+                    - ./config/:/etc/n2n/
+                command: ["edge", "/etc/n2n/edge.conf"]
+                # network_mode: host
+                networks:
+                    n2n:
+                depends_on:
+                    - n2n_supernode
+                external_links:
+                    - n2n_supernode:n2n_supernode
+
+        networks:
             n2n:
-              ipv4_address: 172.77.5.10
-
-        n2n_edge_1:
-          image: zctmdc/n2n_lucktu
-          container_name: n2n_edge_1
-          restart: always
-          privileged: true
-          command:
-            [
-              'sh',
-              '-c',
-              'edge -d T3 -a 10.3.0.77 -c n2n -k test -l 172.77.5.10:10090 -e auto -Efrv'
-            ]
-          # network_mode: host
-          networks:
-            n2n: # ipv4_address: 172.77.5.11
-          depends_on:
-            - n2n_supernode
-          external_links:
-            - n2n_supernode:n2n_supernode
-
-        n2n_edge_2:
-          image: zctmdc/n2n_lucktu
-          container_name: n2n_edge_2
-          restart: always
-          privileged: true
-          volumes: 
-            - ./config/:/etc/n2n/
-          command: [ 'edge', '/etc/n2n/edge.conf' ]
-          # network_mode: host
-          networks:
-            n2n:
-          depends_on:
-            - n2n_supernode
-          external_links:
-            - n2n_supernode:n2n_supernode
-
-      networks:
-        n2n:
-          driver: bridge
-          ipam:
-            driver: default
-            config:
-              - subnet: 172.77.5.0/24
-
-
-      ```
+                driver: bridge
+                ipam:
+                    driver: default
+                    config:
+                        - subnet: 172.77.5.0/24
+        ```
 
 2. 启动容器
 
-  ```bash
-  docker-compose up -d                          # 后台运行
-  docker exec -ti n2n_edge_1 ping 10.3.0.78     # 运行指令
-  # docker-compose up                           # 前台运行
-  # docker-compose up n2n_edge_1                # 仅前台运行 n2n_edge_1
-  # docker-compose up -d n2n_edge_1             # 仅后台运行 n2n_edge_1
-  # docker-compose run n2n_edge_1 edge -h       # 运行指令
-  ```
+```bash
+docker-compose up -d                          # 后台运行
+docker exec -ti n2n_edge_1 ping 10.3.0.78     # 运行指令
+# docker-compose up                           # 前台运行
+# docker-compose up n2n_edge_1                # 仅前台运行 n2n_edge_1
+# docker-compose up -d n2n_edge_1             # 仅后台运行 n2n_edge_1
+# docker-compose run n2n_edge_1 edge -h       # 运行指令
+```
 
 ## 参数说明
 
@@ -270,11 +268,12 @@ docker run \
   edge --help
 ```
 
-- 文档参见 [ntop/n2n 项目文档][github_n2n_doc]
+-   更多本容器说明见 [build.md](build.md)
+-   文档参见 [ntop/n2n 项目文档][github_n2n_doc]
 
-- 更多帮助请参考 [好运博客][好运博客] 中 [N2N 新手向导及最新信息][n2n 新手向导及最新信息]
+-   更多帮助请参考 [好运博客][好运博客] 中 [N2N 新手向导及最新信息][n2n 新手向导及最新信息]
 
-- 更多节点请访问 [N2N 中心节点][n2n中心节点]
+-   更多节点请访问 [N2N 中心节点][n2n中心节点]
 
 更多介绍请访问 [docker-compose CLI 概述][overview of docker-compose cli]
 

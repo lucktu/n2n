@@ -31,20 +31,21 @@ on:
     # Publish semver tags as releases.
     tags: ["v*.*.*"]
 
-  pull_request:
-    branches: ["master"]
-
   workflow_call:
     inputs:
       version_b_s_rc:
         required: true
         type: string
-        
+
       force_push:
         description: "force push to registry"
         required: true
         type: boolean
         default: false
+
+  pull_request:
+    branches: ["master"]
+
 env:
   # Use docker.io for Docker Hub if empty
   # REGISTRY: ghcr.io
@@ -59,7 +60,7 @@ env:
   # COMMIT: 528
 
   # github.repository as <account>/<repo>
-  NED_LIBFIX_VERSIONS_B_S_rC: "v2_2.3.0,v2s_2.1.0_r111,v1"
+  NED_LIBFIX_VERSIONS_B_S_rC: "v2_2.3.0, v2s_2.1.0_r111, v1"
   TEST_PLATFORM: "linux/386"
 
 jobs:

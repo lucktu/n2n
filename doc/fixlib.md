@@ -34,9 +34,9 @@ export https_proxy="${proxy_server}"
 export ALL_PROXY="${proxy_server}"
 ```
 
-## 相应软件包
+## 依赖安装
 
-### ubuntu 安装
+### ubuntu/debain 安装
 
 ```shell
 apt-get update
@@ -55,21 +55,21 @@ apk add --no-cache wget unzip
 
 > qemu-arm: Could not open '/lib/ld-linux.so.3': No such file or directory
 
-- docker run command
+-   docker run command
 
     ```shell
     docker run -ti --rm --platform linux/arm/v7 ubuntu:18.04 bash
     ```
 
-- ubuntu 换源
+-   ubuntu 换源
 
-    [ubuntu 换源](###ubuntu%20换源)
+    [ubuntu 换源](##换源)
 
-- ubuntu 安装软件包
+-   ubuntu 依赖安装
 
-    [ubuntu 安装](###ubuntu%20安装)
+    [ubuntu 安装](##依赖安装)
 
-- Source file
+-   Source file
 
     ```shell
     cd /tmp/
@@ -79,7 +79,7 @@ apk add --no-cache wget unzip
     chmod +x edge2 supernode2
     ```
 
-- fix command
+-   fix command
 
     ```shell
     if [[ $(./edge2 -h 2>&1 | grep  /lib/ld-linux.so.3) ]];then
@@ -97,39 +97,40 @@ apk add --no-cache wget unzip
 
 > error while loading shared libraries: libcrypto.so.1.0.0: cannot open shared object file: No such file or directory
 
-- 使用支持的系统版本
-  - `debian:8`
-  - `debian:jessie`
-  - `ubuntu:18.04`
-  - `ubuntu:bionic`
-  - `alpine:3.8` **可能不起作用*
+-   使用支持的系统版本
 
-- 或手动安装
+    -   `debian:8`
+    -   `debian:jessie`
+    -   `ubuntu:18.04`
+    -   `ubuntu:bionic`
+    -   `alpine:3.8` \*_可能不起作用_
 
-  - ubuntu
+-   或手动安装
 
-    <https://pkgs.org/download/libssl1.0.0>
-    <http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/>
+    -   ubuntu
 
-  - debian
+        <https://pkgs.org/download/libssl1.0.0>  
+        <http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/>
 
-    <https://security.debian.org/debian-security/pool/updates/main/o/openssl/>
+    -   debian
 
-- docker run command
+        <https://security.debian.org/debian-security/pool/updates/main/o/openssl/>
+
+-   docker run command
 
     ```shell
     docker run -ti --rm --platform linux/amd64 ubuntu:18.04 bash
     ```
 
-- ubuntu 换源
+-   ubuntu 换源
 
-    [ubuntu 换源](###ubuntu%20换源)
+[ubuntu 换源](##国内换源)
 
-- ubuntu 安装软件包
+-   ubuntu 安装软件包
 
-    [ubuntu 安装](###ubuntu%20安装)
+[ubuntu 安装](##依赖安装)
 
-- Source file
+-   Source file
 
     ```shell
     cd /tmp/
@@ -139,7 +140,7 @@ apk add --no-cache wget unzip
     chmod +x edge2 supernode2
     ```
 
-- fix command
+-   fix command
 
     ```shell
     if [[ $(./edge2 -h 2>&1 | grep  libcrypto.so.1.0.0) ]];then
@@ -150,3 +151,23 @@ apk add --no-cache wget unzip
     ```shell
     ./edge2 -h
     ```
+
+### 手动修复
+
+```console
+# ldd edge2
+    libcrypto.so.1.1 => not found
+    libc.so.6 => /lib/arm-linux-gnueabihf/libc.so.6 (0x3f708000)
+    /lib/ld-linux-armhf.so.3 (0x40000000)
+```
+
+Google: `libcrypto.so.1.1` `not found`
+
+```console
+./edge2
+    ./edge2: error while loading shared libraries: libcrypto.so.1.1: cannot open shared object file: No such file or directory
+```
+
+Google: `error while loading shared libraries` `libcrypto.so.1.1`
+
+[libcryptoso1.0.0](###libcryptoso1.0.0)

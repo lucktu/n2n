@@ -1,17 +1,18 @@
 #!/bin/bash
+
 rm -r ../result/
 . init_logger.sh
 
-# docker buildx create --use
 docker run --privileged --rm tonistiigi/binfmt --install all
+docker buildx create --use --name build --node build --driver-opt network=host
 
 export MANUAL_BUILD="True"
 export REGISTRY='registry.aour.zctmdc.cn'
 export REGISTRY_USERNAME='zctmdc'
 export REGISTRY_CACHE='True'
 # export PROXY_SERVER="http://host.docker.internal:21089"
-. scan_all_save.sh
-. scan_all_build.sh
+sh ./scan_all_save.sh
+sh ./scan_all_build.sh
 
 . scan_one_build.sh
 build_version_b_s_rcs="v2s,v2,v1"

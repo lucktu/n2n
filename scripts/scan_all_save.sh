@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 扫描`Linux`目录下所有文件
+# 解析版本信息保存至 `result` 文件夹下
+
 . init_path.sh
 . init_logger.sh
 . save_file_infos.sh
@@ -32,4 +35,3 @@ for scan_dir in ${scan_dirs}; do
         SAVE_FILE_INFOS ${s_file}
     done
 done
-
