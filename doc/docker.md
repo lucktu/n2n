@@ -48,49 +48,53 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
 
 - 前台模式
 
-```bash
-docker run \
-  -ti --rm \
-  -p 10090:10090/udp \
-  zctmdc/n2n_lucktu \
-  supernode -l 10090 -v
-```
+    ```bash
+    docker run \
+    -ti --rm \
+    -p 10090:10090/udp \
+    zctmdc/n2n_lucktu \
+    supernode -l 10090 -v
+    ```
 
 - 后台模式
 
-```bash
-docker run \
-  -d --restart=always \
-  --name=supernode \
-  -p 10090:10090/udp \
-  zctmdc/n2n_lucktu \
-  supernode -p 10090 -v
-```
+    ```bash
+    docker run \
+    -d --restart=always \
+    --name=supernode \
+    -p 10090:10090/udp \
+    zctmdc/n2n_lucktu \
+    supernode -p 10090 -v
+    ```
 
 ### 建立 _edge_
 
 - 前台模式
 
-```bash
-docker run \
-   -ti --rm\
-  --privileged \
-  --net=host \
-  zctmdc/n2n_lucktu \
-  edge -d T3 -a 172.3.0.77 -c n2n -k test -l n2n.lucktu.com:10090 -Efrv -e auto
-```
+    ```bash
+    docker run \
+    -ti --rm\
+    --privileged \
+    --net=host \
+    zctmdc/n2n_lucktu \
+    edge -d T3 -a 172.3.0.77 -c n2n -k test -l n2n.lucktu.com:10090 -Efrv -e auto
+    ```
 
 - 后台模式
 
-```bash
-docker run \
-  -d --restart=always \
-  --privileged \
-  --net=host \
-  --name=edge \
-  zctmdc/n2n_lucktu \
-  edge -d T3 -a 172.3.0.78 -c n2n -k test -l n2n.lucktu.com:10090 -Efrv -e auto
-```
+    ```bash
+    docker run \
+    -d --restart=always \
+    --privileged \
+    --net=host \
+    --name=edge \
+    zctmdc/n2n_lucktu \
+    edge -d T3 -a 172.3.0.78 -c n2n -k test -l n2n.lucktu.com:10090 -Efrv -e auto
+    ```
+
+- 测试
+
+    `docker exec edge busybox ping 172.3.0.77`
 
 ### 使用配置文件
 
@@ -158,9 +162,9 @@ docker run \
           edge /etc/n2n/edge.conf
         ```
 
-> [ntop/n2n 项目配置文件示例][github_n2n_conf]
+[ntop/n2n 项目配置文件示例][github_n2n_conf]
 
-> [ntop/n2n 项目配置文件说明][github_n2n_conf_md]
+[ntop/n2n 项目配置文件说明][github_n2n_conf_md]
 
 ### 使用 _docker-compose_ 配置运行
 
@@ -239,14 +243,14 @@ docker run \
 
 2. 启动容器
 
-```bash
-docker-compose up -d                          # 后台运行
-docker exec -ti n2n_edge_1 ping 10.3.0.78     # 运行指令
-# docker-compose up                           # 前台运行
-# docker-compose up n2n_edge_1                # 仅前台运行 n2n_edge_1
-# docker-compose up -d n2n_edge_1             # 仅后台运行 n2n_edge_1
-# docker-compose run n2n_edge_1 edge -h       # 运行指令
-```
+    ```bash
+    docker-compose up -d                          # 后台运行
+    docker exec -ti n2n_edge_1 ping 10.3.0.78     # 运行指令
+    # docker-compose up                           # 前台运行
+    # docker-compose up n2n_edge_1                # 仅前台运行 n2n_edge_1
+    # docker-compose up -d n2n_edge_1             # 仅后台运行 n2n_edge_1
+    # docker-compose run n2n_edge_1 edge -h       # 运行指令
+    ```
 
 ## 参数说明
 
@@ -283,7 +287,7 @@ docker run \
 
 - [我 github 的 docker 项目页][zctmdc_github]
 - [n2n_lucktu 的 docker 项目页][n2n_lucktu]
-- [我 github 的n2n-lucktu docker页][zctmdc_n2n_lucktu]  
+- [我 github 的 n2n-lucktu docker 页][zctmdc_n2n_lucktu]
 
 我将引起注意，不再随意的去更改和重命名空间/变量名
 
