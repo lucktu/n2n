@@ -178,7 +178,6 @@ jobs:
           for ned_libfix_versions_b_s_rc in ${l_ned_libfix_versions_b_s_rc[@]};do
             if [[ "${BUILD_VERSION_B_S_rC}" == "${ned_libfix_versions_b_s_rc}" ]];then
               LOG_WARNING 需要修复 - ${BUILD_VERSION_B_S_rC}
-              LOG_WARNING 使用 Dockerfile.debian-8 - ${BUILD_VERSION_B_S_rC}
               echo "NEED_FIX=true">> $GITHUB_OUTPUT
               exit 0
             fi
