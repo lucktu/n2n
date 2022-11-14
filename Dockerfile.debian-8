@@ -69,6 +69,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -qq update
 RUN apt-get -qq -y install \
   net-tools busybox iptables isc-dhcp-client isc-dhcp-server
+RUN touch /var/lib/dhcp/dhcpd.leases
 
 WORKDIR /usr/local/sbin/
 COPY --from=downloader \

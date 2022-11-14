@@ -64,7 +64,8 @@ LABEL description="${summary}" \
   org.opencontainers.image.description="${summary}" \
   org.opencontainers.image.licenses="MIT"
 
-RUN apk add --no-cache --upgrade bash
+RUN apk add --no-cache --upgrade bash iptables dhcp dhclient
+RUN touch /var/lib/dhcp/dhcpd.leases
 
 WORKDIR /usr/local/sbin/
 COPY --from=downloader \
