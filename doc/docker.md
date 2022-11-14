@@ -46,7 +46,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
 
 ### 建立 _supernode_
 
--   前台模式
+- 前台模式
 
 ```bash
 docker run \
@@ -56,7 +56,7 @@ docker run \
   supernode -l 10090 -v
 ```
 
--   后台模式
+- 后台模式
 
 ```bash
 docker run \
@@ -69,7 +69,7 @@ docker run \
 
 ### 建立 _edge_
 
--   前台模式
+- 前台模式
 
 ```bash
 docker run \
@@ -80,7 +80,7 @@ docker run \
   edge -d T3 -a 172.3.0.77 -c n2n -k test -l n2n.lucktu.com:10090 -Efrv -e auto
 ```
 
--   后台模式
+- 后台模式
 
 ```bash
 docker run \
@@ -268,19 +268,23 @@ docker run \
   edge --help
 ```
 
--   更多本容器说明见 [build.md](build.md)
--   文档参见 [ntop/n2n 项目文档][github_n2n_doc]
+- 更多本容器说明见 [build.md](build.md)
+- 文档参见 [ntop/n2n 项目文档][github_n2n_doc]
 
--   更多帮助请参考 [好运博客][好运博客] 中 [N2N 新手向导及最新信息][n2n 新手向导及最新信息]
+- 更多帮助请参考 [好运博客][好运博客] 中 [N2N 新手向导及最新信息][n2n 新手向导及最新信息]
 
--   更多节点请访问 [N2N 中心节点][n2n中心节点]
+- 更多节点请访问 [N2N 中心节点][n2n中心节点]
 
 更多介绍请访问 [docker-compose CLI 概述][overview of docker-compose cli]
 
 ## 告诉我你在用
 
 如果你使用正常了请点个赞
-[我的 docker 主页][zctmdc—docker] ，[n2n_lucktu 的 docker 项目页][n2n_lucktu] 和 [我 github 的 docker 项目页][zctmdc—github]
+
+- [我 github 的 docker 项目页][zctmdc_github]
+- [n2n_lucktu 的 docker 项目页][n2n_lucktu]
+- [我 github 的n2n-lucktu docker页][zctmdc_n2n_lucktu]  
+
 我将引起注意，不再随意的去更改和重命名空间/变量名
 
 [n2n]: https://www.ntop.org/products/n2n/ "n2n官网"
@@ -294,7 +298,7 @@ docker run \
 [n2n中心节点]: http://supernode.ml/ "N2N中心节点"
 [组网示意]: ./img/n2n_network.png "组网示意"
 [连接原理]: ./img/n2n_com.png "连接原理"
-[zctmdc—docker]: https://hub.docker.com/u/zctmdc "我的docker主页"
 [n2n_lucktu]: https://hub.docker.com/r/zctmdc/n2n_lucktu "n2n_lucktu的docker项目页"
-[zctmdc—github]: https://github.com/zctmdc/docker.git "我github的docker项目页"
+[zctmdc_github]: https://github.com/zctmdc/docker.git "我github的docker项目页"
+[zctmdc_n2n_lucktu]: https://github.com/zctmdc/n2n-lucktu/blob/master/doc/docker.md "我github的n2n-lucktu docker页"
 [overview of docker-compose cli]: https://docs.docker.com/compose/reference/overview/ "docker-compose CLI概述"
