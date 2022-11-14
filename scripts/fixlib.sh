@@ -1,12 +1,13 @@
 #!/bin/bash
 
 . init_logger.sh
+
 flag_retry="$1"
 command_exists() {
     command -v "$@" >/dev/null 2>&1
 }
 is_debain8() {
-    cat /etc/os-release | grep jessssie >/dev/null 2>&1
+    cat /etc/os-release | grep jessie >/dev/null 2>&1
 }
 if [[ -n "$(/usr/local/sbin/edge -h 2>&1 | grep /lib/ld-linux.so.3)" ]]; then
     LOG_WARNING 缺少 /lib/ld-linux.so.3 , 正在修复
@@ -47,7 +48,7 @@ fi
 edge_result="$(edge -h 2>&1 | xargs -I {} echo {})"
 if [[ -z "$(echo ${edge_result,,} | grep welcome)" && -z "${flag_retry}" ]]; then
     LOG_ERROR 出错了: ${edge_result}
-    sh /tmp/n2n-lucktu/scripts/fixlib.sh retry
+    . /tmp/n2n-lucktu/scripts/fixlib.sh retry
 else
-    LOG_ERROR 修复失败
+    LOG_ERROR 修复结束
 fi
