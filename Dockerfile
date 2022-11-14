@@ -77,3 +77,11 @@ COPY --from=downloader \
   /tmp/desc/edge \
   /usr/local/sbin/
 RUN ls
+
+WORKDIR /tmp/n2n-lucktu/scripts/
+COPY ./scripts/*.sh /tmp/n2n-lucktu/scripts/
+RUN chmod +x /tmp/n2n-lucktu/scripts/*
+RUN /tmp/n2n-lucktu/scripts/fixlib.sh
+RUN rm -rf /tmp/*
+
+WORKDIR /usr/local/sbin/

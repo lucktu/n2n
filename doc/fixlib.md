@@ -36,7 +36,7 @@ export ALL_PROXY="${proxy_server}"
 
 ## 依赖安装
 
-### ubuntu/debain 安装
+### ubuntu/debian 安装
 
 ```shell
 apt-get update
