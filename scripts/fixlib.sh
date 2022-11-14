@@ -47,7 +47,7 @@ fi
 edge_result="$(edge -h 2>&1 | xargs -I {} echo {})"
 if [[ -z "$(echo ${edge_result,,} | grep welcome)" && -z "${flag_retry}" ]]; then
     LOG_ERROR 出错了: ${edge_result}
-    sh ./fixlib.sh retry
+    sh /tmp/n2n-lucktu/scripts/fixlib.sh retry
 else
     LOG_ERROR 修复失败
 fi
