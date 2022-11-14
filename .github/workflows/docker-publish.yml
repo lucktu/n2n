@@ -83,6 +83,7 @@ jobs:
       TEST_PLATFORM: ${{ steps.init-build-version.outputs.TEST_PLATFORM }}
       BUILD_VERSION_B_S_rC: ${{ steps.init-build-version.outputs.BUILD_VERSION_B_S_rC }}
       LATEST_VERSION: ${{ steps.init-build-version.outputs.LATEST_VERSION }}
+      NEED_FIX: ${{ steps.init-build-version.outputs.NEED_FIX }}
 
     steps:
       - name: Checkout repository
@@ -172,6 +173,16 @@ jobs:
           fi
           echo "BUILD_VERSION_B_S_rC=${BUILD_VERSION_B_S_rC}" >> $GITHUB_OUTPUT
 
+          ned_libfix_versions_b_s_rc="${{ env.NED_LIBFIX_VERSIONS_B_S_rC }}"
+          l_ned_libfix_versions_b_s_rc=(${ned_libfix_versions_b_s_rc//,/ })
+          for ned_libfix_versions_b_s_rc in ${l_ned_libfix_versions_b_s_rc[@]};do
+            if [[ "${BUILD_VERSION_B_S_rC}" == "${ned_libfix_versions_b_s_rc}" ]];then
+              LOG_WARNING 需要修复 - ${BUILD_VERSION_B_S_rC}
+              LOG_WARNING 使用 Dockerfile.debian-8 - ${BUILD_VERSION_B_S_rC}
+              echo "NEED_FIX=true">> $GITHUB_OUTPUT
+              exit 0
+            fi
+          done
   check-push:
     needs: [init-version]
     runs-on: ubuntu-latest
@@ -210,7 +221,7 @@ jobs:
           if [[ "true" == "${{ env.FORCE_PUSH }}" || "true" == "${{ inputs.force_push }}" ]]; then
               LOG_WARNING "强制 编译/推送"
           elif [[ "${last_pulled_date,,}" != "null" || "${{ needs.init-version.outputs.BUILD_PLATFORMS }}" == "" ]]; then
-              echo 'skip_build_push=true' >> $GITHUB_OUTPUT
+              echo "skip_build_push=true" >> $GITHUB_OUTPUT
               LOG_INFO "跳过 编译/推送"
               exit 0
           else
@@ -299,6 +310,7 @@ jobs:
 
       - name: Build and load to Docker
         uses: docker/build-push-action@v3
+        if: ${{ needs.init-version.outputs.NEED_FIX != 'true' }}
         with:
           context: ${{ env.DOCKER_CONTEXT_PATH }}
           platforms: ${{ needs.init-version.outputs.TEST_PLATFORM }}
@@ -326,16 +338,12 @@ jobs:
               echo -e "\033[0;31m[ERROR] $* \033[0m"
           }
           set -e
-          ned_libfix_versions_b_s_rc="${{ env.NED_LIBFIX_VERSIONS_B_S_rC }}"
-          l_ned_libfix_versions_b_s_rc=(${ned_libfix_versions_b_s_rc//,/ })
-          for ned_libfix_versions_b_s_rc in ${l_ned_libfix_versions_b_s_rc[@]};do
-            if [[ "${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}" == "${ned_libfix_versions_b_s_rc}" ]];then
-              LOG_WARNING 需要修复 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-              LOG_WARNING 使用 Dockerfile.debian-8 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-              echo 'build_dockerfile=Dockerfile.debian-8'>> $GITHUB_OUTPUT
-              exit 0
-            fi
-          done
+          if [[ "${{ needs.init-version.outputs.NEED_FIX }}" == "true" ]];then
+            LOG_WARNING 需要修复 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
+            LOG_WARNING 使用 Dockerfile.debian-8 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
+            echo "build_dockerfile=Dockerfile.debian-8">> $GITHUB_OUTPUT
+            exit 0
+          fi
           LOG_WARNING "Test start: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
           platforms=${{ needs.init-version.outputs.TEST_PLATFORM }}
           l_platforms=(${platforms//,/ })
@@ -348,7 +356,7 @@ jobs:
             if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" ]];then
               LOG_ERROR 出错了: ${edge_result}
               LOG_WARNING 使用 Dockerfile.debian-8 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-              echo 'build_dockerfile=Dockerfile.debian-8'>> $GITHUB_OUTPUT
+              echo "build_dockerfile=Dockerfile.debian-8">> $GITHUB_OUTPUT
               exit 0
             fi
             if [[ -z "$(echo ${edge_result,,} | grep welcome)" ]];then
@@ -372,7 +380,7 @@ jobs:
             # LOG_WARNING "Test done - supernode"
           done
           LOG_WARNING "Test done: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
-          echo 'build_dockerfile=Dockerfile'>> $GITHUB_OUTPUT
+          echo "build_dockerfile=Dockerfile">> $GITHUB_OUTPUT
           exit 0
 
       # Build and push Docker image with Buildx (don't push on PR)
@@ -449,7 +457,7 @@ jobs:
             exit 1
           fi
           LOG_WARNING "Test done: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
-          echo 'build_dockerfile=Dockerfile'>> $GITHUB_OUTPUT
+          echo "build_dockerfile=Dockerfile">> $GITHUB_OUTPUT
           exit 0
 
       # Sign the resulting Docker image digest except on PRs.
