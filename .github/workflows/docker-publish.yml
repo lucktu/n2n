@@ -6,6 +6,16 @@ name: Docker-build-and-push
 # documentation.
 
 on:
+  # schedule:
+  #   - cron: "28 17 * * *"
+  push:
+    branches: ["master"]
+    # Publish semver tags as releases.
+    # tags: ["v*.*.*"]
+
+  pull_request:
+    branches: ["master"]
+
   workflow_dispatch:
     inputs:
       version_b_s_rc:
@@ -24,12 +34,6 @@ on:
     #       REGISTRY_TOKEN:
     #         description: 'TOKEN for REGISTRY'
     #         required: true
-  # schedule:
-  #   - cron: "28 17 * * *"
-  push:
-    branches: ["master"]
-    # Publish semver tags as releases.
-    tags: ["v*.*.*"]
 
   workflow_call:
     inputs:
@@ -42,9 +46,6 @@ on:
         required: true
         type: boolean
         default: false
-
-  pull_request:
-    branches: ["master"]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -68,7 +69,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       APP_NAME: n2n_lucktu
-      DOCKER_CONTEXT_PATH: .
     permissions:
       contents: read
       packages: write
@@ -258,7 +258,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       APP_NAME: n2n_lucktu
-      DOCKER_CONTEXT_PATH: .
     permissions:
       contents: read
       packages: write
@@ -336,7 +335,7 @@ jobs:
         uses: docker/build-push-action@v3
         if: needs.init-version.outputs.NEED_FIX != 'true'
         with:
-          context: ${{ env.DOCKER_CONTEXT_PATH }}
+          context: .
           platforms: ${{ needs.init-version.outputs.TEST_PLATFORM }}
           load: true
           # no-cache: true
@@ -413,8 +412,8 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v3
         with:
-          context: ${{ env.DOCKER_CONTEXT_PATH }}
-          file: ${{ env.DOCKER_CONTEXT_PATH }}/${{steps.n2n-test.outputs.build_dockerfile}}
+          context: .
+          file: ${{steps.n2n-test.outputs.build_dockerfile}}
           platforms: ${{ needs.init-version.outputs.BUILD_PLATFORMS }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
