@@ -10,11 +10,7 @@ services:
         VERSION_B_S_rC: v2s
       labels:
         org.opencontainers.image.version: v2s
-      platforms:
-        - "linux/amd64"
-        - "linux/386"
-        - "linux/arm64/v8"
-        - "linux/arm/v7"
+
   n2n_v2s:
     image: ${REGISTRY}/zctmdc/n2n_lucktu:v2s
     build:
@@ -24,11 +20,6 @@ services:
         VERSION_B_S_rC: v2s
       labels:
         org.opencontainers.image.version: v2s
-      platforms:
-        - "linux/amd64"
-        - "linux/386"
-        - "linux/arm64/v8"
-        - "linux/arm/v7"
 
   n2n_releases-v2:
     image: ${REGISTRY}/zctmdc/n2n_lucktu:releases-v2
@@ -39,11 +30,6 @@ services:
         VERSION_B_S_rC: v2
       labels:
         org.opencontainers.image.version: v2
-      platforms:
-        - "linux/amd64"
-        - "linux/386"
-        - "linux/arm64/v8"
-        - "linux/arm/v7"
 
   n2n_v2:
     image: ${REGISTRY}/zctmdc/n2n_lucktu:v2
@@ -54,11 +40,6 @@ services:
         VERSION_B_S_rC: v2
       labels:
         org.opencontainers.image.version: v2
-      platforms:
-        - "linux/amd64"
-        - "linux/386"
-        - "linux/arm64/v8"
-        - "linux/arm/v7"
 
   n2n_releases-v1:
     image: ${REGISTRY}/zctmdc/n2n_lucktu:releases-v1
@@ -69,11 +50,7 @@ services:
         VERSION_B_S_rC: v1
       labels:
         org.opencontainers.image.version: v1
-      platforms:
-        - "linux/amd64"
-        - "linux/386"
-        - "linux/arm64/v8"
-        - "linux/arm/v7"
+
   n2n_v1:
     image: ${REGISTRY}/zctmdc/n2n_lucktu:v1
     build:
@@ -83,8 +60,3 @@ services:
         VERSION_B_S_rC: v1
       labels:
         org.opencontainers.image.version: v1
-      platforms:
-        - "linux/amd64"
-        - "linux/386"
-        - "linux/arm64/v8"
-        - "linux/arm/v7"
