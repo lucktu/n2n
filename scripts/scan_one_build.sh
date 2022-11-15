@@ -64,8 +64,16 @@ SCAN_ONE_BUILD() {
     mkdir -p $BUILD_SRC
     need_files=""
     find_path="${PROJECT_ROOT_DIR}/Linux/"
-    if [[ "v2s" == "${version_b_s_rc}" || "v2" == "${version_b_s_rc}" || "v1" == "${version_b_s_rc}" ]]; then
+    # if [[ "v2s" == "${version_b_s_rc}" || "v2" == "${version_b_s_rc}" || "v1" == "${version_b_s_rc}" ]]; then
+    if [[ -n "$(echo ${version_b_s_rc} | grep -E '^v[0-9]s?$')" ]]; then
         find_path="${PROJECT_ROOT_DIR}/Linux/n2n_${version_b_s_rc}/"
+        if [[ ! -d "${find_path}" ]]; then
+            if [[ -n "$(ls ${PROJECT_ROOT_DIR}/Linux/ | grep ${version_b_s_rc} | grep x64)" ]]; then
+                find_path="${PROJECT_ROOT_DIR}/Linux/"
+            else
+                LOG_ERROR_WAIT_EXIT "版本未匹配: ${version_b_s_rc}"
+            fi
+        fi
     fi
     find_files="$(find ${find_path} -name "*${build_big_version}*${build_small_version}*${build_commit}*" | grep -v Professional)"
     for src_file in ${find_files[@]}; do
@@ -74,7 +82,7 @@ SCAN_ONE_BUILD() {
             LOG_WARNING "跳过: 是文件夹 - ${src_file}"
             continue
         fi
-        if [[ "v2s" == "${version_b_s_rc}" || "v2" == "${version_b_s_rc}" || "v1" == "${version_b_s_rc}" ]]; then
+        if [[ -n "$(echo ${version_b_s_rc} | grep -E '^v[0-9]s?$')" ]]; then
             LOG_INFO "匹配文件 releases: ${version_b_s_rc} - ${src_file}"
         elif [[ ${build_big_version} != ${src_big_version} || ${build_small_version} != ${src_small_version} || ${build_commit} != ${src_commit} ]]; then
             LOG_WARNING "版本未匹配: ${version_b_s_rc} - ${src_file}"
@@ -136,7 +144,7 @@ SCAN_ONE_BUILD() {
                 --build-arg http_proxy=${PROXY_SERVER,,} \
                 --build-arg https_proxy=${PROXY_SERVER,,}"
             fi
-            
+
             LOG_RUN "${docker_build_command} \
                 -t ${REGISTRY_USERNAME}/n2n-lucktu:test \
                 --load ../. "

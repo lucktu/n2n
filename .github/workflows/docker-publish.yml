@@ -84,15 +84,11 @@ jobs:
       BUILD_VERSION_B_S_rC: ${{ steps.init-build-version.outputs.BUILD_VERSION_B_S_rC }}
       LATEST_VERSION: ${{ steps.init-build-version.outputs.LATEST_VERSION }}
       NEED_FIX: ${{ steps.init-build-version.outputs.NEED_FIX }}
+      ONLY_BIGVERSION: ${{ steps.check-big-version.outputs.ONLY_BIGVERSION }}
 
     steps:
-      - name: Checkout repository
-        # depends on this library
-        if: ${{ ! (('v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc) || (('v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION) && env.SMALL_VERSION == '')) }}
-        uses: actions/checkout@v3
-
-      - name: Check init-build-version
-        id: init-build-version
+      - name: Check big version only
+        id: check-big-version-only
         run: |
           LOG_INFO() {
               echo -e "\033[0;32m[INFO] $* \033[0m"
@@ -103,24 +99,38 @@ jobs:
           LOG_ERROR() {
               echo -e "\033[0;31m[ERROR] $* \033[0m"
           }
-          if [[ "true" == "${{ ('v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc) || (('v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION) && env.SMALL_VERSION == '') }}" ]];then
-            if [[ "true" == "${{ 'v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc }}" ]];then
+          # if [[ "true" == "${{ ('v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc) || (('v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION) && env.SMALL_VERSION == '') }}" ]];then
+          #   if [[ "true" == "${{ 'v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc }}" ]];then
+
+          if [[ -n "$(echo ${{ inputs.version_b_s_rc }} | grep -E '^v[0-9]s?$')" || ( -n "$(echo ${{ env.BIG_VERSION }} | grep -E '^v[0-9]s?$')" && env.SMALL_VERSION == '') ]]; then
+            if [[ -n "$(echo ${{ inputs.version_b_s_rc }} | grep -E '^v[0-9]s?$')" ]];then
               LOG_WARNING USE inputs.version_b_s_rc
-              BUILD_BIG_VERSION=${{ inputs.version_b_s_rc }}
-            elif [[ "true" == "${{ 'v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION }}" ]];then
+              BUILD_VERSION_B_S_rC=${{ inputs.version_b_s_rc }}
+            elif [[ -n "$(echo ${{ env.BIG_VERSION }} | grep -E '^v[0-9]s?$')" ]];then
               LOG_WARNING USE env.BIG_VERSION
-              BUILD_BIG_VERSION=${{ env.BIG_VERSION }}
+              BUILD_VERSION_B_S_rC=${{ env.BIG_VERSION }}
             fi
-            BUILD_PLATFORMS='linux/amd64,linux/386,linux/arm64/v8,linux/arm/v7'
-            echo BBUILD_IG_VERSION: ${BUILD_BIG_VERSION}
-            echo "BUILD_BIG_VERSION=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
-            echo "BUILD_VERSION_B_S_rC=${BUILD_BIG_VERSION}" >> $GITHUB_OUTPUT
+            BUILD_PLATFORMS='linux/386,linux/arm/v7,linux/amd64,linux/arm64/v8'
+            LOG_INFO "BUILD_VERSION_B_S_rC: ${BUILD_VERSION_B_S_rC}"
+            LOG_INFO "BUILD_PLATFORMS: ${BUILD_PLATFORMS}"
+            echo "BUILD_BIG_VERSION=${BUILD_VERSION_B_S_rC}" >> $GITHUB_OUTPUT
+            echo "BUILD_VERSION_B_S_rC=${BUILD_VERSION_B_S_rC}" >> $GITHUB_OUTPUT
             echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
             # Error: buildx failed with: ERROR: docker exporter does not currently support exporting manifest lists
             # echo "TEST_PLATFORM=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
             echo "TEST_PLATFORM=${{ env.TEST_PLATFORM }}" >> $GITHUB_OUTPUT
-            exit 0
+            echo "ONLY_BIGVERSION=true" >> $GITHUB_OUTPUT
+          else
+            echo "ONLY_BIGVERSION=false" >> $GITHUB_OUTPUT
           fi
+      - name: Checkout repository
+        # depends on this library
+        if: steps.check-big-version-only.outputs.ONLY_BIGVERSION != 'true'
+        uses: actions/checkout@v3
+
+      - name: Check init-build-version
+        id: init-build-version
+        run: |
           PROJECT_ROOT_DIR=$(pwd)
           echo "init-version - PROJECT_ROOT_DIR: ${PROJECT_ROOT_DIR}"
           cd ./scripts
@@ -129,7 +139,22 @@ jobs:
           . init_path.sh
           . get_file_infos.sh
           . scan_one_build.sh
-
+          if [[ "${{ steps.check-big-version-only.outputs.ONLY_BIGVERSION }}" == "true" ]]; then
+            BUILD_VERSION_B_S_rC="${{ steps.check-big-version-only.outputs.ONLY_BIGVERSION }}"
+            BUILD_PLATFORMS="${{ steps.check-big-version-only.outputs.BUILD_PLATFORMS }}"
+            TEST_PLATFORM="${{ steps.check-big-version-only.outputs.TEST_PLATFORM }}"
+            LOG_INFO "BUILD_VERSION_B_S_rC: ${BUILD_VERSION_B_S_rC}"
+            LOG_INFO "BUILD_PLATFORMS: ${BUILD_PLATFORMS}"
+            LOG_INFO "TEST_PLATFORM: ${TEST_PLATFORM}"
+            echo "BUILD_BIG_VERSION=${BUILD_VERSION_B_S_rC}" >> $GITHUB_OUTPUT
+            echo "BUILD_VERSION_B_S_rC=${BUILD_VERSION_B_S_rC}" >> $GITHUB_OUTPUT
+            echo "BUILD_PLATFORMS=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
+            # Error: buildx failed with: ERROR: docker exporter does not currently support exporting manifest lists
+            # echo "TEST_PLATFORM=${BUILD_PLATFORMS}" >> $GITHUB_OUTPUT
+            echo "TEST_PLATFORM=${TEST_PLATFORM}" >> $GITHUB_OUTPUT
+            echo "ONLY_BIGVERSION=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
           if [[  "true" == "${{ inputs.version_b_s_rc != '' }}" ]];then
             LOG_WARNING "use version_b_s_rc version"
             SCAN_ONE_BUILD ${{ inputs.version_b_s_rc }}
@@ -227,9 +252,9 @@ jobs:
               LOG_INFO "准备 编译/推送"
           fi
 
-  build-psuh:
+  build-psuh-n2n_lucktu:
     needs: [init-version, check-push]
-    if: ${{ needs.check-push.outputs.skip_build_push != 'true' }}
+    if: needs.check-push.outputs.skip_build_push != 'true'
     runs-on: ubuntu-latest
     env:
       APP_NAME: n2n_lucktu
@@ -250,7 +275,7 @@ jobs:
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
-        if: ${{ github.event_name != 'pull_request' }}
+        if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@main
         with:
           cosign-release: "v1.13.1"
@@ -262,7 +287,7 @@ jobs:
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
-        if: ${{ github.event_name != 'pull_request' }}
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
@@ -309,7 +334,7 @@ jobs:
 
       - name: Build and load to Docker
         uses: docker/build-push-action@v3
-        if: ${{ needs.init-version.outputs.NEED_FIX != 'true' }}
+        if: needs.init-version.outputs.NEED_FIX != 'true'
         with:
           context: ${{ env.DOCKER_CONTEXT_PATH }}
           platforms: ${{ needs.init-version.outputs.TEST_PLATFORM }}
@@ -465,7 +490,7 @@ jobs:
       # transparency data even for private images, pass --force to cosign below.
       # https://github.com/sigstore/cosign
       - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
+        if: github.event_name != 'pull_request'
         env:
           COSIGN_EXPERIMENTAL: "true"
         # This step uses the identity token to provision an ephemeral certificate

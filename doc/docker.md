@@ -281,6 +281,25 @@ docker run \
 
 更多介绍请访问 [docker-compose CLI 概述][overview of docker-compose cli]
 
+## DHCP
+
+内置多个软件包
+
+- `busybox`
+- `iptables`
+- `isc-dhcp-client`
+- `isc-dhcp-server`
+
+参考官方的教程，网上说明，进行配置
+
+- `dhcpd -f -d "${EDGE_TUN}" -cf dhcpd.conf`
+- `busybox udhcpd udhcpd.conf`
+- `dhclient -d --dad-wait-time 5 ${EDGE_TUN}`
+- `busybox ip`
+- `iptables`
+
+可以看看: <https://github.com/zctmdc/docker/blob/alpha/n2n_ntop/scripts/n2n.sh>
+
 ## 告诉我你在用
 
 如果你使用正常了请点个赞
