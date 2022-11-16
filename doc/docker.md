@@ -53,7 +53,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
     -ti --rm \
     -p 10090:10090/udp \
     zctmdc/n2n_lucktu \
-    supernode -l 10090 -v
+    supernode -p 10090 -vf
     ```
 
 - 后台模式
@@ -64,7 +64,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
     --name=supernode \
     -p 10090:10090/udp \
     zctmdc/n2n_lucktu \
-    supernode -p 10090 -v
+    supernode -p 10090 -vf
     ```
 
 ### 建立 _edge_
@@ -77,7 +77,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
     --privileged \
     --net=host \
     zctmdc/n2n_lucktu \
-    edge -d T3 -a 172.3.0.77 -c n2n -k test -l n2n.lucktu.com:10090 -Efrv -e auto
+    edge -d T3 -a 172.3.0.77 -c n2n -k test -l 127.0.0.1:10090 -Efrv -e auto
     ```
 
 - 后台模式
@@ -89,7 +89,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
     --net=host \
     --name=edge \
     zctmdc/n2n_lucktu \
-    edge -d T3 -a 172.3.0.78 -c n2n -k test -l n2n.lucktu.com:10090 -Efrv -e auto
+    edge -d T3 -a 172.3.0.78 -c n2n -k test -l 127.0.0.1:10090 -Efrv -e auto
     ```
 
 - 测试
@@ -136,7 +136,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
         # community 密码
         -k=test
         # supernode 地址和端口
-        -l=n2n.lucktu.com:10090
+        -l=127.0.0.1:10090
         # 使用 AES 加密算法加密传输的数据
         -A3
         # 作为首选播发提供的本地IP地址
@@ -161,7 +161,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
           -d --restart=always \
           --name=supernode \
           -p 10090:10090/udp \
-          -v ./config/:/etc/n2n/ \
+          -v $(pwd)/config/:/etc/n2n/ \
           zctmdc/n2n_lucktu \
           supernode /etc/n2n/supernode.conf
         ```
@@ -174,7 +174,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
           --privileged \
           --net=host \
           --name=edge \
-          -v ./config/:/etc/n2n/ \
+          -v $(pwd)/config/:/etc/n2n/ \
           zctmdc/n2n_lucktu \
           edge /etc/n2n/edge.conf
         ```

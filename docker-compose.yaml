@@ -1,0 +1,62 @@
+version: "3"
+services:
+    n2n_supernode:
+        # build:
+        #   context: .
+        #   dockerfile: Dockerfile
+        image: zctmdc/n2n_lucktu
+        container_name: n2n_supernode
+        restart: always
+        volumes:
+            - ./config/:/etc/n2n/
+        command: ["supernode", "/etc/n2n/supernode.conf"]
+        # privileged: true
+        # network_mode: host
+        ports:
+            - 10090:10090/udp
+        networks:
+            n2n:
+                ipv4_address: 172.77.5.10
+
+    n2n_edge_1:
+        image: zctmdc/n2n_lucktu
+        container_name: n2n_edge_1
+        restart: always
+        privileged: true
+        command:
+            [
+                "sh",
+                "-c",
+                "edge -d T3 -a 10.3.0.77 -c n2n -k test -l 172.77.5.10:10090 -e auto -Efrv",
+            ]
+        # network_mode: host
+        networks:
+            n2n: # ipv4_address: 172.77.5.11
+        depends_on:
+            - n2n_supernode
+        external_links:
+            - n2n_supernode:n2n_supernode
+
+    n2n_edge_2:
+        image: zctmdc/n2n_lucktu
+        container_name: n2n_edge_2
+        restart: always
+        privileged: true
+        volumes:
+            - ./config/:/etc/n2n/
+        command: ["edge", "/etc/n2n/edge.conf"]
+        # network_mode: host
+        networks:
+            n2n:
+        depends_on:
+            - n2n_supernode
+        external_links:
+            - n2n_supernode:n2n_supernode
+
+networks:
+    n2n:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.77.5.0/24
