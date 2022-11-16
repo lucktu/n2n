@@ -57,12 +57,10 @@ SCAN_ONE_BUILD() {
     if [[ ${build_version_b_s_rc} != ${version_b_s_rc} ]]; then
         LOG_ERROR_WAIT_EXIT "错误: SCAN_ONE_BUILD: build_version_b_s_rc  ${build_version_b_s_rc} != ${version_b_s_rc}"
     fi
-    build_platforms=''
     if [[ -d $BUILD_SRC ]]; then
         rm -r $BUILD_SRC
     fi
     mkdir -p $BUILD_SRC
-    need_files=""
     find_path="${PROJECT_ROOT_DIR}/Linux/"
     # if [[ "v2s" == "${version_b_s_rc}" || "v2" == "${version_b_s_rc}" || "v1" == "${version_b_s_rc}" ]]; then
     if [[ -n "$(echo ${version_b_s_rc} | grep -E '^v[0-9]s?$')" ]]; then
@@ -75,6 +73,8 @@ SCAN_ONE_BUILD() {
             fi
         fi
     fi
+    need_files=""
+    build_platforms=''
     find_files="$(find ${find_path} -name "*${build_big_version}*${build_small_version}*${build_commit}*" | grep -v Professional)"
     for src_file in ${find_files[@]}; do
         GET_FILE_INFOS ${src_file}

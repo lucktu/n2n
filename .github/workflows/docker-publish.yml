@@ -21,7 +21,6 @@ on:
       version_b_s_rc:
         description: "version_b_s_rc e.g. v2_2.7.0_r528 | v2"
         required: false
-
       force_push:
         description: "force push to registry"
         required: true
@@ -131,14 +130,15 @@ jobs:
       - name: Check init-build-version
         id: init-build-version
         run: |
-          PROJECT_ROOT_DIR=$(pwd)
-          echo "init-version - PROJECT_ROOT_DIR: ${PROJECT_ROOT_DIR}"
-          cd ./scripts
-          chmod +x *.sh
-          . init_logger.sh
-          . init_path.sh
-          . get_file_infos.sh
-          . scan_one_build.sh
+          LOG_INFO() {
+              echo -e "\033[0;32m[INFO] $* \033[0m"
+          }
+          LOG_WARNING() {
+              echo -e "\033[0;33m[WARNING] $* \033[0m"
+          }
+          LOG_ERROR() {
+              echo -e "\033[0;31m[ERROR] $* \033[0m"
+          }
           if [[ "${{ steps.check-big-version-only.outputs.ONLY_BIGVERSION }}" == "true" ]]; then
             BUILD_VERSION_B_S_rC="${{ steps.check-big-version-only.outputs.ONLY_BIGVERSION }}"
             BUILD_PLATFORMS="${{ steps.check-big-version-only.outputs.BUILD_PLATFORMS }}"
@@ -155,6 +155,15 @@ jobs:
             echo "ONLY_BIGVERSION=true" >> $GITHUB_OUTPUT
             exit 0
           fi
+          PROJECT_ROOT_DIR=$(pwd)
+          echo "init-version - PROJECT_ROOT_DIR: ${PROJECT_ROOT_DIR}"
+          cd ./scripts
+          chmod +x *.sh
+          . init_logger.sh
+          . init_path.sh
+          . get_file_infos.sh
+          . scan_one_build.sh
+
           if [[  "true" == "${{ inputs.version_b_s_rc != '' }}" ]];then
             LOG_WARNING "use version_b_s_rc version"
             SCAN_ONE_BUILD ${{ inputs.version_b_s_rc }}
@@ -338,10 +347,8 @@ jobs:
           context: .
           platforms: ${{ needs.init-version.outputs.TEST_PLATFORM }}
           load: true
-          # no-cache: true
+          no-cache: true
           tags: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache
-          cache-to: type=inline
           build-args: |
             VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             BIG_VERSION=${{ needs.init-version.outputs.BUILD_BIG_VERSION }}
@@ -399,7 +406,7 @@ jobs:
             docker run --rm \
               --platform ${test_platform} \
               ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
-              supernode -h  || echo 
+              supernode -h  || echo
             # LOG_WARNING "Test done - supernode"
           done
           LOG_WARNING "Test done: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
@@ -418,8 +425,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          no-cache: true
-          cache-from: type=inline
+          # no-cache: true
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
           build-args: |
             VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
@@ -472,7 +479,7 @@ jobs:
             docker run --rm \
               --platform ${test_platform} \
               ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
-              supernode -h  || echo 
+              supernode -h  || echo
             # LOG_WARNING "Test done - supernode"
           done
           if [[ "${flag_test_pass}" != "true" ]];then
