@@ -140,7 +140,7 @@ jobs:
               echo -e "\033[0;31m[ERROR] $* \033[0m"
           }
           if [[ "${{ steps.check-big-version-only.outputs.ONLY_BIGVERSION }}" == "true" ]]; then
-            BUILD_VERSION_B_S_rC="${{ steps.check-big-version-only.outputs.ONLY_BIGVERSION }}"
+            BUILD_VERSION_B_S_rC="${{ steps.check-big-version-only.outputs.BUILD_VERSION_B_S_rC }}"
             BUILD_PLATFORMS="${{ steps.check-big-version-only.outputs.BUILD_PLATFORMS }}"
             TEST_PLATFORM="${{ steps.check-big-version-only.outputs.TEST_PLATFORM }}"
             LOG_INFO "BUILD_VERSION_B_S_rC: ${BUILD_VERSION_B_S_rC}"
