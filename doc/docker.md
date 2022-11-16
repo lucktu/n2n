@@ -46,7 +46,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
 
 ### 建立 _supernode_
 
-- 前台模式
+-   前台模式
 
     ```bash
     docker run \
@@ -56,7 +56,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
     supernode -p 10090 -vf
     ```
 
-- 后台模式
+-   后台模式
 
     ```bash
     docker run \
@@ -69,7 +69,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
 
 ### 建立 _edge_
 
-- 前台模式
+-   前台模式
 
     ```bash
     docker run \
@@ -80,7 +80,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
     edge -d T3 -a 172.3.0.77 -c n2n -k test -l 127.0.0.1:10090 -Efrv -e auto
     ```
 
-- 后台模式
+-   后台模式
 
     ```bash
     docker run \
@@ -92,7 +92,7 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
     edge -d T3 -a 172.3.0.78 -c n2n -k test -l 127.0.0.1:10090 -Efrv -e auto
     ```
 
-- 测试
+-   测试
 
     `docker exec edge busybox ping 172.3.0.77`
 
@@ -108,11 +108,27 @@ n2n 尽可能在 edge 节点之间建立直接的 P2P 连接;如果不可能（�
 
         ```bash
         cat >file<<-EOF
-        文件内容
+        文件内容-line1
+        文件内容-line2
+        文件内容-line3
+        文件内容-line4
         EOF
         ```
 
         see: <https://cn.bing.com/search?q=cat+file+eof>
+        mabe not work.
+
+    - var
+
+        ```bash
+        content='
+        文件内容-line1
+        文件内容-line2
+        文件内容-line3
+        文件内容-line4
+        '
+        echo "${content}">file
+        ```
 
     - `./config/supernode.conf`
 
@@ -291,13 +307,13 @@ docker run \
   edge --help
 ```
 
-- 更多本容器说明见 [build.md](build.md)
+-   更多本容器说明见 [build.md](build.md)
 
-- 文档参见 [ntop/n2n 项目文档][github_n2n_doc]
+-   文档参见 [ntop/n2n 项目文档][github_n2n_doc]
 
-- 更多帮助请参考 [好运博客][好运博客] 中 [N2N 新手向导及最新信息][n2n 新手向导及最新信息]
+-   更多帮助请参考 [好运博客][好运博客] 中 [N2N 新手向导及最新信息][n2n 新手向导及最新信息]
 
-- 更多节点请访问 [N2N 中心节点][n2n中心节点]
+-   更多节点请访问 [N2N 中心节点][n2n中心节点]
 
 更多介绍请访问 [docker-compose CLI 概述][overview of docker-compose cli]
 
@@ -305,18 +321,18 @@ docker run \
 
 内置多个软件包
 
-- `busybox`
-- `iptables`
-- `isc-dhcp-client`
-- `isc-dhcp-server`
+-   `busybox`
+-   `iptables`
+-   `isc-dhcp-client`
+-   `isc-dhcp-server`
 
 参考官方的教程，网上说明，进行配置
 
-- `dhcpd -f -d "${EDGE_TUN}" -cf dhcpd.conf`
-- `busybox udhcpd udhcpd.conf`
-- `dhclient -d --dad-wait-time 5 ${EDGE_TUN}`
-- `busybox ip`
-- `iptables`
+-   `dhcpd -f -d "${EDGE_TUN}" -cf dhcpd.conf`
+-   `busybox udhcpd udhcpd.conf`
+-   `dhclient -d --dad-wait-time 5 ${EDGE_TUN}`
+-   `busybox ip`
+-   `iptables`
 
 可以看看: <https://github.com/zctmdc/docker/blob/alpha/n2n_ntop/scripts/n2n.sh>
 
@@ -324,9 +340,9 @@ docker run \
 
 如果你使用正常了请点个赞
 
-- [我 github 的 docker 项目页][zctmdc_github]
-- [n2n_lucktu 的 docker 项目页][n2n_lucktu]
-- [我 github 的 n2n-lucktu docker 页][zctmdc_n2n_lucktu]
+-   [我 github 的 docker 项目页][zctmdc_github]
+-   [n2n_lucktu 的 docker 项目页][n2n_lucktu]
+-   [我 github 的 n2n-lucktu docker 页][zctmdc_n2n_lucktu]
 
 我将引起注意，不再随意的去更改和重命名空间/变量名
 
