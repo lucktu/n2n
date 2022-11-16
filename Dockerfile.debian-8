@@ -64,9 +64,6 @@ LABEL description="${summary}" \
   org.opencontainers.image.description="${summary}" \
   org.opencontainers.image.licenses="MIT"
 
-ARG VERSION_B_S_rC
-ENV VERSION_B_S_rC=${VERSION_B_S_rC}
-
 # edge need ifconfig
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -qq update
@@ -88,3 +85,6 @@ RUN /tmp/n2n-lucktu/scripts/fixlib.sh
 RUN rm -rf /tmp/*
 
 WORKDIR /usr/local/sbin/
+
+ARG VERSION_B_S_rC
+ENV VERSION_B_S_rC=${VERSION_B_S_rC}

@@ -64,9 +64,6 @@ LABEL description="${summary}" \
   org.opencontainers.image.description="${summary}" \
   org.opencontainers.image.licenses="MIT"
 
-ARG VERSION_B_S_rC
-ENV VERSION_B_S_rC=${VERSION_B_S_rC}
-
 RUN apk add --no-cache --upgrade bash iptables dhcp dhclient
 RUN touch /var/lib/dhcp/dhcpd.leases
 
@@ -84,3 +81,6 @@ RUN /tmp/n2n-lucktu/scripts/fixlib.sh
 RUN rm -rf /tmp/*
 
 WORKDIR /usr/local/sbin/
+
+ARG VERSION_B_S_rC
+ENV VERSION_B_S_rC=${VERSION_B_S_rC}
