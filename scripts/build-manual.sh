@@ -12,8 +12,8 @@ export REGISTRY_USERNAME='zctmdc'
 export REGISTRY_CACHE='True'
 # export PROXY_SERVER="http://host.docker.internal:21089"
 
-. scan_all_save.sh
-. scan_all_build.sh
+sh -c scan_all_save.sh
+sh -c scan_all_build.sh
 
 . scan_one_build.sh
 build_version_b_s_rcs="v2s,v2,v1"
