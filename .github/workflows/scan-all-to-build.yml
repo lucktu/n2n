@@ -88,7 +88,7 @@ jobs:
       DOCKER_APP_NAME: ${{ inputs.DOCKER_APP_NAME }}
       DOCKER_BUILD_DOCKERFILE_OK: ${{ inputs.DOCKER_BUILD_DOCKERFILE_OK }}
       DOCKER_BUILD_DOCKERFILE_FIX: ${{ inputs.DOCKER_BUILD_DOCKERFILE_FIX }}
-      secrets: inherit
+    secrets: inherit
 
   build-releases-version:
     permissions:
