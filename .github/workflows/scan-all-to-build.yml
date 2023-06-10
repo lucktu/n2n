@@ -4,7 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       build-releases-version:
-        description: "Build all releases versions? v2s|v2|v1"
+        description: "Build all releases versions? v3|v2s|v2|v1"
+        required: true
+        type: boolean
+        default: false
+      build-othen-version:
+        description: "Build all othen versions?     e.g. v1_1.3.2_r104-v3_3.1.1_r1255"
         required: true
         type: boolean
         default: false
@@ -31,9 +36,7 @@ on:
 jobs:
   scan-all:
     runs-on: ubuntu-latest
-    env:
-      APP_NAME: n2n_lucktu
-      DOCKER_CONTEXT_PATH: .
+    if: ${{ inputs.build-othen-version }}
     permissions:
       contents: read
       packages: write
@@ -80,7 +83,6 @@ jobs:
       fail-fast: false
       # max-parallel: 1
       matrix: ${{ fromJSON(needs.scan-all.outputs.version_b_s_rcs) }}
-
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
@@ -100,7 +102,7 @@ jobs:
       fail-fast: false
       # max-parallel: 1
       matrix:
-        version_b_s_rc: [v1, v2, v2s]
+        version_b_s_rc: [v1, v2, v2s, v3]
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}

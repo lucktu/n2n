@@ -362,6 +362,14 @@ jobs:
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
+      # type=raw,value=v3,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v3' }}
+      # type=raw,value=releases-v3,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v3' }}
+      # type=raw,value=v2s,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2s' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+      # type=raw,value=releases-v2s,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2s' && needs.init-version.outputs.BUILD_SMALL_VERSION == '2.1.0' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+      # type=raw,value=v2,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+      # type=raw,value=releases-v2,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+      # type=raw,value=v1,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v1' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v4
@@ -369,13 +377,8 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}
           tags: |
             type=raw,value=latest,enable=${{ needs.init-version.outputs.LATEST_VERSION == 'true' }}
-            type=raw,value=v3,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v3' }}
-            type=raw,value=releases-v3,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v3' }}
-            type=raw,value=v2s,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2s' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
-            type=raw,value=releases-v2s,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2s' && needs.init-version.outputs.BUILD_SMALL_VERSION == '2.1.0' && needs.init-version.outputs.BUILD_COMMIT == '' }}
-            type=raw,value=v2,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
-            type=raw,value=releases-v2,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v2' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
-            type=raw,value=v1,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v1' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
+            type=raw,value=${{ needs.init-version.outputs.BUILD_BIG_VERSION }},enable=${{ needs.init-version.outputs.BUILD_SMALL_VERSION == needs.init-version.outputs.BUILD_BIG_VERSION }}
+            type=raw,value=releases-${{ needs.init-version.outputs.BUILD_BIG_VERSION }},enable=${{ needs.init-version.outputs.BUILD_SMALL_VERSION == needs.init-version.outputs.BUILD_BIG_VERSION }}
             type=raw,value=releases-v1,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v1' && needs.init-version.outputs.BUILD_SMALL_VERSION == '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
             type=raw,value=${{ format( '{0}_{1}_r{2}', needs.init-version.outputs.BUILD_BIG_VERSION, needs.init-version.outputs.BUILD_SMALL_VERSION, needs.init-version.outputs.BUILD_COMMIT ) }}, enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION != '' && needs.init-version.outputs.BUILD_SMALL_VERSION != '' && needs.init-version.outputs.BUILD_COMMIT != '' }}
             type=raw,value=${{ format( '{0}_{1}', needs.init-version.outputs.BUILD_BIG_VERSION, needs.init-version.outputs.BUILD_SMALL_VERSION, needs.init-version.outputs.BUILD_COMMIT ) }}, enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION != '' && needs.init-version.outputs.BUILD_SMALL_VERSION != '' && needs.init-version.outputs.BUILD_COMMIT == '' }}
