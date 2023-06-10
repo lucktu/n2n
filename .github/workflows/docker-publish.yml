@@ -75,13 +75,19 @@ env:
   # Use docker.io for Docker Hub if empty
   # REGISTRY: ghcr.io
   REGISTRY: docker.io
-  BIG_VERSION: v3
-  SMALL_VERSION: 3.1.1-16
-  COMMIT: 1200
-  FORCE_PUSH: false
+  
+  ## e.g. 1
+  # BIG_VERSION: v3
+  # SMALL_VERSION: 3.1.1-16
+  # COMMIT: 1200
+  # FORCE_PUSH: false
+  
+  
+  ## e.g. 2
   # BIG_VERSION: v2
   # SMALL_VERSION: 2.7.0
   # COMMIT: 528
+  # FORCE_PUSH: true
 
   # github.repository as <account>/<repo>
   NED_LIBFIX_VERSIONS_B_S_rC: "v2_2.3.0, v2s_2.1.0_r111, v1"
@@ -148,13 +154,13 @@ jobs:
           # if [[ "true" == "${{ ('v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc) || (('v2s' == env.BIG_VERSION || 'v2' == env.BIG_VERSION || 'v1' == env.BIG_VERSION) && env.SMALL_VERSION == '') }}" ]];then
           #   if [[ "true" == "${{ 'v2s' == inputs.version_b_s_rc || 'v2' == inputs.version_b_s_rc || 'v1' == inputs.version_b_s_rc }}" ]];then
 
-          if [[ -n "$(echo ${{ inputs.version_b_s_rc }} | grep -E '^v[0-9]s?$')" || ( -n "$(echo ${{ env.BIG_VERSION }} | grep -E '^v[0-9]s?$')" && env.SMALL_VERSION == '') ]]; then
+          if [[ -n "$(echo '${{ inputs.version_b_s_rc }}' | grep -E '^v[0-9]s?$')" || ( -n "$(echo '${{ env.BIG_VERSION }}' | grep -E '^v[0-9]s?$')" && env.SMALL_VERSION == '') ]]; then
             if [[ -n "$(echo ${{ inputs.version_b_s_rc }} | grep -E '^v[0-9]s?$')" ]];then
               LOG_WARNING USE inputs.version_b_s_rc
               BUILD_VERSION_B_S_rC=${{ inputs.version_b_s_rc }}
-            elif [[ -n "$(echo ${{ env.BIG_VERSION }} | grep -E '^v[0-9]s?$')" ]];then
+            elif [[ -n "$(echo '${{ env.BIG_VERSION }}' | grep -E '^v[0-9]s?$')" ]];then
               LOG_WARNING USE env.BIG_VERSION
-              BUILD_VERSION_B_S_rC=${{ env.BIG_VERSION }}
+              BUILD_VERSION_B_S_rC='${{ env.BIG_VERSION }}'
             fi
             BUILD_PLATFORMS='linux/386,linux/arm/v7,linux/amd64,linux/arm64/v8'
             LOG_INFO "BUILD_VERSION_B_S_rC: ${BUILD_VERSION_B_S_rC}"
@@ -219,12 +225,12 @@ jobs:
             BUILD_COMMIT=${build_commit}
           elif [[ "true" == "${{ env.BIG_VERSION != '' }}" || "true" == "${{ env.SMALL_VERSION != '' }}"   ]];then
             LOG_WARNING "use env version"
-            BUILD_BIG_VERSION=${{env.BIG_VERSION}}
-            BUILD_SMALL_VERSION=${{env.SMALL_VERSION}}
-            BUILD_COMMIT=${{env.COMMIT}}
+            BUILD_BIG_VERSION='${{env.BIG_VERSION}}'
+            BUILD_SMALL_VERSION='${{env.SMALL_VERSION}}'
+            BUILD_COMMIT='${{env.COMMIT}}'
           else
             LOG_WARNING "use latest version"
-            src_file=$(ls ${PROJECT_ROOT_DIR}/Linux | grep x64)
+            src_file=$(ls ${PROJECT_ROOT_DIR}/Linux | grep x64 | sort -r | head -n 1)
             LOG_INFO "src_file: ${src_file}"
             GET_FILE_INFOS ${src_file}
             BUILD_BIG_VERSION=${src_big_version}
