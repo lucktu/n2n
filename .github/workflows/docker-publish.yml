@@ -26,13 +26,23 @@ on:
         required: true
         type: boolean
         default: false
-    # secrets:
-    #       REGISTRY_USERNAME:
-    #         description: 'USERNAME for REGISTRY'
-    #         required: true
-    #       REGISTRY_TOKEN:
-    #         description: 'TOKEN for REGISTRY'
-    #         required: true
+      DOCKER_APP_NAME:
+        description: "docker app name             e.g. n2n"
+        default: "n2n_lucktu"
+        required: true
+        type: string
+      DOCKER_BUILD_DOCKERFILE_OK:
+        description: "docker_build_dockerfile_ok  e.g. Dockerfile.ubuntu-latest | Dockerfile.alpine-latest | Dockerfile.debian-stable"
+        default: "Dockerfile.debian-stable"
+        required: true
+        type: string
+      DOCKER_BUILD_DOCKERFILE_FIX:
+        description: "docker_build_dockerfile_fix e.g. Dockerfile.ubuntu-18.04 | Dockerfile.alpine-3.8 | Dockerfile.debian-stable"
+        default: "Dockerfile.debian-stable"
+        required: true
+        type: string
+
+
 
   workflow_call:
     inputs:
@@ -45,12 +55,26 @@ on:
         required: true
         type: boolean
         default: false
+      DOCKER_APP_NAME:
+        description: "docker app name             e.g. n2n"
+        default: "n2n_lucktu"
+        required: true
+        type: string
+      DOCKER_BUILD_DOCKERFILE_OK:
+        description: "docker_build_dockerfile_ok  e.g. Dockerfile.ubuntu-latest | Dockerfile.alpine-latest | Dockerfile.debian-stable"
+        default: "Dockerfile.debian-stable"
+        required: true
+        type: string
+      DOCKER_BUILD_DOCKERFILE_FIX:
+        description: "docker_build_dockerfile_fix e.g. Dockerfile.ubuntu-18.04 | Dockerfile.alpine-3.8 | Dockerfile.debian-stable"
+        default: "Dockerfile.debian-stable"
+        required: true
+        type: string
 
 env:
   # Use docker.io for Docker Hub if empty
   # REGISTRY: ghcr.io
   REGISTRY: docker.io
-
   BIG_VERSION: v3
   SMALL_VERSION: 3.1.1-16
   COMMIT: 1200
@@ -62,12 +86,13 @@ env:
   # github.repository as <account>/<repo>
   NED_LIBFIX_VERSIONS_B_S_rC: "v2_2.3.0, v2s_2.1.0_r111, v1"
   TEST_PLATFORM: "linux/386"
+  DOCKER_APP_NAME: "n2n_lucktu"
+  DOCKER_BUILD_DOCKERFILE_OK: "Dockerfile.debian-stable"
+  DOCKER_BUILD_DOCKERFILE_FIX: "Dockerfile.alpine-latest"
 
 jobs:
   init-version:
     runs-on: ubuntu-latest
-    env:
-      APP_NAME: n2n_lucktu
     permissions:
       contents: read
       packages: write
@@ -84,8 +109,30 @@ jobs:
       LATEST_VERSION: ${{ steps.init-build-version.outputs.LATEST_VERSION }}
       NEED_FIX: ${{ steps.init-build-version.outputs.NEED_FIX }}
       ONLY_BIGVERSION: ${{ steps.check-big-version-only.outputs.ONLY_BIGVERSION }}
+      DOCKER_APP_NAME: ${{ steps.init-docker-build-info.outputs.DOCKER_APP_NAME }}
+      DOCKER_BUILD_DOCKERFILE_OK: ${{ steps.init-docker-build-info.outputs.DOCKER_BUILD_DOCKERFILE_OK }}
+      DOCKER_BUILD_DOCKERFILE_FIX: ${{ steps.init-docker-build-info.outputs.DOCKER_BUILD_DOCKERFILE_FIX }}
 
     steps:
+      - name: Init DOCKER_BUILD info
+        id: init-docker-build-info
+        run: |
+          input_DOCKER_APP_NAME="${{ inputs.DOCKER_APP_NAME }}"
+          input_DOCKER_BUILD_DOCKERFILE_OK="${{ inputs.DOCKER_APP_NAME }}"
+          input_DOCKER_BUILD_DOCKERFILE_FIX="${{ inputs.DOCKER_APP_NAME }}"
+
+          env_DOCKER_APP_NAME="${{ env.DOCKER_APP_NAME }}"
+          env_DOCKER_BUILD_DOCKERFILE_OK="${{ env.DOCKER_APP_NAME }}"
+          env_DOCKER_BUILD_DOCKERFILE_FIX="${{ env.DOCKER_APP_NAME }}"
+
+          DOCKER_APP_NAME="${input_DOCKER_APP_NAME:-${env_DOCKER_APP_NAME}}"
+          DOCKER_BUILD_DOCKERFILE_OK="${input_DOCKER_BUILD_DOCKERFILE_OK:-${env_DOCKER_BUILD_DOCKERFILE_OK}}"
+          DOCKER_BUILD_DOCKERFILE_FIX="${input_DOCKER_BUILD_DOCKERFILE_FIX:-${env_DOCKER_BUILD_DOCKERFILE_FIX}}"
+
+          echo "DOCKER_APP_NAME=${DOCKER_APP_NAME}" >>  $GITHUB_OUTPUT
+          echo "DOCKER_BUILD_DOCKERFILE_OK=${DOCKER_BUILD_DOCKERFILE_OK}" >>  $GITHUB_OUTPUT
+          echo "DOCKER_BUILD_DOCKERFILE_FIX=${DOCKER_BUILD_DOCKERFILE_FIX}" >>  $GITHUB_OUTPUT
+
       - name: Check big version only
         id: check-big-version-only
         run: |
@@ -207,7 +254,7 @@ jobs:
           fi
           echo "BUILD_VERSION_B_S_rC=${BUILD_VERSION_B_S_rC}" >> $GITHUB_OUTPUT
 
-          ned_libfix_versions_b_s_rc="${{ env.NED_LIBFIX_VERSIONS_B_S_rC }}"
+          # ned_libfix_versions_b_s_rc="${{ env.NED_LIBFIX_VERSIONS_B_S_rC }}"
           l_ned_libfix_versions_b_s_rc=(${ned_libfix_versions_b_s_rc//,/ })
           for ned_libfix_versions_b_s_rc in ${l_ned_libfix_versions_b_s_rc[@]};do
             if [[ "${BUILD_VERSION_B_S_rC}" == "${ned_libfix_versions_b_s_rc}" ]];then
@@ -231,7 +278,7 @@ jobs:
         id: get_tag_last_pushed
         uses: sergeysova/jq-action@v2
         with:
-          cmd: curl -k -sS https://hub.docker.com/v2/repositories/${{ secrets.REGISTRY_USERNAME }}/n2n_lucktu/tags/${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} | jq '.tag_last_pushed'
+          cmd: curl -k -sS https://hub.docker.com/v2/repositories/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}/tags/${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} | jq '.tag_last_pushed'
 
       - name: Check tag_last_pushed
         id: tag_last_pushed
@@ -265,8 +312,6 @@ jobs:
     needs: [init-version, check-push]
     if: needs.check-push.outputs.skip_build_push != 'true'
     runs-on: ubuntu-latest
-    env:
-      APP_NAME: n2n_lucktu
     permissions:
       contents: read
       packages: write
@@ -321,7 +366,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}
+          images: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}
           tags: |
             type=raw,value=latest,enable=${{ needs.init-version.outputs.LATEST_VERSION == 'true' }}
             type=raw,value=v3,enable=${{ needs.init-version.outputs.BUILD_BIG_VERSION == 'v3' }}
@@ -345,10 +390,11 @@ jobs:
         # if: needs.init-version.outputs.NEED_FIX != 'true'
         with:
           context: .
+          file: ${{ needs.init-version.outputs.DOCKER_BUILD_DOCKERFILE_OK }}
           platforms: ${{ needs.init-version.outputs.TEST_PLATFORM }}
           load: true
           no-cache: true
-          tags: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test
+          tags: ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:test
           build-args: |
             VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             BIG_VERSION=${{ needs.init-version.outputs.BUILD_BIG_VERSION }}
@@ -370,8 +416,8 @@ jobs:
           set -e
           # if [[ "${{ needs.init-version.outputs.NEED_FIX }}" == "true" ]];then
           #   LOG_WARNING 需要修复 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-          #   LOG_WARNING 使用 Dockerfile - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-          #   echo "build_dockerfile=Dockerfile">> $GITHUB_OUTPUT
+          #   LOG_WARNING 使用 ${{ needs.init-version.outputs.DOCKER_BUILD_DOCKERFILE_FIX }} - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
+          #   echo "build_dockerfile=${{ needs.init-version.outputs.DOCKER_BUILD_DOCKERFILE_FIX }}">> $GITHUB_OUTPUT
           #   exit 0
           # fi
           LOG_WARNING "Test start: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
@@ -381,12 +427,12 @@ jobs:
             LOG_WARNING "Test for platform: ${test_platform}"
             edge_result="$(docker run --rm \
               --platform ${test_platform} \
-              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:test \
               edge -h 2>&1 | xargs -0 --no-run-if-empty -I {} echo {})"
             if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" ]];then
               LOG_ERROR 出错了: ${edge_result}
-              LOG_WARNING 使用 Dockerfile.alpine-3.8 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-              echo "build_dockerfile=Dockerfile.alpine-3.8">> $GITHUB_OUTPUT
+              LOG_WARNING 使用 ${{ needs.init-version.outputs.DOCKER_BUILD_DOCKERFILE_FIX }} - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
+              echo "build_dockerfile=${{ needs.init-version.outputs.DOCKER_BUILD_DOCKERFILE_FIX }}">> $GITHUB_OUTPUT
               exit 0
             fi
             if [[ -z "$(echo ${edge_result,,} | grep welcome)" ]];then
@@ -395,22 +441,22 @@ jobs:
             fi
             docker run --rm \
               --platform ${test_platform} \
-              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:test \
               edge -h
             LOG_WARNING "Test pass - edge"
             docker run --rm \
               --platform ${test_platform} \
-              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:test \
               ls /usr/local/sbin/supernode
             # supernode will not pass
             docker run --rm \
               --platform ${test_platform} \
-              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:test \
               supernode -h  || echo
             # LOG_WARNING "Test done - supernode"
           done
           LOG_WARNING "Test done: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
-          echo "build_dockerfile=Dockerfile">> $GITHUB_OUTPUT
+          echo "build_dockerfile=${{ needs.init-version.outputs.DOCKER_BUILD_DOCKERFILE_OK }}">> $GITHUB_OUTPUT
           exit 0
 
       # Build and push Docker image with Buildx (don't push on PR)
@@ -426,8 +472,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           # no-cache: true
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:buildcache,mode=max
           build-args: |
             VERSION_B_S_rC=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             BIG_VERSION=${{ needs.init-version.outputs.BUILD_BIG_VERSION }}
@@ -455,7 +501,7 @@ jobs:
             LOG_WARNING "Test for platform: ${test_platform}"
             edge_result="$(docker run --rm \
               --platform ${test_platform} \
-              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
               edge -h 2>&1 | xargs -0 --no-run-if-empty -I {} echo {})"
             if [[ -z "$(echo ${edge_result,,} | grep welcome)" ]];then
               LOG_ERROR 出错了: ${test_platform} - ${edge_result}
@@ -464,21 +510,21 @@ jobs:
             fi
             docker run --rm \
               --platform ${test_platform} \
-              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
               ls /usr/local/sbin/edge
             docker run --rm \
               --platform ${test_platform} \
-              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
               edge -h
             LOG_WARNING "Test pass - edge"
             docker run --rm \
               --platform ${test_platform} \
-              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
               ls /usr/local/sbin/supernode
             # supernode will not pass
             docker run --rm \
               --platform ${test_platform} \
-              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
+              ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ needs.init-version.outputs.DOCKER_APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
               supernode -h  || echo
             # LOG_WARNING "Test done - supernode"
           done

@@ -13,7 +13,21 @@ on:
         required: true
         type: boolean
         default: false
-
+      DOCKER_APP_NAME:
+        description: "docker app name             e.g. n2n"
+        default: "n2n_lucktu"
+        required: true
+        type: string
+      DOCKER_BUILD_DOCKERFILE_OK:
+        description: "docker_build_dockerfile_ok  e.g. Dockerfile.ubuntu-latest | Dockerfile.alpine-latest | Dockerfile.debian-stable"
+        default: "Dockerfile.debian-stable"
+        required: true
+        type: string
+      DOCKER_BUILD_DOCKERFILE_FIX:
+        description: "docker_build_dockerfile_fix e.g. Dockerfile.ubuntu-18.04 | Dockerfile.alpine-3.8 | Dockerfile.debian-stable"
+        default: "Dockerfile.debian-stable"
+        required: true
+        type: string
 jobs:
   scan-all:
     runs-on: ubuntu-latest
