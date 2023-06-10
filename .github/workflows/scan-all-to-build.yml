@@ -78,14 +78,17 @@ jobs:
       id-token: write
     strategy:
       fail-fast: false
-      max-parallel: 1
+      # max-parallel: 1
       matrix: ${{ fromJSON(needs.scan-all.outputs.version_b_s_rcs) }}
 
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
       force_push: ${{ needs.scan-all.outputs.force_push == 'true' }}
-    secrets: inherit
+      DOCKER_APP_NAME: ${{ inputs.DOCKER_APP_NAME }}
+      DOCKER_BUILD_DOCKERFILE_OK: ${{ inputs.DOCKER_BUILD_DOCKERFILE_OK }}
+      DOCKER_BUILD_DOCKERFILE_FIX: ${{ inputs.DOCKER_BUILD_DOCKERFILE_FIX }}
+      secrets: inherit
 
   build-releases-version:
     permissions:
@@ -95,11 +98,14 @@ jobs:
     if: ${{ inputs.build-releases-version }}
     strategy:
       fail-fast: false
-      max-parallel: 1
+      # max-parallel: 1
       matrix:
         version_b_s_rc: [v1, v2, v2s]
     uses: ./.github/workflows/docker-publish.yml
     with:
       version_b_s_rc: ${{ matrix.version_b_s_rc }}
-      force_push: ${{ inputs.force_push == 'true' }}
+      force_push: ${{ inputs.force-push == 'true' }}
+      DOCKER_APP_NAME: ${{ inputs.DOCKER_APP_NAME }}
+      DOCKER_BUILD_DOCKERFILE_OK: ${{ inputs.DOCKER_BUILD_DOCKERFILE_OK }}
+      DOCKER_BUILD_DOCKERFILE_FIX: ${{ inputs.DOCKER_BUILD_DOCKERFILE_FIX }}
     secrets: inherit
