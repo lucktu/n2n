@@ -146,7 +146,7 @@ n2n_lucktu:downloader
 
 | FILE                    | 定义                             | 说明                                               |
 | :---------------------- | :------------------------------- | :------------------------------------------------- |
-| Dockerfile              | `debian:stable`                  | 优先使用最新稳定版, 已修复 `libssl1.0.0` 问题      |
+| Dockerfile.              | `debian:stable`                  | 优先使用最新稳定版, 已修复 `libssl1.0.0` 问题      |
 | Dockerfile.debian-8     | `debian:8` / `debian:jessie`     | 用于修复 `libssl1.0.0` 问题                        |
 | Dockerfile.ubuntu-18.04 | `ubuntu:18.04` / `ubuntu:bionic` | 用于修复 `libssl1.0.0` 问题                        |
 | Dockerfile.alpine-3.8   | `alpine:3.8`                     | 用于修复 `libssl1.0.0` 问题 _\*可能会提示缺少依赖_ |

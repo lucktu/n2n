@@ -152,7 +152,7 @@ SCAN_ONE_BUILD() {
             edge_result="$(docker run --rm \
                 --platform ${test_platform} \
                 ${REGISTRY_USERNAME}/n2n-lucktu:test \
-                edge -h 2>&1 | xargs -I {} echo {})"
+                edge -h 2>&1 | xargs -0 --no-run-if-empty -I {} echo {})"
             if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" ]]; then
                 LOG_ERROR 出错了: ${edge_result}
                 LOG_WARNING 使用 Dockerfile.debian-8 - ${BUILD_VERSION_B_S_rC}

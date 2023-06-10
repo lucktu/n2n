@@ -1,5 +1,5 @@
 ARG VERSION_B_S_rC
-FROM zctmdc/n2n_lucktu:${VERSION_B_S_rC}  
+FROM lucktu/n2n_lucktu:${VERSION_B_S_rC}  
 
 
 ARG DEBIAN_FRONTEND=noninteractive  

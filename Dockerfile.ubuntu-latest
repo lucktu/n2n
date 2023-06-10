@@ -7,9 +7,6 @@ LABEL description="${summary}" \
   app.kubernetes.io/name="${name}" \
   org.opencontainers.image.title="${name}" \
   org.opencontainers.artifact.description="${summary}" \
-  org.opencontainers.image.url="https://hub.docker.com/r/zctmdc/n2n-lucktu" \
-  org.opencontainers.image.source="https://github.com/zctmdc/docker/tree/alpha/n2n-lucktu" \
-  org.opencontainers.image.authors="zctmdc@outlook.com" \
   org.opencontainers.image.description="${summary}" \
   org.opencontainers.image.documentation="https://github.com/zctmdc/docker/tree/alpha/n2n-lucktu/doc/build.md"\
   org.opencontainers.image.licenses="MIT"
@@ -49,18 +46,15 @@ COPY ./scripts/ /tmp/n2n-lucktu/scripts/
 RUN /tmp/n2n-lucktu/scripts/extract_n2n.sh
 RUN /tmp/n2n-lucktu/scripts/sel_n2n.sh
 
-FROM debian:8
+FROM ubuntu:18.04
 
 ARG name="n2n-lucktu"
-ARG summary="n2n-lucktu built on-top of debian:8"
+ARG summary="n2n-lucktu built on-top of ubuntu:18.04"
 LABEL description="${summary}" \
   maintainer="<zctmdc@outlook.com>" \
   app.kubernetes.io/name="${name}" \
   org.opencontainers.image.title="${name}" \
   org.opencontainers.artifact.description="${summary}" \
-  org.opencontainers.image.url="https://hub.docker.com/r/zctmdc/n2n-lucktu" \
-  org.opencontainers.image.source="https://github.com/zctmdc/docker/tree/alpha/n2n-lucktu" \
-  org.opencontainers.image.authors="zctmdc@outlook.com" \
   org.opencontainers.image.description="${summary}" \
   org.opencontainers.image.licenses="MIT"
 
@@ -68,7 +62,7 @@ LABEL description="${summary}" \
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -qq update
 RUN apt-get -qq -y install \
-  net-tools busybox iptables isc-dhcp-client isc-dhcp-server
+  net-tools busybox iptables isc-dhcp-client isc-dhcp-server inetutils-ping 
 RUN touch /var/lib/dhcp/dhcpd.leases
 
 WORKDIR /usr/local/sbin/
@@ -85,6 +79,6 @@ RUN /tmp/n2n-lucktu/scripts/fixlib.sh
 RUN rm -rf /tmp/*
 
 WORKDIR /usr/local/sbin/
-
+  
 ARG VERSION_B_S_rC
 ENV VERSION_B_S_rC=${VERSION_B_S_rC}

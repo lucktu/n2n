@@ -83,7 +83,7 @@ jobs:
       BUILD_VERSION_B_S_rC: ${{ steps.init-build-version.outputs.BUILD_VERSION_B_S_rC }}
       LATEST_VERSION: ${{ steps.init-build-version.outputs.LATEST_VERSION }}
       NEED_FIX: ${{ steps.init-build-version.outputs.NEED_FIX }}
-      ONLY_BIGVERSION: ${{ steps.check-big-version.outputs.ONLY_BIGVERSION }}
+      ONLY_BIGVERSION: ${{ steps.check-big-version-only.outputs.ONLY_BIGVERSION }}
 
     steps:
       - name: Check big version only
@@ -342,7 +342,7 @@ jobs:
 
       - name: Build and load to Docker
         uses: docker/build-push-action@v3
-        if: needs.init-version.outputs.NEED_FIX != 'true'
+        # if: needs.init-version.outputs.NEED_FIX != 'true'
         with:
           context: .
           platforms: ${{ needs.init-version.outputs.TEST_PLATFORM }}
@@ -368,12 +368,12 @@ jobs:
               echo -e "\033[0;31m[ERROR] $* \033[0m"
           }
           set -e
-          if [[ "${{ needs.init-version.outputs.NEED_FIX }}" == "true" ]];then
-            LOG_WARNING 需要修复 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-            LOG_WARNING 使用 Dockerfile.debian-8 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-            echo "build_dockerfile=Dockerfile.debian-8">> $GITHUB_OUTPUT
-            exit 0
-          fi
+          # if [[ "${{ needs.init-version.outputs.NEED_FIX }}" == "true" ]];then
+          #   LOG_WARNING 需要修复 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
+          #   LOG_WARNING 使用 Dockerfile - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
+          #   echo "build_dockerfile=Dockerfile">> $GITHUB_OUTPUT
+          #   exit 0
+          # fi
           LOG_WARNING "Test start: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
           platforms=${{ needs.init-version.outputs.TEST_PLATFORM }}
           l_platforms=(${platforms//,/ })
@@ -382,11 +382,11 @@ jobs:
             edge_result="$(docker run --rm \
               --platform ${test_platform} \
               ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:test \
-              edge -h 2>&1 | xargs -I {} echo {})"
+              edge -h 2>&1 | xargs -0 --no-run-if-empty -I {} echo {})"
             if [[ -n "$(echo ${edge_result} | grep -E '(libcrypto.so.1.0.0)|(/lib/ld-linux.so.3)')" ]];then
               LOG_ERROR 出错了: ${edge_result}
-              LOG_WARNING 使用 Dockerfile.debian-8 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
-              echo "build_dockerfile=Dockerfile.debian-8">> $GITHUB_OUTPUT
+              LOG_WARNING 使用 Dockerfile.alpine-3.8 - ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}
+              echo "build_dockerfile=Dockerfile.alpine-3.8">> $GITHUB_OUTPUT
               exit 0
             fi
             if [[ -z "$(echo ${edge_result,,} | grep welcome)" ]];then
@@ -456,7 +456,7 @@ jobs:
             edge_result="$(docker run --rm \
               --platform ${test_platform} \
               ${{ env.REGISTRY }}/${{ secrets.REGISTRY_USERNAME }}/${{ env.APP_NAME }}:${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }} \
-              edge -h 2>&1 | xargs -I {} echo {})"
+              edge -h 2>&1 | xargs -0 --no-run-if-empty -I {} echo {})"
             if [[ -z "$(echo ${edge_result,,} | grep welcome)" ]];then
               LOG_ERROR 出错了: ${test_platform} - ${edge_result}
               flag_test_pass="false"
@@ -487,7 +487,6 @@ jobs:
             exit 1
           fi
           LOG_WARNING "Test done: ${{ needs.init-version.outputs.BUILD_VERSION_B_S_rC }}"
-          echo "build_dockerfile=Dockerfile">> $GITHUB_OUTPUT
           exit 0
 
       # Sign the resulting Docker image digest except on PRs.
