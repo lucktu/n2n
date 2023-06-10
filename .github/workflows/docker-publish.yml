@@ -118,12 +118,12 @@ jobs:
         id: init-docker-build-info
         run: |
           input_DOCKER_APP_NAME="${{ inputs.DOCKER_APP_NAME }}"
-          input_DOCKER_BUILD_DOCKERFILE_OK="${{ inputs.DOCKER_APP_NAME }}"
-          input_DOCKER_BUILD_DOCKERFILE_FIX="${{ inputs.DOCKER_APP_NAME }}"
+          input_DOCKER_BUILD_DOCKERFILE_OK="${{ inputs.DOCKER_BUILD_DOCKERFILE_OK }}"
+          input_DOCKER_BUILD_DOCKERFILE_FIX="${{ inputs.DOCKER_BUILD_DOCKERFILE_FIX }}"
 
           env_DOCKER_APP_NAME="${{ env.DOCKER_APP_NAME }}"
-          env_DOCKER_BUILD_DOCKERFILE_OK="${{ env.DOCKER_APP_NAME }}"
-          env_DOCKER_BUILD_DOCKERFILE_FIX="${{ env.DOCKER_APP_NAME }}"
+          env_DOCKER_BUILD_DOCKERFILE_OK="${{ env.DOCKER_BUILD_DOCKERFILE_OK }}"
+          env_DOCKER_BUILD_DOCKERFILE_FIX="${{ env.DOCKER_BUILD_DOCKERFILE_FIX }}"
 
           DOCKER_APP_NAME="${input_DOCKER_APP_NAME:-${env_DOCKER_APP_NAME}}"
           DOCKER_BUILD_DOCKERFILE_OK="${input_DOCKER_BUILD_DOCKERFILE_OK:-${env_DOCKER_BUILD_DOCKERFILE_OK}}"
