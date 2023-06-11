@@ -30,15 +30,15 @@ https://docs.docker.com/docker-hub/access-tokens/
 - 所以的话
 - 如果不需要全部的小版本，可以不参考黄色截图部分，用红色的，只生成大版本
 
-> 指定版本：
+- 指定版本：
 
 ![image](https://github.com/lucktu/n2n/assets/24244480/e0f11901-7cea-44bc-8f83-c222f6731f7f)
 
-> 上图中，如果不指定版本
+- 上图中，如果不指定版本
 
 默认使用  倒序 `Linux` 文件夹下面的文件 `x64` 第一个文件
 比如 `n2n_v4_xxx` `n2n_v3_xxx` 应该会选中 `n2n_v4` 那个文件版本
-然后识别版本并生成相应的docker镜像
+然后识别版本并生成相应的docker镜像 `latest`
 
 
 ## 较上次提交变化
