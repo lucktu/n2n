@@ -46,3 +46,7 @@ https://docs.docker.com/docker-hub/access-tokens/
 - 采用新的修复代码，修复依赖
 - 增加了多个参数，便于定制镜像
 
+## 运行结果参考
+
+![image](https://github.com/lucktu/n2n/assets/24244480/d91adea4-a6bb-4204-8d07-454b8c976c08)
+![image](https://github.com/lucktu/n2n/assets/24244480/3217678f-62e9-4ecf-8c0a-fe2cfddbb0e4)
