@@ -5,13 +5,23 @@ Unfortunately, compiling is also a technical job, and many people can't, so I've
 
 NOTE for n2n_v3 (https://github.com/ntop/n2n):
 
-2021-10-28: v.3.0.0_r1041, <strong>n2n_v3 was officially released.</strong>
+2022-05-25: v.3.1.1_r1210(-26-g99b6b6b), <strong>Start making route and upnp as separate programs </strong>
+
+2022-03-31: v.3.1.1_r1185(-1-g661858a), update to v.3.1.1
+
+2021-12-23: v.3.1.0_r1113(-40-e6e8cb0), Added upnp support.
+
+2021-10-28: v.3.0.0_r1037, <strong>n2n_v3 was officially released and starting with v.3.1.0 </strong>
 
 2020-08-12: v.2.9.0_r529, edge is no longer compatible with the previous one !!!
 
 =========================================================
 
 NOTE for n2n_v2 (https://github.com/ntop/n2n/tree/2.8-stable):
+
+2023-06-22:  v2.8.2_r558, Speed and stability have been improved, from github.com/lucktu/cnn2n
+
+2023-02-13:  v2.8.1_r546, Add auto-ip function, from github.com/lucktu/cnn2n
 
 2020-08-12: v.2.8.0_r528, Generate a new branche: "<strong>2.8-stable</strong>". v.2.7.0_r525(or r523) is recommended
 
@@ -79,29 +89,29 @@ v1   https://github.com/meyerd/n2n/tree/master/n2n_v1
 
 v2s  https://github.com/meyerd/n2n/tree/master/n2n_v2
 
-v2   https://github.com/ntop/n2n/tree/2.8-stable
+v2   https://github.com/ntop/n2n/tree/2.8-stable or https://github.com/lucktu/cnn2n(new2)
 
 v3   https://github.com/ntop/n2n
 
 ---------------------supernode for test-------------------
 
-v1  n2n.lucktu.com:10082
+v1  ouno.eu.org:10082
 
-v2s n2n.lucktu.com:10088
+v2s ouno.eu.org:10088
 
-v2  n2n.lucktu.com:10086
+v2  ouno.eu.org:10086
 
-v3  n2n.lucktu.com:10090
+v3  ouno.eu.org:10090
 
 ---------------------------download-----------------------
 
 First: https://github.com/lucktu/n2n 
 
-Second: https://gitee.com/lucktu/n2nb  (Faster)
+Second: https://gitee.com/lucktu/n2nb  (Faster for China)
 
 Third: http://n2n.lucktu.com/n2n/     (Convenient,uninsured)
 
-QQ group: 5804301 (Old: 256572040, disused)
+QQ group: 196588661 (Old: 256572040, disused)
 
 ---
 
