@@ -3,6 +3,12 @@ Unfortunately, compiling is also a technical job, and many people can't, so I've
 ![image](https://github.com/lucktu/other/raw/master/image/speed/19102501.PNG)
 #####################################################################
 
+NOTE for n2n_v2.3 (https://github.com/lucktu/n2n6):
+
+2025-12-22: v2.3.2.1_f4ecf76, Supports IPv4 and IPv6, and provides a test server: ouno.eu.org:10084
+
+=========================================================
+
 NOTE for n2n_v3 (https://github.com/ntop/n2n):
 
 2022-05-25: v.3.1.1_r1210(-26-g99b6b6b), <strong>Start making route and upnp as separate programs </strong>
