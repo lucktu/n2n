@@ -7,7 +7,7 @@ NOTE for n2n_v2.3 (https://github.com/lucktu/n2n6):
 
 2026-06-27: v2.3_6.3_7669b4b, update to v2.3_6.3
 
-2025-12-22: v2.3.2.1_f4ecf76, Supports IPv4 and IPv6, and provides a test server: n2n6.ouno.eu.org:10084
+2025-12-22: v2.3.2.1_f4ecf76, Supports IPv4 and IPv6, and provides a test server: n2n6.ouno.eu.org
 
 =========================================================
 
